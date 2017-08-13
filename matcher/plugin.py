@@ -78,7 +78,7 @@ class _content_check_or_store_pattern:
 
     @_store_pattern_handle_error
     def __eq__(self, text):
-        expected_text = self._filename.read_text().strip()
+        expected_text = self._filename.read_text()
         return expected_text == text
 
 
@@ -92,27 +92,32 @@ class _content_check_or_store_pattern:
 
 def _try_cli_option(request):
     result = request.config.getoption('--pm-patterns-base-dir')
-    return pathlib.Path(result) if result is not None else None
+    return (pathlib.Path(result) if result is not None else None, True)
 
 
 def _try_ini_option(request):
     result = request.config.getini('pm-patterns-base-dir')
-    return pathlib.Path(result) if result is not None else None
+    return (pathlib.Path(result) if result is not None else None, False)
 
 
 def _try_module_path(request):
     assert request.fspath.dirname is not None
-    return pathlib.Path(request.fspath.dirname) / 'data' / 'expected'
+    return (pathlib.Path(request.fspath.dirname) / 'data' / 'expected', False)
 
 
 def _make_expected_filename(request, ext: str) -> pathlib.Path:
     result = None
+    use_cwd_as_base = False
     for alg in [_try_cli_option, _try_ini_option, _try_module_path]:
-        result = alg(request)
+        result, use_cwd_as_base = alg(request)
         if result is not None:
             break
 
     assert result is not None
+
+    # Make the found path absolute using pytest's rootdir as the base
+    if not result.is_absolute():
+        result = (pathlib.Path.cwd() if use_cwd_as_base else pathlib.Path(request.config.inifile.dirname)) / result
 
     # Make sure base directory exists
     if not result.exists():
