@@ -35,8 +35,10 @@ named fixture functions.
 
         assert stdout == expected_out
 
-For the first ``pytest`` run it would fail, cuz there is no expected pattern file present.
-To write, it one can use :command:`pytest` CLI:
+Add ``pm-patterns-base-dir`` option to ``pytest.ini`` file (and ``pytest`` section)
+pointing for example to ``test/data/expected``. For the first ``pytest`` run it would
+fail, cuz there is no expected pattern file present. To write, it one can use
+:command:`pytest` CLI:
 
 ::
 
