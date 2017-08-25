@@ -145,3 +145,23 @@ def expected_err(request):
         _make_expected_filename(request, '.err')
       , request.config.getoption('--pm-save-patterns')
       )
+
+
+def _report_mismatch(actual, expected):
+    return [
+        'Comparing test output and expected (from `{}`):'.format(expected.pattern_file)
+      , '---[BEGIN actual output]---'
+      ] + actual.splitlines() + [
+        '---[END actual output]---'
+      , '---[BEGIN expected output]---'
+      ] + expected.expected_file_content.splitlines() + [
+        '---[END expected output]---'
+      ]
+
+
+def pytest_assertrepr_compare(op, left, right):
+    if isinstance(left, _content_check_or_store_pattern) and isinstance(right, str) and op == "==":
+        return _report_mismatch(right, left)
+
+    if isinstance(right, _content_check_or_store_pattern) and isinstance(left, str) and op == "==":
+        return _report_mismatch(left, right)
