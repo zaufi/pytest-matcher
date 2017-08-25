@@ -18,7 +18,6 @@
 # Standard imports
 import pathlib
 import pytest
-import warnings
 
 
 # Add CLI option
@@ -67,7 +66,7 @@ class _content_check_or_store_pattern:
             # Ok, this is the "normal" check:
             # - make sure the pattern file exists
             if not self._filename.exists():
-                warnings.warn('Pattern file not found `{}`'.format(self._filename), RuntimeWarning)
+                pytest.skip('Pattern file not found `{}`'.format(self._filename))
                 return False
 
             # - call wrapped function to
@@ -121,7 +120,7 @@ def _make_expected_filename(request, ext: str) -> pathlib.Path:
 
     # Make sure base directory exists
     if not result.exists():
-        raise ValueError('Base directory for pattern-matcher do not exists: `{}`'.format(result))
+        raise pytest.skip('Base directory for pattern-matcher do not exists: `{}`'.format(result))
 
     if request.cls is not None:
         result /= request.cls.__name__
