@@ -20,30 +20,6 @@ import pathlib
 import pytest
 
 
-# Add CLI option
-def pytest_addoption(parser):
-    # Add a couple of CLI options into a dedicated group
-    group = parser.getgroup('pattern-matcher')
-    group.addoption(
-        '--pm-save-patterns'
-      , action='store_true'
-        # TODO Better description
-      , help='store matching patterns instead of checking them'
-      )
-    group.addoption(
-        '--pm-patterns-base-dir'
-      , metavar='PATH'
-      , help='base directory to read/write pattern files'
-      )
-
-    # Also add INI file option `pm-patterns-base-dir`
-    parser.addini(
-        'pm-patterns-base-dir'
-      , help='base directory to read/write pattern files'
-      , default=None
-      )
-
-
 class _content_check_or_store_pattern:
 
     def __init__(self, filename, store):
@@ -82,11 +58,30 @@ class _content_check_or_store_pattern:
 
 
     @_store_pattern_handle_error
-    def match(self, text):
+    def match(self, text, flags=0):
         content = ' '.join(self._filename.read_text().strip().splitlines())
-        what = re.compile(content)
+        try:
+            what = re.compile(content, flags=flags)
+
+        except Exception as ex:
+            pytest.skip('Compile a regualr expression from pattern failed: {}'.format(str(ex)))
+            return False
+
         transformed_text = ' '.join(text.splitlines())
-        return bool(what.match(transformed_text))
+        m = what.fullmatch(transformed_text)
+        return m is not None and bool(m)
+
+
+    def report_compare_mismatch(self, actual):
+        return [
+            'Comparing test output and expected (from `{}`):'.format(self.pattern_file)
+          , '---[BEGIN actual output]---'
+          ] + actual.splitlines() + [
+            '---[END actual output]---'
+          , '---[BEGIN expected output]---'
+          ] + self.expected_file_content.splitlines() + [
+            '---[END expected output]---'
+          ]
 
 
 def _try_cli_option(request):
@@ -146,21 +141,38 @@ def expected_err(request):
       )
 
 
-def _report_mismatch(actual, expected):
-    return [
-        'Comparing test output and expected (from `{}`):'.format(expected.pattern_file)
-      , '---[BEGIN actual output]---'
-      ] + actual.splitlines() + [
-        '---[END actual output]---'
-      , '---[BEGIN expected output]---'
-      ] + expected.expected_file_content.splitlines() + [
-        '---[END expected output]---'
-      ]
+#BEGIN Pytest hooks
 
-
+# Hook into comparision failure
 def pytest_assertrepr_compare(op, left, right):
     if isinstance(left, _content_check_or_store_pattern) and isinstance(right, str) and op == "==":
-        return _report_mismatch(right, left)
+        return left.report_compare_mismatch(right)
 
     if isinstance(right, _content_check_or_store_pattern) and isinstance(left, str) and op == "==":
-        return _report_mismatch(left, right)
+        return right.report_compare_mismatch(left)
+
+
+# Add CLI option
+def pytest_addoption(parser):
+    # Add a couple of CLI options into a dedicated group
+    group = parser.getgroup('pattern-matcher')
+    group.addoption(
+        '--pm-save-patterns'
+      , action='store_true'
+        # TODO Better description
+      , help='store matching patterns instead of checking them'
+      )
+    group.addoption(
+        '--pm-patterns-base-dir'
+      , metavar='PATH'
+      , help='base directory to read/write pattern files'
+      )
+
+    # Also add INI file option `pm-patterns-base-dir`
+    parser.addini(
+        'pm-patterns-base-dir'
+      , help='base directory to read/write pattern files'
+      , default=None
+      )
+
+#END Pytest hooks
