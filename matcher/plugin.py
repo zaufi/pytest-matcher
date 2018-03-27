@@ -31,7 +31,7 @@ class _content_check_or_store_pattern:
         def _inner(self, text):
             # Check if `--save-patterns` has given to CLI
             if self._store:
-                # Make directory to store pattern file if it doesn't exist yet
+                # Make a directory to store a pattern file if it doesn't exist yet
                 if not self._filename.parent.exists():
                     self._filename.parent.mkdir(parents=True)
 
@@ -127,6 +127,9 @@ def _make_expected_filename(request, ext: str) -> pathlib.Path:
 
 @pytest.fixture
 def expected_out(request):
+    '''
+        A pytest fixture to match `STDOUT` against a file.
+    '''
     return _content_check_or_store_pattern(
         _make_expected_filename(request, '.out')
       , request.config.getoption('--pm-save-patterns')
@@ -135,6 +138,9 @@ def expected_out(request):
 
 @pytest.fixture
 def expected_err(request):
+    '''
+        A pytest fixture to match `STDERR` against a file.
+    '''
     return _content_check_or_store_pattern(
         _make_expected_filename(request, '.err')
       , request.config.getoption('--pm-save-patterns')

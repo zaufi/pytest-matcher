@@ -17,7 +17,8 @@ Unreleased_
 Added
 -----
 
-- Use ``pytest.skip()`` if no pattern file has found or it contains an invalid regular expression.
+- Use ``pytest.skip()`` if no pattern file has found or it contains an invalid regular expression;
+- Added doc-strings to the fixtures, so :command:`pytest --fixtures` would not complain.
 
 Changed
 -------
