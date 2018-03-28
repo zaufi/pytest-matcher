@@ -17,8 +17,10 @@
 
 # Standard imports
 import pathlib
+import platform
 import pytest
-
+import re
+import shutil
 
 class _content_check_or_store_pattern:
 
@@ -36,7 +38,9 @@ class _content_check_or_store_pattern:
                     self._filename.parent.mkdir(parents=True)
 
                 # Store!
+                # NOTE Python >= 3.5 needed
                 self._filename.write_text(text)
+
                 return True
 
             # Ok, this is the "normal" check:
@@ -109,6 +113,9 @@ def _make_expected_filename(request, ext: str) -> pathlib.Path:
 
     assert result is not None
 
+    use_system_suffix = request.config.getini('pm-pattern-file-use-system-name')
+    use_system_suffix = True if use_system_suffix == 'true' or use_system_suffix == '1' else False
+
     # Make the found path absolute using pytest's rootdir as the base
     if not result.is_absolute():
         result = (pathlib.Path.cwd() if use_cwd_as_base else pathlib.Path(request.config.inifile.dirname)) / result
@@ -120,7 +127,9 @@ def _make_expected_filename(request, ext: str) -> pathlib.Path:
     if request.cls is not None:
         result /= request.cls.__name__
 
-    result /= request.function.__name__ + ext
+    result /= request.function.__name__ \
+      + ('-' + platform.system() if use_system_suffix else '') \
+      + ext
 
     return result
 
@@ -179,6 +188,11 @@ def pytest_addoption(parser):
         'pm-patterns-base-dir'
       , help='base directory to read/write pattern files'
       , default=None
+      )
+    parser.addini(
+        'pm-pattern-file-use-system-name'
+      , help='expect a system name (`platform.system()`) to be a pattern filename suffix'
+      , default=False
       )
 
 #END Pytest hooks
