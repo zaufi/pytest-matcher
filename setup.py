@@ -26,7 +26,7 @@ setup(
   , version = __version__
   , python_requires = '~=3.4'
   , description = 'Match test output against patterns stored in files'
-  , long_description = readfile('README.rst'),
+  , long_description = readfile('README.rst')
   , long_description_content_type = 'text/x-rst'
   , author = 'Alex Turbov'
   , author_email = 'i.zaufi@gmail.com'
