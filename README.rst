@@ -1,7 +1,7 @@
 What is this
 ============
 
-This is a pytest plugin which provides a could of fixtures to match
+This is a pytest plugin which provides a couple of fixtures to match
 test output against patterns stored in files.
 
 The plugin extend pytest with the following CLI options:
@@ -14,9 +14,9 @@ name, test class name and/or test function name as following:
 
 ::
 
-    <base-dir>/<test-module-name>/[test-class-name]/<test-function-name>
+    <base-dir>/<test-module-name>/[test-class-name/]<test-function-name>
 
-Note, that for non-class test functions the *class-name* part is absent.
+Note, that for non-class test functions the *test-class-name* part is absent.
 
 
 Quick Start
@@ -37,7 +37,7 @@ named fixture functions.
 
 Add ``pm-patterns-base-dir`` option to ``pytest.ini`` file (and ``pytest`` section)
 pointing for example to ``test/data/expected``. For the first ``pytest`` run it would
-fail, cuz there is no expected pattern file present. To write, it one can use
+fail, cuz there is no expected pattern file present. To write it one can use
 :command:`pytest` CLI:
 
 ::

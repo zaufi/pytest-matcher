@@ -11,7 +11,7 @@ to `Semantic Versioning`_.
 .. _Semantic Versioning: http://semver.org/
 
 
-1.2.0_ -- 2018-03-28
+1.2.0_ -- 2018-03-29
 ====================
 
 Added
@@ -19,7 +19,9 @@ Added
 
 - Add an ``ini`` file option ``pm-pattern-file-use-system-name`` to control if the system
   name suffix expected to be in a pattern filename. E.g. this allows to have patterns with
-  different CR/LF conventions.
+  different CR/LF conventions;
+- Add ``expected_yaml`` fixture to match YAML files;
+- Introduce unit tests.
 
 
 1.1.0_ -- 2018-03-28
