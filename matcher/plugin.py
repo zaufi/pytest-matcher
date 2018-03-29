@@ -121,7 +121,7 @@ def _try_module_path(request):
     return (pathlib.Path(request.fspath.dirname) / 'data' / 'expected', False)
 
 
-def _make_expected_filename(request, ext: str) -> pathlib.Path:
+def _make_expected_filename(request, ext: str, use_system_suffix=True) -> pathlib.Path:
     result = None
     use_cwd_as_base = False
     for alg in [_try_cli_option, _try_ini_option, _try_module_path]:
@@ -131,8 +131,9 @@ def _make_expected_filename(request, ext: str) -> pathlib.Path:
 
     assert result is not None
 
-    use_system_suffix = request.config.getini('pm-pattern-file-use-system-name')
-    use_system_suffix = True if use_system_suffix == 'true' or use_system_suffix == '1' else False
+    if use_system_suffix:
+        use_system_suffix = request.config.getini('pm-pattern-file-use-system-name')
+        use_system_suffix = True if use_system_suffix == 'true' or use_system_suffix == '1' else False
 
     # Make the found path absolute using pytest's rootdir as the base
     if not result.is_absolute():
@@ -239,7 +240,7 @@ class _yaml_check_or_store_pattern:
 @pytest.fixture
 def expected_yaml(request):
     return _yaml_check_or_store_pattern(
-        _make_expected_filename(request, '.yaml')
+        _make_expected_filename(request, '.yaml', use_system_suffix=False)
       , request.config.getoption('--pm-save-patterns')
       )
 
