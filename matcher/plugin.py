@@ -64,7 +64,7 @@ class _content_check_or_store_pattern:
             self._expected_file_content = self._pattern_filename.read_text()
         else:
             # TODO Remove this
-            with self._filename.open('r') as fd:
+            with self._pattern_filename.open('r') as fd:
                 self._expected_file_content = fd.read()
 
         assert self._expected_file_content is not None
