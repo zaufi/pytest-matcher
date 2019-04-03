@@ -11,6 +11,15 @@ to `Semantic Versioning`_.
 .. _Semantic Versioning: http://semver.org/
 
 
+1.2.2_ -- 2019-04-04
+====================
+
+Fixed
+-----
+
+- Update code for modern ``pytest`` (4.4.0) and ``PyYAML`` (5.1).
+
+
 1.2.1_ -- 2018-03-30
 ====================
 
@@ -57,7 +66,8 @@ Added
 - Add pretty printer for failed asserts with ``expected_out`` fixture and equal comparition operator.
 
 
-.. _Unreleased: https://github.com/onixsol/ecm/compare/release/1.2.1...HEAD
+.. _Unreleased: https://github.com/onixsol/ecm/compare/release/1.2.2...HEAD
+.. _1.2.2: https://github.com/onixsol/ecm/compare/release/1.2.1...1.2.2
 .. _1.2.1: https://github.com/onixsol/ecm/compare/release/1.2.0...1.2.1
 .. _1.2.0: https://github.com/onixsol/ecm/compare/release/1.1.0...1.2.0
 .. _1.1.0: https://github.com/onixsol/ecm/compare/release/1.0.0...1.1.0
