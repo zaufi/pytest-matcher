@@ -42,7 +42,7 @@ def no_file_test(ourtestdir):
     result = ourtestdir.runpytest()
     result.assert_outcomes(skipped=1)
     result.stdout.re_match_lines([
-        'SKIP \[1\] .*Pattern file not found .*test_no_expected_file.out`'
+        '.*Pattern file not found .*test_no_expected_file.out`'
       ])
 
 
@@ -97,7 +97,7 @@ def result_yaml_not_found_test(ourtestdir):
     result = ourtestdir.runpytest()
     result.assert_outcomes(skipped=1)
     result.stdout.re_match_lines([
-        'SKIP \[1\] .*Result YAML file not found `result.yaml`'
+        '.*Result YAML file not found `result.yaml`'
       ])
 
 
@@ -123,7 +123,7 @@ def expected_yaml_not_found_test(ourtestdir):
     result = ourtestdir.runpytest()
     result.assert_outcomes(skipped=1)
     result.stdout.re_match_lines([
-        'SKIP \[1\] .*Expected YAML file not found `.*test_yaml.yaml`'
+        '.*Expected YAML file not found `.*test_yaml.yaml`'
       ])
 
 

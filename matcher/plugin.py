@@ -214,8 +214,8 @@ class _yaml_check_or_store_pattern:
 
         # Load data to compare
         with result_file.open('r') as result_fd, self._expected_file.open('r') as expected_fd:
-            self._result = yaml.load(result_fd)
-            self._expected = yaml.load(expected_fd)
+            self._result = yaml.safe_load(result_fd)
+            self._expected = yaml.safe_load(expected_fd)
 
         return self._result == self._expected
 
