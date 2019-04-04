@@ -11,6 +11,15 @@ to `Semantic Versioning`_.
 .. _Semantic Versioning: http://semver.org/
 
 
+Unreleased_
+===========
+
+Added
+-----
+
+- Show actual output and expected output on failed ``expected_out.match()``.
+
+
 1.2.2_ -- 2019-04-04
 ====================
 

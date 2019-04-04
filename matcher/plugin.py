@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2017-2018 Alex Turbov <i.zaufi@gmail.com>
+# Copyright (c) 2017-2019 Alex Turbov <i.zaufi@gmail.com>
 #
 # Pytest-match plugin is free software: you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the
@@ -23,6 +23,38 @@ import re
 import shutil
 import sys
 import yaml
+
+class _content_match_result:
+    '''
+        TODO Is this job for Python `dataclass`?
+    '''
+
+    def __init__(self, result, text, regex, filename):
+        self._filename = filename
+        self._result = result
+        self._text = text
+        self._regex = regex
+
+
+    def __eq__(self, other):
+        if isinstance(other, bool):
+            return self._result == other
+        return False
+
+
+    def report_regex_mismatch(self):
+        return [
+            ''
+          , 'The test output doesn\'t match to the expected regex'
+          , '(from `{}`):'.format(self._filename)
+          , '---[BEGIN actual output]---'
+          ] + self._text + [
+            '---[END actual output]---'
+          , '---[BEGIN expected regex]---'
+          ] + self._regex.splitlines() + [
+            '---[END expected regex]---'
+          ]
+
 
 class _content_check_or_store_pattern:
 
@@ -84,18 +116,26 @@ class _content_check_or_store_pattern:
             what = re.compile(content, flags=flags)
 
         except Exception as ex:
-            pytest.skip('Compile a regualr expression from pattern failed: {}'.format(str(ex)))
+            pytest.skip('Compile a regualar expression from the pattern has failed: {}'.format(str(ex)))
             return False
 
-        transformed_text = ' '.join(text.splitlines())
-        m = what.fullmatch(transformed_text)
-        return m is not None and bool(m)
+        text_lines = text.splitlines()
+
+        m = what.fullmatch(' '.join(text_lines))
+        return _content_match_result(
+            m is not None and bool(m)
+          , text_lines
+          , self._expected_file_content
+          , self._pattern_filename
+          )
 
 
     def report_compare_mismatch(self, actual):
         assert self._expected_file_content is not None
         return [
-            'Comparing test output and expected (from `{}`):'.format(self._pattern_filename)
+            ''
+          , 'The test output doesn\'t equal to the expected'
+          , '(from `{}`):'.format(self._pattern_filename)
           , '---[BEGIN actual output]---'
           ] + actual.splitlines() + [
             '---[END actual output]---'
@@ -224,7 +264,8 @@ class _yaml_check_or_store_pattern:
         assert self._result is not None
         assert self._expected is not None
         return [
-            'Comparing test result (`{}`) and expected (`{}`) YAMLs:'.format(
+            ''
+          , 'Comparing the test result (`{}`) and the expected (`{}`) YAML files:'.format(
                     actual
                   , self._expected_file
                   )
@@ -249,18 +290,22 @@ def expected_yaml(request):
 
 # Hook into comparision failure
 def pytest_assertrepr_compare(op, left, right):
-    if isinstance(left, _content_check_or_store_pattern) and isinstance(right, str) and op == "==":
-        return left.report_compare_mismatch(right)
+    if op == '==':
+        if isinstance(left, _content_match_result) and isinstance(right, bool):
+            return left.report_regex_mismatch()
 
-    if isinstance(right, _content_check_or_store_pattern) and isinstance(left, str) and op == "==":
-        return right.report_compare_mismatch(left)
+        if isinstance(left, _content_check_or_store_pattern) and isinstance(right, str):
+            return left.report_compare_mismatch(right)
 
-    # Enhace YAML checker failures
-    if isinstance(left, _yaml_check_or_store_pattern) and isinstance(right, pathlib.Path) and op == "==":
-        return left.report_compare_mismatch(right)
+        if isinstance(right, _content_check_or_store_pattern) and isinstance(left, str):
+            return right.report_compare_mismatch(left)
 
-    if isinstance(right, _yaml_check_or_store_pattern) and isinstance(left, pathlib.Path) and op == "==":
-        return right.report_compare_mismatch(left)
+        # Enhace YAML checker failures
+        if isinstance(left, _yaml_check_or_store_pattern) and isinstance(right, pathlib.Path):
+            return left.report_compare_mismatch(right)
+
+        if isinstance(right, _yaml_check_or_store_pattern) and isinstance(left, pathlib.Path):
+            return right.report_compare_mismatch(left)
 
 
 # Add CLI option

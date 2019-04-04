@@ -24,7 +24,7 @@ def ourtestdir(testdir):
     # Write a sample config file
     testdir.tmpdir.join('pytest.ini').write(
         '[pytest]\n'
-        'addopts = -ra\n'
+        'addopts = -vv -ra\n'
         'pm-patterns-base-dir = {}'.format(str(testdir.tmpdir))
       )
     yield testdir
@@ -55,6 +55,7 @@ def simple_test(ourtestdir):
             print('Hello Africa!')
             stdout, stderr = capfd.readouterr()
             assert expected_out == stdout
+            assert stderr == ''
     ''')
 
     # Run all tests with pytest
@@ -83,6 +84,45 @@ def failed_test(ourtestdir):
       , 'E         ---[BEGIN expected output]---'
       , 'E         Hello Africa!'
       , 'E         ---[END expected output]---'
+      ])
+
+
+def regex_match_test(ourtestdir):
+    # Write a sample expectations file
+    ourtestdir.tmpdir.join('test_sample_out.out').write('.*Africa!\nHello\\s+.*!\n')
+    # Write a sample test (finally)
+    ourtestdir.makepyfile('''
+        def test_sample_out(capfd, expected_out):
+            print('Hello Africa!')
+            print('Hello Asia!')
+            stdout, stderr = capfd.readouterr()
+            assert expected_out.match(stdout) == True
+            assert stderr == ''
+    ''')
+
+    # Run all tests with pytest
+    result = ourtestdir.runpytest()
+    result.assert_outcomes(passed=1)
+
+
+def regex_fail_match_test(ourtestdir):
+    # Write a sample expectations file
+    ourtestdir.tmpdir.join('test_sample_out.out').write('.*Africa!\nEhlo\\s+.*!\n')
+    # Write a sample test (finally)
+    ourtestdir.makepyfile('''
+        def test_sample_out(capfd, expected_out):
+            print('Hello Africa!')
+            print('Hello Asia!')
+            stdout, stderr = capfd.readouterr()
+            assert expected_out.match(stdout) == True
+            assert stderr == ''
+    ''')
+
+    # Run all tests with pytest
+    result = ourtestdir.runpytest()
+    result.assert_outcomes(failed=1)
+    result.stdout.re_match_lines([
+        '.*The test output doesn\'t match to the expected regex'
       ])
 
 
