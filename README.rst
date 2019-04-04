@@ -6,9 +6,9 @@ What is this
 This is a pytest plugin which provides a couple of fixtures to match
 test output against patterns stored in files.
 
-The plugin extend pytest with the following CLI options:
+The plugin extends pytest with the following CLI options:
 
-- ``--pm-save-patterns`` -- to store output to a pattern file (instead of checking);
+- ``--pm-save-patterns`` -- to store the output to a pattern file (instead of checking);
 - ``--pm-patterns-base-dir`` to specify a base directory, where to lookup pattern files.
 
 Pattern files are stored in a base directory and additional paths based on test module
@@ -24,7 +24,7 @@ Note, that for non-class test functions the *test-class-name* part is absent.
 Quick Start
 ===========
 
-The plugin provides :py:function:`expected_out` and :py:function:`expected_err`
+The plugin provides ``expected_out`` and ``expected_err``
 named fixture functions.
 
 
@@ -40,7 +40,7 @@ named fixture functions.
 Add ``pm-patterns-base-dir`` option to ``pytest.ini`` file (and ``pytest`` section)
 pointing for example to ``test/data/expected``. For the first ``pytest`` run it would
 fail, cuz there is no expected pattern file present. To write it one can use
-:command:`pytest` CLI:
+``pytest`` CLI:
 
 ::
 
