@@ -42,6 +42,10 @@ class _content_match_result:
         return False
 
 
+    def __bool__(self):
+        return self._result
+
+
     def report_regex_mismatch(self):
         return [
             ''
@@ -65,7 +69,7 @@ class _content_check_or_store_pattern:
 
 
     def _store_pattern_handle_error(fn):
-        def _inner(self, text):
+        def _inner(self, text, *args, **kwargs):
             # Check if `--save-patterns` has given to CLI
             if self._store:
                 # Make a directory to store a pattern file if it doesn't exist yet
@@ -85,7 +89,7 @@ class _content_check_or_store_pattern:
                 return False
 
             # - call wrapped function to
-            return fn(self, text)
+            return fn(self, text, *args, **kwargs)
 
         return _inner
 
@@ -109,11 +113,14 @@ class _content_check_or_store_pattern:
 
 
     @_store_pattern_handle_error
-    def match(self, text, flags=0):
+    def match(self, text, flags=re.RegexFlag(0)):
         self._read_expected_file_content()
-        content = ' '.join(self._expected_file_content.strip().splitlines())
+        content = ('.*\n' if flags.value & re.MULTILINE else ' ').join(self._expected_file_content.strip().splitlines())
         try:
-            what = re.compile(content, flags=flags)
+            if flags.value & re.MULTILINE:
+                what = re.compile('.*' + content + '.*', flags=flags)
+            else:
+                what = re.compile(content, flags=flags)
 
         except Exception as ex:
             pytest.skip('Compile a regualar expression from the pattern has failed: {}'.format(str(ex)))
@@ -121,7 +128,7 @@ class _content_check_or_store_pattern:
 
         text_lines = text.splitlines()
 
-        m = what.fullmatch(' '.join(text_lines))
+        m = what.fullmatch((('\n' if flags.value & re.MULTILINE else ' ')).join(text_lines))
         return _content_match_result(
             m is not None and bool(m)
           , text_lines
