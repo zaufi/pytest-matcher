@@ -113,11 +113,11 @@ class _content_check_or_store_pattern:
 
 
     @_store_pattern_handle_error
-    def match(self, text, flags=re.RegexFlag(0)):
+    def match(self, text, flags=0):
         self._read_expected_file_content()
-        content = ('.*\n' if flags.value & re.MULTILINE else ' ').join(self._expected_file_content.strip().splitlines())
+        content = ('.*\n' if flags & re.MULTILINE else ' ').join(self._expected_file_content.strip().splitlines())
         try:
-            if flags.value & re.MULTILINE:
+            if flags & re.MULTILINE:
                 what = re.compile('.*' + content + '.*', flags=flags)
             else:
                 what = re.compile(content, flags=flags)
@@ -128,7 +128,7 @@ class _content_check_or_store_pattern:
 
         text_lines = text.splitlines()
 
-        m = what.fullmatch((('\n' if flags.value & re.MULTILINE else ' ')).join(text_lines))
+        m = what.fullmatch((('\n' if flags & re.MULTILINE else ' ')).join(text_lines))
         return _content_match_result(
             m is not None and bool(m)
           , text_lines
