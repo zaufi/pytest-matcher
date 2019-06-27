@@ -11,6 +11,15 @@ to `Semantic Versioning`_.
 .. _Semantic Versioning: http://semver.org/
 
 
+1.3.3_ -- 2019-06-27
+====================
+
+Fixed
+-----
+
+- Fix backward compatibility w/ Python less than 3.6.
+
+
 1.3.2_ -- 2019-06-26
 ====================
 
@@ -84,7 +93,8 @@ Added
 - Add pretty printer for failed asserts with ``expected_out`` fixture and equal comparition operator.
 
 
-.. _Unreleased: https://github.com/onixsol/ecm/compare/release/1.3.2...HEAD
+.. _Unreleased: https://github.com/onixsol/ecm/compare/release/1.3.3...HEAD
+.. _1.3.3: https://github.com/onixsol/ecm/compare/release/1.3.2...1.3.3
 .. _1.3.2: https://github.com/onixsol/ecm/compare/release/1.3.1...1.3.2
 .. _1.3.1: https://github.com/onixsol/ecm/compare/release/1.2.2...1.3.1
 .. _1.2.2: https://github.com/onixsol/ecm/compare/release/1.2.1...1.2.2
