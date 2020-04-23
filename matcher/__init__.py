@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2017-2019 Alex Turbov <i.zaufi@gmail.com>
+# Copyright (c) 2017-2020 Alex Turbov <i.zaufi@gmail.com>
 #
 # Pytest-match plugin is free software: you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the

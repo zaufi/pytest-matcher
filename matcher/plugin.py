@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2017-2019 Alex Turbov <i.zaufi@gmail.com>
+# Copyright (c) 2017-2020 Alex Turbov <i.zaufi@gmail.com>
 #
 # Pytest-match plugin is free software: you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the
@@ -21,7 +21,6 @@ import platform
 import pytest
 import re
 import shutil
-import sys
 import yaml
 
 class _content_match_result:
@@ -77,7 +76,6 @@ class _content_check_or_store_pattern:
                     self._pattern_filename.parent.mkdir(parents=True)
 
                 # Store!
-                # NOTE Python >= 3.5 needed
                 self._pattern_filename.write_text(text)
 
                 return True
@@ -95,14 +93,7 @@ class _content_check_or_store_pattern:
 
 
     def _read_expected_file_content(self):
-        # TODO Use Python 3.5 only
-        if sys.version_info >= (3, 5):
-            self._expected_file_content = self._pattern_filename.read_text()
-        else:
-            # TODO Remove this
-            with self._pattern_filename.open('r') as fd:
-                self._expected_file_content = fd.read()
-
+        self._expected_file_content = self._pattern_filename.read_text()
         assert self._expected_file_content is not None
 
 

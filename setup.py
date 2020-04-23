@@ -1,6 +1,7 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
 #
-# Copyright (c) 2017-2019 Alex Turbov <i.zaufi@gmail.com>
+# Copyright (c) 2017-2020 Alex Turbov <i.zaufi@gmail.com>
 #
 
 import pathlib
