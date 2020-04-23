@@ -1,0 +1,13 @@
+[scripts]
+dist = "python ./setup.py bdist_wheel"
+dist-check = "twine check dist/*"
+test = "pytest -p no:cacheprovider"
+
+[dev-packages]
+pytest-matcher = {editable = true, path = "."}
+twine = "*"
+
+[packages]
+pytest = "*"
+PyYAML = ">= 3.12"
+setuptools = ">= 39.2.0"

@@ -11,3 +11,4 @@ pytest_matcher.egg-info/
 cov_html/
 .eggs/
 .pytest_cache/
+.venv/
