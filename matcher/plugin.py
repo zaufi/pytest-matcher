@@ -305,6 +305,10 @@ def pytest_assertrepr_compare(op, left, right):
         if isinstance(right, _yaml_check_or_store_pattern) and isinstance(left, pathlib.Path):
             return right.report_compare_mismatch(left)
 
+    if op == 'is':
+        if isinstance(left, _content_match_result) and isinstance(right, bool):
+            return left.report_regex_mismatch()
+
 
 # Add CLI option
 def pytest_addoption(parser):

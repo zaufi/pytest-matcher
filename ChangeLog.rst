@@ -11,6 +11,15 @@ to `Semantic Versioning`_.
 .. _Semantic Versioning: http://semver.org/
 
 
+Unreleased_
+===========
+
+Added
+-----
+
+- Allow ``assert expected_out.match(blah_blah) is True``.
+
+
 1.3.3_ -- 2019-06-27
 ====================
 
