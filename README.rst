@@ -1,7 +1,7 @@
 What is this
 ============
 
-|Build Status| |nbsp| |Latest Release|
+|Latest Release|
 
 This is a pytest plugin which provides a couple of fixtures to match
 test output against patterns stored in files.
@@ -56,7 +56,5 @@ See Also
 
 .. |Latest Release| image:: https://badge.fury.io/py/pytest-matcher.svg
     :target: https://pypi.org/project/pytest-matcher/#history
-.. |Build Status| image:: https://travis-ci.org/zaufi/pytest-matcher.svg?branch=master
-   :target: https://travis-ci.org/zaufi/pytest-matcher
 .. |nbsp| unicode:: 0xA0
    :trim:
