@@ -11,13 +11,18 @@ to `Semantic Versioning`_.
 .. _Semantic Versioning: http://semver.org/
 
 
-Unreleased_
-===========
+1.4.0_ -- 2021-12-10
+====================
 
 Added
 -----
 
 - Allow ``assert expected_out.match(blah_blah) is True``.
+
+Changed
+-------
+
+- Migrate to ``setup.py``-less build (using PEP517 and PEP660).
 
 
 1.3.3_ -- 2019-06-27
@@ -102,7 +107,8 @@ Added
 - Add pretty printer for failed asserts with ``expected_out`` fixture and equal comparition operator.
 
 
-.. _Unreleased: https://github.com/onixsol/ecm/compare/release/1.3.3...HEAD
+.. _Unreleased: https://github.com/onixsol/ecm/compare/release/1.4.0...HEAD
+.. _1.4.0: https://github.com/onixsol/ecm/compare/release/1.3.3...1.4.0
 .. _1.3.3: https://github.com/onixsol/ecm/compare/release/1.3.2...1.3.3
 .. _1.3.2: https://github.com/onixsol/ecm/compare/release/1.3.1...1.3.2
 .. _1.3.1: https://github.com/onixsol/ecm/compare/release/1.2.2...1.3.1
