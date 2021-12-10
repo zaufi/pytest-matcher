@@ -4,10 +4,11 @@ dist-check = "twine check dist/*"
 test = "pytest -p no:cacheprovider"
 
 [dev-packages]
+#cffi = ">= 1.15.0"
 pytest-matcher = {editable = true, path = "."}
-twine = "*"
+twine = ">= 3.7.1"
 
 [packages]
 pytest = "*"
 PyYAML = ">= 3.12"
-setuptools = ">= 39.2.0"
+setuptools = ">= 58.0"
