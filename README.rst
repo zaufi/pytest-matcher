@@ -16,9 +16,11 @@ name, test class name and/or test function name as following:
 
 ::
 
-    <base-dir>/<test-module-name>/[test-class-name/]<test-function-name>
+    <base-dir>/<test-module-name>/[test-class-name/]<test-function-name>[[<callspec-id>]]
 
 Note, that for non-class test functions the *test-class-name* part is absent.
+For parametrized tests, the *callspec-id* part containing %XX-escaped information
+about the parametrization is added.
 
 
 Quick Start
