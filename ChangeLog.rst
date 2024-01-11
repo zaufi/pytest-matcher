@@ -104,7 +104,7 @@ Changed
 Added
 -----
 
-- Add pretty printer for failed asserts with ``expected_out`` fixture and equal comparition operator.
+- Add pretty printer for failed asserts with ``expected_out`` fixture and equal comparison operator.
 
 
 .. _Unreleased: https://github.com/onixsol/ecm/compare/release/1.4.0...HEAD

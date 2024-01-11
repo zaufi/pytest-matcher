@@ -1,31 +1,44 @@
 # Read the docs here: https://pre-commit.com and http://jorisroovers.github.io/gitlint/
 # Install hooks to your clone:
-#   $ pre-commit install --install-hooks
-# and
-#   $ pre-commit install --install-hooks -t commit-msg
+#   $ pre-commit install
+#
+# List of available hooks: https://pre-commit.com/hooks.html
+#
 
-default_stages: [commit]
+default_stages: [pre-commit]
+default_install_hook_types: [pre-commit, commit-msg]
 fail_fast: false
+
 repos:
   - repo: meta
     hooks:
-      - id: check-useless-excludes
       - id: check-hooks-apply
+      - id: check-useless-excludes
 
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.0.1
+    rev: v4.5.0
     hooks:
       - id: check-case-conflict
-      - id: check-merge-conflict
+      - id: check-executables-have-shebangs
+        always_run: true
       - id: check-yaml
       - id: end-of-file-fixer
-      - id: fix-encoding-pragma
-      - id: no-commit-to-branch
-        args: ['--branch=stage/latest', '--pattern=stage/*']
+      - id: mixed-line-ending
       - id: trailing-whitespace
 
+  - repo: https://github.com/jumanjihouse/pre-commit-hooks
+    rev: 3.0.0
+    hooks:
+      - id: git-check
+        # ATTENTION This hook doesn't need any files to check.
+        # Instead, it checks the whole repo against settings in the
+        # `.gitattributes`. So, better to minimize the amount of
+        # useless file names passed to it. See also, BUG
+        # https://github.com/jumanjihouse/pre-commit-hooks/issues/40
+        files: 'LICENSE'
+
   - repo: https://github.com/jorisroovers/gitlint
-    rev: v0.17.0
+    rev: v0.19.1
     hooks:
       - id: gitlint
         name: Commit message check
@@ -33,4 +46,24 @@ repos:
         entry: gitlint --msg-filename
         stages: [commit-msg]
 
-# kate: indent-width 2; tab-width 2;
+  - repo: https://github.com/editorconfig-checker/editorconfig-checker.python
+    rev: 2.7.3
+    hooks:
+      - id: editorconfig-checker
+
+  - repo: https://github.com/codespell-project/codespell
+    rev: v2.2.6
+    hooks:
+      - id: codespell
+        additional_dependencies: ['tomli']
+
+  - repo: https://github.com/pre-commit/pygrep-hooks
+    rev: v1.10.0
+    hooks:
+      - id: rst-backticks
+      - id: rst-directive-colons
+
+  - repo: https://github.com/abravalheri/validate-pyproject
+    rev: v0.15
+    hooks:
+      - id: validate-pyproject

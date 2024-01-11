@@ -115,7 +115,7 @@ class _content_check_or_store_pattern:
                 what = re.compile(content, flags=flags)
 
         except Exception as ex:
-            pytest.skip('Compile a regualar expression from the pattern has failed: {}'.format(str(ex)))
+            pytest.skip('Compile a regular expression from the pattern has failed: {}'.format(str(ex)))
             return False
 
         text_lines = text.splitlines()
@@ -287,7 +287,7 @@ def expected_yaml(request):
 
 #BEGIN Pytest hooks
 
-# Hook into comparision failure
+# Hook into comparison failure
 def pytest_assertrepr_compare(op, left, right):
     if op == '==':
         if isinstance(left, _content_match_result) and isinstance(right, bool):
@@ -299,7 +299,7 @@ def pytest_assertrepr_compare(op, left, right):
         if isinstance(right, _content_check_or_store_pattern) and isinstance(left, str):
             return right.report_compare_mismatch(left)
 
-        # Enhace YAML checker failures
+        # Enhance YAML checker failures
         if isinstance(left, _yaml_check_or_store_pattern) and isinstance(right, pathlib.Path):
             return left.report_compare_mismatch(right)
 
