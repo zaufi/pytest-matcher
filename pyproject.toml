@@ -1,3 +1,225 @@
+#
+# SPDX-FileCopyrightText: 2024-now Alex Turbov <zaufi@pm.me>
+# SPDX-License-Identifier: CC0-1.0
+#
+
 [build-system]
-requires = ["setuptools_pep660" , "wheel"]
-build-backend = "setuptools_pep660"
+requires = ["hatchling", "hatch-vcs"]
+build-backend = "hatchling.build"
+
+[project]
+# https://packaging.python.org/en/latest/specifications/pyproject-toml
+name = "pytest-matcher"
+description = "Keep a ChangeLog"
+readme = "README.rst"
+requires-python = ">=3.9"
+license = { file="LICENSES/GPL-3.0-or-later.txt" }
+authors = [{ name="Alex Turbov", email="zaufi@pm.me" }]
+maintainers = [{ name="Alex Turbov", email="zaufi@pm.me" }]
+keywords = [
+    "pytest plugin"
+  ]
+# https://pypi.org/classifiers
+classifiers = [
+    "Development Status :: 5 - Production/Stable"
+  , "Framework :: Pytest"
+  , "Intended Audience :: Developers"
+  , "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)"
+  , "Natural Language :: English"
+  , "Operating System :: OS Independent"
+  , "Programming Language :: Python :: 3"
+  , "Programming Language :: Python :: 3 :: Only"
+  , "Programming Language :: Python :: 3.9"
+  , "Programming Language :: Python :: 3.10"
+  , "Programming Language :: Python :: 3.11"
+  , "Programming Language :: Python :: 3.12"
+  , "Topic :: Software Development :: Testing"
+  ]
+dependencies = [
+    "PyYAML"
+  , "pytest"
+  ]
+dynamic = ["version"]
+
+[project.entry-points.pytest11]
+pytest_matcher = "matcher.plugin"
+
+[project.urls]
+HowItWorks = "http://zaufi.github.io/programming/2017/07/05/extend-pytest-with-fixtures"
+Code = "https://github.com/zaufi/pytest-matcher"
+'Issues Tracker' = "https://github.com/zaufi/pytest-matcher/issues"
+'Report an Issue' = "https://github.com/zaufi/pytest-matcher/issues/new/choose"
+
+[tool.codespell]
+builtin = "clear,rare,names,code,en-GB_to_en-US"
+check-filenames = ""
+context = 2
+enable-colors = true
+quiet-level = 3
+skip = ".git,.venv,build,dist"
+
+[tool.coverage.html]
+directory = "build/coverage"
+skip_empty = true
+title = "Test Coverage Report"
+
+[tool.coverage.report]
+exclude_lines = [
+    # Have to re-enable the standard pragma
+    "pragma: no cover"
+
+    # Don't complain about missing debug-only code:
+  , "def __repr__"
+  ]
+
+[tool.coverage.run]
+branch = true
+data_file = "build/.coverage"
+
+[tool.hatch]
+
+[tool.hatch.build]
+dev-mode-dirs = ["src"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/matcher"]
+
+[tool.hatch.version]
+source = "vcs"
+tag-pattern = "release/(.*)"
+
+[tool.hatch.envs.default]
+description = "Development environment"
+dependencies = [
+    "codespell >= 2.2.6"
+  , "coverage[toml]"
+  , "isort"
+  , "mypy"
+  , "pytest >= 7.0"
+  , "pytest-cov"
+  , "reuse"
+  , "ruff >= 0.1.11"
+  , "types-PyYAML"
+  , "twine"
+  , "vulture"
+  , "validate-pyproject[all] >= 0.15"
+  ]
+
+[tool.hatch.envs.default.scripts]
+# Some shortcut commands
+all = [
+    "dead-check", "dist-check", "license-check", "lint-check", "pyproject-check", "spell-check", "type-check"
+  ]
+# Various linter commands
+dead-check = "vulture src/matcher"
+dist-check = "twine check dist/*"
+license-check = "reuse lint"
+lint-check = "ruff check src/matcher test"
+pyproject-check = "validate-pyproject {root:real}/pyproject.toml"
+spell-check = "codespell"
+type-check = "mypy src/matcher test"
+# Testing commands
+coverage = "pytest --cov-report html --cov=matcher"
+test = "pytest {verbosity:flag} {args}"
+# Misc commands
+annotate-code = "reuse annotate -c \"$(git config --get user.name) <$(git config --get user.email)>\" -t code -l GPL-3.0-or-later {args}"
+annotate-misc = "reuse annotate -c \"$(git config --get user.name) <$(git config --get user.email)>\" -t misc -l CC0-1.0 {args}"
+dist = "hatch build -t wheel"
+show-coverage = "xdg-open build/coverage/index.html"
+fix-spelling = "codespell -i 3 -w"
+
+[tool.isort]
+multi_line_output = 3
+use_parentheses = true
+honor_noqa = true
+import_heading_stdlib = "Standard imports"
+import_heading_thirdparty = "Third party packages"
+import_heading_firstparty = "Project specific imports"
+import_heading_localfolder = "Local imports"
+
+[tool.mypy]
+cache_dir = "build/.mypy_cache"
+check_untyped_defs = true
+ignore_missing_imports = true
+pretty = true
+warn_return_any = true
+warn_unused_configs = true
+warn_unused_ignores = true
+warn_unreachable = true
+
+[tool.pylint.BASIC]
+const-naming-style = "UPPER_CASE"
+
+[tool.pylint.DESIGN]
+max-args = 6
+max-attributes = 9
+max-branches = 15
+max-locals = 20
+max-statements = 80
+min-public-methods = 0
+
+[tool.pylint.FORMAT]
+max-line-length = 120
+
+[tool.pylint.LOGGING]
+logging-format-style = "new"
+
+[tool.pylint.MISCELLANEOUS]
+notes = []
+
+[tool.pytest.ini_options]
+addopts = "-ra"
+cache_dir = "build/.pytest_cache"
+testpaths = ["test"]
+python_files = ["test_*.py"]
+python_classes = ["*Tester"]
+python_functions = ["*_test", "*_test_?", "*_test_??"]
+markers = [
+    "wip: work in progress"
+  ]
+
+# https://beta.ruff.rs/docs/settings
+[tool.ruff]
+cache-dir = "build/.ruff_cache"
+output-format = "grouped"
+ignore = [
+    "COM812"    # Trailing comma missing
+  , "FIX002"    # Line contains TODO (and it's OK ;-)
+  , "S101"      # Use of `assert` detected (and it's OK, especially in tests ;)
+  , "TD002"     # Missing author in TODO
+  , "TD003"     # Missing issue link on the line following this TODO
+  , "TD004"     # Missing colon in TODO
+    # TODO Suppress everything for now, will fix after migration to `hatch`.
+  , "ANN001"    # Missing type annotation for function argument
+  , "ANN002"    # Missing type annotation for `*args`
+  , "ANN003"    # Missing type annotation for `**kwargs`
+  , "ANN101"    # Missing type annotation for `self` in method
+  , "ANN201"    # Missing return type annotation for public function
+  , "ANN202"    # Missing return type annotation for private function
+  , "ANN205"    # Missing return type annotation for staticmethod
+  , "ANN401"    # Dynamically typed expressions (typing.Any) are disallowed
+  , "N801"      # Class name `...` should use CapWords convention
+  ]
+line-length = 120
+select = ["ALL"]
+show-source = true
+target-version = "py39"
+
+[tool.ruff.extend-per-file-ignores]
+"test/test_*.py" = [
+    "D"         # Documentation issues
+  , "PLR2004"   # Magic value used in comparison
+  ]
+
+[tool.ruff.flake8-quotes]
+inline-quotes = "single"
+
+[tool.ruff.isort]
+known-first-party = ["matcher"]
+
+[tool.ruff.pydocstyle]
+convention = "google"
+
+[tool.vulture]
+min_confidence = 61
+ignore_names = ["kwargs", "args"]

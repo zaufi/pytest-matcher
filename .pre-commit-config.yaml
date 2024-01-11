@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2017-now Alex Turbov <zaufi@pm.me>
+# SPDX-License-Identifier: CC0-1.0
+#
 # Read the docs here: https://pre-commit.com and http://jorisroovers.github.io/gitlint/
 # Install hooks to your clone:
 #   $ pre-commit install
@@ -56,6 +59,12 @@ repos:
     hooks:
       - id: codespell
         additional_dependencies: ['tomli']
+
+  - repo: https://github.com/pre-commit/pygrep-hooks
+    rev: v1.10.0
+    hooks:
+      - id: rst-backticks
+      - id: rst-directive-colons
 
   - repo: https://github.com/pre-commit/pygrep-hooks
     rev: v1.10.0

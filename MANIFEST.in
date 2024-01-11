@@ -1,7 +1,0 @@
-include README.rst
-include ChangeLog.rst
-include setup.cfg
-prune .gitignore
-prune .travis.yml
-exclude .gitignore
-exclude .travis.yml

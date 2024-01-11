@@ -1,3 +1,6 @@
+.. SPDX-FileCopyrightText: 2017-now, See ``CONTRIBUTORS.lst``
+.. SPDX-License-Identifier: CC0-1.0
+
 ==========
 Change Log
 ==========
@@ -9,6 +12,14 @@ to `Semantic Versioning`_.
 
 .. _Keep a Changelog: http://keepachangelog.com/
 .. _Semantic Versioning: http://semver.org/
+
+Unreleased_
+===========
+
+Added
+-----
+
+- [4_] Make it possible to use ``expected_xxx`` with parameterized tests.
 
 
 1.4.0_ -- 2021-12-10
@@ -107,13 +118,14 @@ Added
 - Add pretty printer for failed asserts with ``expected_out`` fixture and equal comparison operator.
 
 
-.. _Unreleased: https://github.com/onixsol/ecm/compare/release/1.4.0...HEAD
-.. _1.4.0: https://github.com/onixsol/ecm/compare/release/1.3.3...1.4.0
-.. _1.3.3: https://github.com/onixsol/ecm/compare/release/1.3.2...1.3.3
-.. _1.3.2: https://github.com/onixsol/ecm/compare/release/1.3.1...1.3.2
-.. _1.3.1: https://github.com/onixsol/ecm/compare/release/1.2.2...1.3.1
-.. _1.2.2: https://github.com/onixsol/ecm/compare/release/1.2.1...1.2.2
-.. _1.2.1: https://github.com/onixsol/ecm/compare/release/1.2.0...1.2.1
-.. _1.2.0: https://github.com/onixsol/ecm/compare/release/1.1.0...1.2.0
-.. _1.1.0: https://github.com/onixsol/ecm/compare/release/1.0.0...1.1.0
-.. _1.0.0: https://github.com/onixsol/ecm/compare/release/0.9.0...1.0.0
+.. _Unreleased: https://github.com/zaufi/pytest-matcher/compare/release/1.4.0...HEAD
+.. _1.4.0: https://github.com/zaufi/pytest-matcher/compare/release/1.3.3...release/1.4.0
+.. _1.3.3: https://github.com/zaufi/pytest-matcher/compare/release/1.3.2...release/1.3.3
+.. _1.3.2: https://github.com/zaufi/pytest-matcher/compare/release/1.3.1...release/1.3.2
+.. _1.3.1: https://github.com/zaufi/pytest-matcher/compare/release/1.2.2...release/1.3.1
+.. _1.2.2: https://github.com/zaufi/pytest-matcher/compare/release/1.2.1...release/1.2.2
+.. _1.2.1: https://github.com/zaufi/pytest-matcher/compare/release/1.2.0...release/1.2.1
+.. _1.2.0: https://github.com/zaufi/pytest-matcher/compare/release/1.1.0...release/1.2.0
+.. _1.1.0: https://github.com/zaufi/pytest-matcher/compare/release/1.0.0...release/1.1.0
+.. _1.0.0: https://github.com/zaufi/pytest-matcher/compare/release/0.9.0...release/1.0.0
+.. _4: https://github.com/zaufi/pytest-matcher/issues/4
