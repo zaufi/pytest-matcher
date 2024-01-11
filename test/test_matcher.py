@@ -237,3 +237,31 @@ def yaml_match_failure_test(ourtestdir):
       , 'E         ---[BEGIN expected result]---'
       , 'E         ---[END expected result]---'
       ])
+
+
+def parametrized_case_test(ourtestdir):
+    # Given testing argvalues and expected decorations
+    testing_pairs = [
+        ((0, 'y'), '[0-y]'),
+        ((1, 'some words'), '[1-some%20words]'),
+        ((2, '~/some/path/'), '[2-~%2Fsome%2Fpath%2F]'),
+    ]
+    # Write sample expectation files
+    for values, decoration in testing_pairs:
+        expected_filename = 'test_parametrized{}.out'.format(decoration)
+        ourtestdir.tmpdir.join(expected_filename).write(str(values) + '\n')
+
+    # Write a sample test (finally)
+    ourtestdir.makepyfile('''
+        import pytest
+        @pytest.mark.parametrize('x,y', {argvalues})
+        def test_parametrized(x, y, capfd, expected_out):
+            print((x, y))
+            stdout, stderr = capfd.readouterr()
+            assert expected_out == stdout
+            assert stderr == ''
+    '''.format(argvalues=[p[0] for p in testing_pairs]))
+
+    # Run all tests with pytest
+    result = ourtestdir.runpytest()
+    result.assert_outcomes(passed=3)

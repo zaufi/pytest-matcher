@@ -21,6 +21,7 @@ import platform
 import pytest
 import re
 import shutil
+import urllib.parse
 import yaml
 
 class _content_match_result:
@@ -189,7 +190,7 @@ def _make_expected_filename(request, ext: str, use_system_suffix=True) -> pathli
     if request.cls is not None:
         result /= request.cls.__name__
 
-    result /= request.function.__name__ \
+    result /= urllib.parse.quote(request.node.name, safe='[]') \
       + ('-' + platform.system() if use_system_suffix else '') \
       + ext
 
