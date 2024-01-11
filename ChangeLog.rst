@@ -13,8 +13,8 @@ to `Semantic Versioning`_.
 .. _Keep a Changelog: http://keepachangelog.com/
 .. _Semantic Versioning: http://semver.org/
 
-Unreleased_
-===========
+1.5.0_ -- 2024-01-11
+====================
 
 Added
 -----
@@ -118,7 +118,8 @@ Added
 - Add pretty printer for failed asserts with ``expected_out`` fixture and equal comparison operator.
 
 
-.. _Unreleased: https://github.com/zaufi/pytest-matcher/compare/release/1.4.0...HEAD
+.. _Unreleased: https://github.com/zaufi/pytest-matcher/compare/release/1.5.0...HEAD
+.. _1.5.0: https://github.com/zaufi/pytest-matcher/compare/release/1.4.0...release/1.5.0
 .. _1.4.0: https://github.com/zaufi/pytest-matcher/compare/release/1.3.3...release/1.4.0
 .. _1.3.3: https://github.com/zaufi/pytest-matcher/compare/release/1.3.2...release/1.3.3
 .. _1.3.2: https://github.com/zaufi/pytest-matcher/compare/release/1.3.1...release/1.3.2
