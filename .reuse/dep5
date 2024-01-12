@@ -1,9 +1,9 @@
 Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
-Upstream-Name: kcl
+Upstream-Name: pytest-matcher
 Upstream-Contact: Alex Turbov <zaufi@pm.me>
-Source: https://github.com/0xc0de-LLC/kcl
+Source: https://github.com/zaufi/pytest-matcher
 
 # NOTE It's not possible to have comments in any way in JSON files!
 Files: test/data/*.json
-Copyright: 2023 Alex Turbov <zaufi@pm.me>
+Copyright: 2024 Alex Turbov <zaufi@pm.me>
 License: CC0-1.0
