@@ -12,11 +12,18 @@ import pathlib
 import platform
 import re
 import shutil
+import sys
 import urllib.parse
+from typing import Final, cast
 
 # Third party packages
 import pytest
 import yaml
+
+if sys.version_info < (3, 11):
+    _RE_NOFLAG: Final[re.RegexFlag] = cast(re.RegexFlag, 0)
+else:
+    _RE_NOFLAG: Final[re.RegexFlag] = re.NOFLAG
 
 
 class _content_match_result:
@@ -92,7 +99,7 @@ class _content_check_or_store_pattern:
         return self._expected_file_content == text
 
     @_store_pattern_handle_error
-    def match(self, text: str, flags: re.RegexFlag = re.NOFLAG) -> _content_match_result:
+    def match(self, text: str, flags: re.RegexFlag = _RE_NOFLAG) -> _content_match_result:
         self._read_expected_file_content()
         content = (
             '.*\n' if flags & re.MULTILINE else ' '
