@@ -98,7 +98,7 @@ dependencies = [
   , "pytest >= 7.0"
   , "pytest-cov"
   , "reuse"
-  , "ruff >= 0.1.11"
+  , "ruff >= 0.1.13"
   , "types-PyYAML"
   , "twine"
   , "vulture"

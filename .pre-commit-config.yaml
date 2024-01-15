@@ -60,11 +60,11 @@ repos:
       - id: codespell
         additional_dependencies: ['tomli']
 
-  - repo: https://github.com/pre-commit/pygrep-hooks
-    rev: v1.10.0
+  - repo: https://github.com/charliermarsh/ruff-pre-commit
+    # ALERT Don't forget to update `pyproject.toml:tool.hatch.envs.default`
+    rev: v0.1.13
     hooks:
-      - id: rst-backticks
-      - id: rst-directive-colons
+      - id: ruff
 
   - repo: https://github.com/pre-commit/pygrep-hooks
     rev: v1.10.0
