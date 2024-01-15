@@ -38,7 +38,7 @@ repos:
         # `.gitattributes`. So, better to minimize the amount of
         # useless file names passed to it. See also, BUG
         # https://github.com/jumanjihouse/pre-commit-hooks/issues/40
-        files: 'LICENSE'
+        files: 'README.rst'
 
   - repo: https://github.com/jorisroovers/gitlint
     rev: v0.19.1
