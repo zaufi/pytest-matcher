@@ -283,24 +283,27 @@ def expected_yaml(request):
 def pytest_assertrepr_compare(op: str, left: object, right: object) -> list[str] | None:  # NOQA: PLR0911
     """Hook into comparison failure."""
     if op == '==':
-        if isinstance(left, _content_match_result) and isinstance(right, bool):
-            return left.report_regex_mismatch()
+        match left, right:
+            case _content_match_result() as left, bool(right):
+                return left.report_regex_mismatch()
 
-        if isinstance(left, _content_check_or_store_pattern) and isinstance(right, str):
-            return left.report_compare_mismatch(right)
+            case _content_check_or_store_pattern() as left, str(right):
+                return left.report_compare_mismatch(right)
 
-        if isinstance(right, _content_check_or_store_pattern) and isinstance(left, str):
-            return right.report_compare_mismatch(left)
+            case str(left), _content_check_or_store_pattern() as right:
+                return right.report_compare_mismatch(left)
 
-        # Enhance YAML checker failures
-        if isinstance(left, _yaml_check_or_store_pattern) and isinstance(right, pathlib.Path):
-            return left.report_compare_mismatch(right)
+            # Enhance YAML checker failures
+            case _yaml_check_or_store_pattern() as left, pathlib.Path() as right:
+                return left.report_compare_mismatch(right)
 
-        if isinstance(right, _yaml_check_or_store_pattern) and isinstance(left, pathlib.Path):
-            return right.report_compare_mismatch(left)
+            case pathlib.Path() as left, _yaml_check_or_store_pattern() as right:
+                return right.report_compare_mismatch(left)
 
-    elif op == 'is' and isinstance(left, _content_match_result) and isinstance(right, bool):
-        return left.report_regex_mismatch()
+    elif op == 'is':
+        match left, right:
+            case _content_match_result() as left,  bool(right):
+                return left.report_regex_mismatch()
 
     return None
 
