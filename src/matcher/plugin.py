@@ -29,7 +29,7 @@ else:
 class _content_match_result:
     """TODO Is this job for Python `dataclass`?"""
 
-    def __init__(self, result: bool, text: list[str], regex: str, filename: pathlib.Path) -> None:  # NOQA: FBT001
+    def __init__(self, *, result: bool, text: list[str], regex: str, filename: pathlib.Path) -> None:
         self._result = result
         self._text = text
         self._regex = regex
@@ -119,10 +119,10 @@ class _content_check_or_store_pattern:
 
         m = what.fullmatch(('\n' if flags & re.MULTILINE else ' ').join(text_lines))
         return _content_match_result(
-            m is not None and bool(m)
-          , text_lines
-          , self._expected_file_content                     # type: ignore[arg-type]
-          , self._pattern_filename
+            result=m is not None and bool(m)
+          , text=text_lines
+          , regex=self._expected_file_content               # type: ignore[arg-type]
+          , filename=self._pattern_filename
           )
 
     def report_compare_mismatch(self, actual: str) -> list[str]:
