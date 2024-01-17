@@ -68,7 +68,7 @@ Fixed
 Added
 -----
 
-- Show actual output and expected output on failed ``expected_out.match()``.
+- Show actual and expected output on failed ``expected_out.match()``.
 
 
 1.2.2_ -- 2019-04-04
@@ -95,8 +95,8 @@ Fixed
 Added
 -----
 
-- Add an ``ini`` file option ``pm-pattern-file-use-system-name`` to control if the system
-  name suffix expected to be in a pattern filename. E.g. this allows having patterns with
+- Add an INI-file option ``pm-pattern-file-use-system-name`` to control if the system
+  name suffix is expected to be in a pattern filename. E.g. this allows having patterns with
   different CR/LF conventions;
 - Add ``expected_yaml`` fixture to match YAML files;
 - Introduce unit tests.
@@ -108,7 +108,8 @@ Added
 Added
 -----
 
-- Use ``pytest.skip()`` if no pattern file has found or it contains an invalid regular expression;
+- Use ``pytest.skip()`` if no pattern file has been found or it contains an invalid
+  regular expression;
 - Added doc-strings to the fixtures, so :command:`pytest --fixtures` would not complain.
 
 Changed
