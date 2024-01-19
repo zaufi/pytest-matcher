@@ -367,8 +367,8 @@ class UnusedFilesReporter:
         known_extensions = '.out', '.err'
 
         all_paths: list[Path] = []
-        for p in patterns_base_dir.iterdir():
-            if p.suffix in known_extensions:
+        for p in patterns_base_dir.rglob('*'):
+            if p.is_file() and p.suffix in known_extensions:
                 all_paths.append(p.resolve())
 
         collected_paths: list[Path] = []
