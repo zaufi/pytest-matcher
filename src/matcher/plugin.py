@@ -323,6 +323,12 @@ def pytest_addoption(parser) -> None:
       , metavar='PATH'
       , help='base directory to read/write pattern files'
       )
+    group.addoption(
+        '--pm-reveal-unused-files'
+      , action='store_true'
+      , help='reveal and print unused pattern files'
+      )
+
 
     # Also add INI file option `pm-patterns-base-dir`
     parser.addini(
@@ -335,5 +341,45 @@ def pytest_addoption(parser) -> None:
       , help='expect a system name (`platform.system()`) to be a pattern filename suffix'
       , default=False
       )
+
+
+@pytest.hookimpl(trylast=True)
+def pytest_configure(config: pytest.Config):
+    if config.getoption('--pm-reveal-unused-files'):
+        config.option.collectonly = True
+        reporter = UnusedFilesReporter()
+        config.pluginmanager.unregister(name='terminalreporter')
+        config.pluginmanager.register(reporter, 'terminalreporter')
+
+
+class UnusedFilesReporter:
+    def pytest_collection_finish(self, session: pytest.Session) -> None:
+        if not session.items:
+            return
+
+        for alg in [_try_cli_option, _try_ini_option]:
+            patterns_base_dir, _ = alg(session.items[0]._request)
+            if patterns_base_dir:
+                break
+        else:
+            raise ValueError('Failed to determine a patterns base directory')
+
+        known_extensions = '.out', '.err'
+
+        all_paths: list[Path] = []
+        for p in patterns_base_dir.iterdir():
+            if p.suffix in known_extensions:
+                all_paths.append(p.resolve())
+
+        collected_paths: list[Path] = []
+        for item in session.items:
+            for fixture, ext in zip((expected_out, expected_err), known_extensions):
+                if fixture.__name__ in item.fixturenames:
+                    filename = _make_expected_filename(item._request, ext)
+                    collected_paths.append(filename)
+
+        unused_paths = set(all_paths).difference(collected_paths)
+        if unused_paths:
+            print('\n'.join(map(str, sorted(unused_paths))))
 
 # END Pytest hooks

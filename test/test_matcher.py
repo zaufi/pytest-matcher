@@ -252,3 +252,27 @@ def parametrized_case_test(ourtestdir) -> None:
     # Run all tests with pytest
     result = ourtestdir.runpytest()
     result.assert_outcomes(passed=3)
+
+
+def reveal_unused_files_test(ourtestdir) -> None:
+    # Write sample expectation files
+    ourtestdir.tmpdir.join('test_a.out').write('')
+    ourtestdir.tmpdir.join('test_b.out').write('')
+    ourtestdir.tmpdir.join('test_b.err').write('')
+    # Write unused files
+    ourtestdir.tmpdir.join('test_a.err').write('')
+    ourtestdir.tmpdir.join('test_c.out').write('')
+    ourtestdir.tmpdir.join('test_d.out.bak').write('')
+
+    # Write a sample test (finally)
+    ourtestdir.makepyfile(f"""
+        def test_a(expected_out): pass
+        def test_b(expected_out, expected_err): pass
+    """)
+
+    # Run all tests with pytest
+    result = ourtestdir.runpytest('--pm-reveal-unused-files')
+    result.stdout.fnmatch_lines([
+        ourtestdir.tmpdir.join("test_a.err")
+      , ourtestdir.tmpdir.join("test_c.out")
+      ])
