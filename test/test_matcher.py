@@ -265,7 +265,7 @@ def reveal_unused_files_test(ourtestdir) -> None:
     ourtestdir.tmpdir.join('test_b.out').write('')
 
     # Write a sample test (finally)
-    ourtestdir.makepyfile(f"""
+    ourtestdir.makepyfile("""
         def test_a(expected_out): pass
         class TestClass:
             def test_a(self, expected_out): pass
@@ -274,6 +274,6 @@ def reveal_unused_files_test(ourtestdir) -> None:
     # Run all tests with pytest
     result = ourtestdir.runpytest('--pm-reveal-unused-files')
     result.stdout.fnmatch_lines([
-        ourtestdir.tmpdir.join("test_a.err")
-      , ourtestdir.tmpdir.join("test_b.out")
+        ourtestdir.tmpdir.join('test_a.err')
+      , ourtestdir.tmpdir.join('test_b.out')
       ])

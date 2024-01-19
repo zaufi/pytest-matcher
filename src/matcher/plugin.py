@@ -345,6 +345,7 @@ def pytest_addoption(parser) -> None:
 
 @pytest.hookimpl(trylast=True)
 def pytest_configure(config: pytest.Config):
+    """Register additional configuration."""
     if config.getoption('--pm-reveal-unused-files'):
         config.option.collectonly = True
         reporter = UnusedFilesReporter()
@@ -353,6 +354,7 @@ def pytest_configure(config: pytest.Config):
 
 
 class UnusedFilesReporter:
+    """A reporter to reveal and list unused pattern files."""
     def pytest_collection_finish(self, session: pytest.Session) -> None:
         if not session.items:
             return
@@ -362,16 +364,17 @@ class UnusedFilesReporter:
             if patterns_base_dir:
                 break
         else:
-            raise ValueError('Failed to determine a patterns base directory')
+            message = 'Failed to determine a patterns base directory'
+            raise ValueError(message)
 
         known_extensions = '.out', '.err'
 
-        all_paths: list[Path] = []
+        all_paths: list[pathlib.Path] = []
         for p in patterns_base_dir.rglob('*'):
             if p.is_file() and p.suffix in known_extensions:
                 all_paths.append(p.resolve())
 
-        collected_paths: list[Path] = []
+        collected_paths: list[pathlib.Path] = []
         for item in session.items:
             for fixture, ext in zip((expected_out, expected_err), known_extensions):
                 if fixture.__name__ in item.fixturenames:
