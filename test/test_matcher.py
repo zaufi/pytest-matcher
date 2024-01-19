@@ -257,22 +257,23 @@ def parametrized_case_test(ourtestdir) -> None:
 def reveal_unused_files_test(ourtestdir) -> None:
     # Write sample expectation files
     ourtestdir.tmpdir.join('test_a.out').write('')
-    ourtestdir.tmpdir.join('test_b.out').write('')
-    ourtestdir.tmpdir.join('test_b.err').write('')
+    ourtestdir.tmpdir.join('test_a.out.bak').write('')
+    ourtestdir.tmpdir.mkdir('TestClass')
+    ourtestdir.tmpdir.join('TestClass/test_a.out').write('')
     # Write unused files
     ourtestdir.tmpdir.join('test_a.err').write('')
-    ourtestdir.tmpdir.join('test_c.out').write('')
-    ourtestdir.tmpdir.join('test_d.out.bak').write('')
+    ourtestdir.tmpdir.join('test_b.out').write('')
 
     # Write a sample test (finally)
     ourtestdir.makepyfile(f"""
         def test_a(expected_out): pass
-        def test_b(expected_out, expected_err): pass
+        class TestClass:
+            def test_a(self, expected_out): pass
     """)
 
     # Run all tests with pytest
     result = ourtestdir.runpytest('--pm-reveal-unused-files')
     result.stdout.fnmatch_lines([
         ourtestdir.tmpdir.join("test_a.err")
-      , ourtestdir.tmpdir.join("test_c.out")
+      , ourtestdir.tmpdir.join("test_b.out")
       ])
