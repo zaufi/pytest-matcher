@@ -7,3 +7,7 @@ Source: https://github.com/zaufi/pytest-matcher
 Files: test/data/*.json
 Copyright: 2024 Alex Turbov <zaufi@pm.me>
 License: CC0-1.0
+
+Files: .github/pull_request_template.md
+Copyright: 2024 Alex Turbov <zaufi@pm.me>
+License: CC0-1.0
