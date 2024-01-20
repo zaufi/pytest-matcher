@@ -278,7 +278,7 @@ def expected_yaml(request):
       )
 
 
-#BEGIN Pytest hooks
+# BEGIN Pytest hooks
 
 def pytest_assertrepr_compare(op: str, left: object, right: object) -> list[str] | None:  # NOQA: PLR0911
     """Hook into comparison failure."""
@@ -336,4 +336,4 @@ def pytest_addoption(parser) -> None:
       , default=False
       )
 
-#END Pytest hooks
+# END Pytest hooks
