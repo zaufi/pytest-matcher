@@ -383,6 +383,6 @@ class UnusedFilesReporter:
 
         unused_paths = set(all_paths).difference(collected_paths)
         if unused_paths:
-            print('\n'.join(map(str, sorted(unused_paths))))
+            sys.stdout.write('\n'.join(map(str, sorted(unused_paths))) + '\n')
 
 # END Pytest hooks
