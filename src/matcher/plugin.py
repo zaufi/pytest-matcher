@@ -365,7 +365,7 @@ class UnusedFilesReporter:
                 break
         else:
             message = 'Failed to determine a patterns base directory'
-            raise ValueError(message)
+            raise pytest.UsageError(message)
 
         known_extensions = '.out', '.err'
 
