@@ -1,0 +1,54 @@
+# SPDX-FileCopyrightText: 2024-now, Alex Turbov <zaufi@pm.me>
+# SPDX-License-Identifier: CC0-1.0
+
+name: Linter Checks
+
+on:
+  push:
+    branches:
+      - master
+
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  linters:
+    name: Run various linters
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install hatch
+          hatch env create
+
+      - name: Build a package
+        run: hatch build
+
+      - name: Run package check
+        run: hatch run dist-check
+
+      - name: Run linter check
+        run: hatch run lint-check
+
+      - name: Run type check
+        run: hatch run type-check
+
+      - name: Run spell check
+        run: hatch run spell-check
+
+      - name: Run license check
+        run: hatch run license-check
+
+      - name: Run dead code check
+        run: hatch run dead-check
