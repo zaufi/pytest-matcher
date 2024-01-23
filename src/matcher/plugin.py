@@ -311,6 +311,7 @@ class _UnusedFilesReporter:
         unused_paths = all_paths - collected_paths
         if unused_paths:
             sys.stdout.write('\n'.join(map(str, sorted(unused_paths))) + '\n')
+            pytest.exit('Found unused pattern files', 1)
 
 
 # BEGIN Pytest hooks
