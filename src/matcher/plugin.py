@@ -278,6 +278,41 @@ def expected_yaml(request):
       )
 
 
+class UnusedFilesReporter:
+    """A reporter to reveal unused pattern files."""
+    def pytest_collection_finish(self, session: pytest.Session) -> None:
+        """Once test items have been collected, check for and show unused files."""
+        if not session.items:
+            return
+
+        for alg in [_try_cli_option, _try_ini_option]:
+            patterns_base_dir, _ = alg(session.items[0]._request)  # NOQA: SLF001
+            if patterns_base_dir:
+                break
+        else:
+            message = 'Failed to determine a patterns base directory'
+            raise pytest.UsageError(message)
+
+        known_extensions = '.out', '.err'
+
+        all_paths = {
+            p.resolve()
+            for p in patterns_base_dir.rglob('*')
+            if p.is_file() and p.suffix in known_extensions
+          }
+
+        collected_paths = {
+            _make_expected_filename(item._request, ext)  # NOQA: SLF001
+            for item in session.items
+            for fixture, ext in zip((expected_out, expected_err), known_extensions)
+            if fixture.__name__ in item.fixturenames
+          }
+
+        unused_paths = all_paths - collected_paths
+        if unused_paths:
+            sys.stdout.write('\n'.join(map(str, sorted(unused_paths))) + '\n')
+
+
 # BEGIN Pytest hooks
 
 def pytest_assertrepr_compare(op: str, left: object, right: object) -> list[str] | None:  # NOQA: PLR0911
@@ -351,39 +386,5 @@ def pytest_configure(config: pytest.Config):
         reporter = UnusedFilesReporter()
         config.pluginmanager.unregister(name='terminalreporter')
         config.pluginmanager.register(reporter, 'terminalreporter')
-
-
-class UnusedFilesReporter:
-    """A reporter to reveal unused pattern files."""
-    def pytest_collection_finish(self, session: pytest.Session) -> None:
-        """Once test items have been collected, check for and show unused files."""
-        if not session.items:
-            return
-
-        for alg in [_try_cli_option, _try_ini_option]:
-            patterns_base_dir, _ = alg(session.items[0]._request)  # NOQA: SLF001
-            if patterns_base_dir:
-                break
-        else:
-            message = 'Failed to determine a patterns base directory'
-            raise pytest.UsageError(message)
-
-        known_extensions = '.out', '.err'
-
-        all_paths: list[pathlib.Path] = []
-        for p in patterns_base_dir.rglob('*'):
-            if p.is_file() and p.suffix in known_extensions:
-                all_paths.append(p.resolve())  # NOQA: PERF401
-
-        collected_paths: list[pathlib.Path] = []
-        for item in session.items:
-            for fixture, ext in zip((expected_out, expected_err), known_extensions):
-                if fixture.__name__ in item.fixturenames:
-                    filename = _make_expected_filename(item._request, ext)  # NOQA: SLF001
-                    collected_paths.append(filename)
-
-        unused_paths = set(all_paths).difference(collected_paths)
-        if unused_paths:
-            sys.stdout.write('\n'.join(map(str, sorted(unused_paths))) + '\n')
 
 # END Pytest hooks
