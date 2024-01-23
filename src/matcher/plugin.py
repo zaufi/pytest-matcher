@@ -278,7 +278,7 @@ def expected_yaml(request):
       )
 
 
-class UnusedFilesReporter:
+class _UnusedFilesReporter:
     """A reporter to reveal unused pattern files."""
     def pytest_collection_finish(self, session: pytest.Session) -> None:
         """Once test items have been collected, check for and show unused files."""
@@ -383,7 +383,7 @@ def pytest_configure(config: pytest.Config):
     """Register additional configuration."""
     if config.getoption('--pm-reveal-unused-files'):
         config.option.collectonly = True
-        reporter = UnusedFilesReporter()
+        reporter = _UnusedFilesReporter()
         config.pluginmanager.unregister(name='terminalreporter')
         config.pluginmanager.register(reporter, 'terminalreporter')
 
