@@ -286,7 +286,7 @@ class _UnusedFilesReporter:
             return
 
         for alg in [_try_cli_option, _try_ini_option]:
-            patterns_base_dir, _ = alg(session.items[0]._request)  # NOQA: SLF001
+            patterns_base_dir, _ = alg(session.items[0]._request)  # type: ignore[attr-defined] # NOQA: SLF001
             if patterns_base_dir:
                 break
         else:
@@ -302,10 +302,10 @@ class _UnusedFilesReporter:
           }
 
         collected_paths = {
-            _make_expected_filename(item._request, ext)  # NOQA: SLF001
+            _make_expected_filename(item._request, ext)  # type: ignore[attr-defined] # NOQA: SLF001
             for item in session.items
             for fixture, ext in zip((expected_out, expected_err), known_extensions)
-            if fixture.__name__ in item.fixturenames
+            if fixture.__name__ in item.fixturenames  # type: ignore[attr-defined]
           }
 
         unused_paths = all_paths - collected_paths
