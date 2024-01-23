@@ -273,6 +273,7 @@ def reveal_unused_files_test(ourtestdir) -> None:
 
     # Run all tests with pytest
     result = ourtestdir.runpytest('--pm-reveal-unused-files')
+    assert result.ret == 1
     result.stdout.fnmatch_lines([
         ourtestdir.tmpdir.join('test_a.err')
       , ourtestdir.tmpdir.join('test_b.out')
