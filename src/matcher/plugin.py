@@ -8,6 +8,7 @@
 from __future__ import annotations
 
 # Standard imports
+import os
 import pathlib
 import platform
 import re
@@ -280,6 +281,9 @@ def expected_yaml(request):
 
 class _UnusedFilesReporter:
     """A reporter to reveal unused pattern files."""
+    def __init__(self, *, return_codes: bool = False) -> None:
+        self._return_codes = return_codes
+
     def pytest_collection_finish(self, session: pytest.Session) -> None:
         """Once test items have been collected, check for and show unused files."""
         if not session.items:
@@ -311,7 +315,8 @@ class _UnusedFilesReporter:
         unused_paths = all_paths - collected_paths
         if unused_paths:
             sys.stdout.write('\n'.join(map(str, sorted(unused_paths))) + '\n')
-            pytest.exit('Found unused pattern files', 1)
+            if self._return_codes:
+                pytest.exit('Found unused pattern files', 1)
 
 
 # BEGIN Pytest hooks
@@ -382,9 +387,14 @@ def pytest_addoption(parser) -> None:
 @pytest.hookimpl(trylast=True)
 def pytest_configure(config: pytest.Config):
     """Register additional configuration."""
+    if os.getenv('PYTEST_MATCHER_RETURN_CODES', '').lower() == 'yes':  # NOQA: SIM108
+        plugin_return_codes = True
+    else:
+        plugin_return_codes = False
+
     if config.getoption('--pm-reveal-unused-files'):
         config.option.collectonly = True
-        reporter = _UnusedFilesReporter()
+        reporter = _UnusedFilesReporter(return_codes=plugin_return_codes)
         config.pluginmanager.unregister(name='terminalreporter')
         config.pluginmanager.register(reporter, 'terminalreporter')
 

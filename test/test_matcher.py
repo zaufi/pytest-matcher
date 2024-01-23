@@ -254,7 +254,8 @@ def parametrized_case_test(ourtestdir) -> None:
     result.assert_outcomes(passed=3)
 
 
-def reveal_unused_files_test(ourtestdir) -> None:
+@pytest.mark.parametrize(('return_codes', 'expected_code'), [(False, 0), (True, 1)])
+def reveal_unused_files_test(return_codes, expected_code, ourtestdir, monkeypatch) -> None:
     # Write sample expectation files
     ourtestdir.tmpdir.join('test_a.out').write('')
     ourtestdir.tmpdir.join('test_a.out.bak').write('')
@@ -272,8 +273,11 @@ def reveal_unused_files_test(ourtestdir) -> None:
     """)
 
     # Run all tests with pytest
+    if return_codes:
+        monkeypatch.setenv('PYTEST_MATCHER_RETURN_CODES', 'yes')
+
     result = ourtestdir.runpytest('--pm-reveal-unused-files')
-    assert result.ret == 1
+    assert result.ret == expected_code
     result.stdout.fnmatch_lines([
         ourtestdir.tmpdir.join('test_a.err')
       , ourtestdir.tmpdir.join('test_b.out')
