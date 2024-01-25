@@ -387,14 +387,11 @@ def pytest_addoption(parser) -> None:
 @pytest.hookimpl(trylast=True)
 def pytest_configure(config: pytest.Config):
     """Register additional configuration."""
-    if os.getenv('PYTEST_MATCHER_RETURN_CODES', '').lower() == 'yes':  # NOQA: SIM108
-        plugin_return_codes = True
-    else:
-        plugin_return_codes = False
+    return_codes = os.getenv('PYTEST_MATCHER_RETURN_CODES', '').lower() in ('yes', 'true', '1')
 
     if config.getoption('--pm-reveal-unused-files'):
         config.option.collectonly = True
-        reporter = _UnusedFilesReporter(return_codes=plugin_return_codes)
+        reporter = _UnusedFilesReporter(return_codes=return_codes)
         config.pluginmanager.unregister(name='terminalreporter')
         config.pluginmanager.register(reporter, 'terminalreporter')
 
