@@ -387,11 +387,13 @@ def pytest_addoption(parser) -> None:
 @pytest.hookimpl(trylast=True)
 def pytest_configure(config: pytest.Config):
     """Register additional configuration."""
-    if config.getoption('--pm-reveal-unused-files'):
-        return_codes = os.getenv('PYTEST_MATCHER_RETURN_CODES', '').lower() in ('yes', 'true', '1')
-        config.option.collectonly = True
-        reporter = _UnusedFilesReporter(return_codes=return_codes)
-        config.pluginmanager.unregister(name='terminalreporter')
-        config.pluginmanager.register(reporter, 'terminalreporter')
+    if not config.getoption('--pm-reveal-unused-files'):
+        return
+
+    return_codes = os.getenv('PYTEST_MATCHER_RETURN_CODES', '').lower() in ('yes', 'true', '1')
+    config.option.collectonly = True
+    reporter = _UnusedFilesReporter(return_codes=return_codes)
+    config.pluginmanager.unregister(name='terminalreporter')
+    config.pluginmanager.register(reporter, 'terminalreporter')
 
 # END Pytest hooks
