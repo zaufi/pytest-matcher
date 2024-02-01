@@ -94,11 +94,11 @@ dependencies = [
   , "isort"
   , "mypy"
   , "reuse"
-  , "ruff >= 0.1.14"
+  , "ruff >= 0.1.15"
   , "types-PyYAML"
   , "twine"
   , "vulture"
-  , "validate-pyproject[all] >= 0.15"
+  , "validate-pyproject[all] >= 0.16"
   ]
 
 [tool.hatch.envs.default.scripts]
