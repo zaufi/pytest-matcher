@@ -371,8 +371,7 @@ def pytest_addoption(parser) -> None:
       , help='reveal and print unused pattern files'
       )
 
-
-    # Also add INI file option `pm-patterns-base-dir`
+    # Also add INI file (TOML table) options
     parser.addini(
         'pm-patterns-base-dir'
       , help='base directory to read/write pattern files'
