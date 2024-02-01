@@ -40,4 +40,4 @@ jobs:
 
       - name: Run tests
         run: |
-          hatch run run-tests
+          hatch run test

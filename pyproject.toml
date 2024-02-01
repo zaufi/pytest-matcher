@@ -115,7 +115,7 @@ pyproject-check = "validate-pyproject {root:real}/pyproject.toml"
 spell-check = "codespell"
 type-check = "mypy src/matcher test"
 # Testing commands
-run-tests = "hatch env run -e test test"
+test = "hatch env run -e test test"
 # Misc commands
 annotate-code = "reuse annotate -c \"$(git config --get user.name) <$(git config --get user.email)>\" -t code -l GPL-3.0-or-later {args}"
 annotate-misc = "reuse annotate -c \"$(git config --get user.name) <$(git config --get user.email)>\" -t misc -l CC0-1.0 {args}"
