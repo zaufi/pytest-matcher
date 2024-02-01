@@ -363,6 +363,7 @@ def pytest_addoption(parser) -> None:
         '--pm-patterns-base-dir'
       , metavar='PATH'
       , help='base directory to read/write pattern files'
+      , type=pathlib.Path
       )
     group.addoption(
         '--pm-reveal-unused-files'
@@ -380,7 +381,7 @@ def pytest_addoption(parser) -> None:
     parser.addini(
         'pm-pattern-file-use-system-name'
       , help='expect a system name (`platform.system()`) to be a pattern filename suffix'
-      , default=False
+      , type='bool'
       )
 
 
