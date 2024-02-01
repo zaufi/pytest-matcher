@@ -59,7 +59,6 @@ quiet-level = 3
 skip = ".git,.venv,build,dist"
 
 [tool.coverage.html]
-directory = "build/coverage"
 skip_empty = true
 title = "Test Coverage Report"
 
@@ -92,11 +91,8 @@ tag-pattern = "release/(.*)"
 description = "Development environment"
 dependencies = [
     "codespell >= 2.2.6"
-  , "coverage[toml]"
   , "isort"
   , "mypy"
-  , "pytest >= 7.0"
-  , "pytest-cov"
   , "reuse"
   , "ruff >= 0.1.14"
   , "types-PyYAML"
@@ -119,14 +115,31 @@ pyproject-check = "validate-pyproject {root:real}/pyproject.toml"
 spell-check = "codespell"
 type-check = "mypy src/matcher test"
 # Testing commands
-coverage = "pytest --cov-report html --cov=matcher"
-test = "pytest {verbosity:flag} {args}"
+run-tests = "hatch env run -e test test"
 # Misc commands
 annotate-code = "reuse annotate -c \"$(git config --get user.name) <$(git config --get user.email)>\" -t code -l GPL-3.0-or-later {args}"
 annotate-misc = "reuse annotate -c \"$(git config --get user.name) <$(git config --get user.email)>\" -t misc -l CC0-1.0 {args}"
 dist = "hatch build -t wheel"
-show-coverage = "xdg-open build/coverage/index.html"
 fix-spelling = "codespell -i 3 -w"
+
+[tool.hatch.envs.test]
+description = "Unit tests environment"
+
+[[tool.hatch.envs.test.matrix]]
+pytest = ["pytest.8x", "pytest.7x"]
+
+[tool.hatch.envs.test.overrides]
+matrix.pytest.dependencies = [
+    "coverage[toml]"
+  , "pytest-cov"
+  , { value = "pytest ~= 8.0", if = ["pytest.8x"] }
+  , { value = "pytest ~= 7.0", if = ["pytest.7x"] }
+  ]
+
+[tool.hatch.envs.test.scripts]
+cov = "pytest --cov-report term --cov-report html:build/coverage-{matrix:pytest} --cov=matcher"
+show-cov = "xdg-open build/coverage-{matrix:pytest}/index.html"
+test = "pytest -o cache_dir=build/.{matrix:pytest}_cache {verbosity:flag} {args}"
 
 [tool.isort]
 multi_line_output = 3
@@ -169,14 +182,15 @@ notes = []
 
 [tool.pytest.ini_options]
 addopts = "-ra"
-cache_dir = "build/.pytest_cache"
-testpaths = ["test"]
-python_files = ["test_*.py"]
-python_classes = ["*Tester"]
-python_functions = ["*_test", "*_test_?", "*_test_??"]
+log_cli = true
 markers = [
     "wip: work in progress"
   ]
+minversion = "7.0"
+python_files = ["test_*.py"]
+python_classes = ["*Tester"]
+python_functions = ["*_test", "*_test_?", "*_test_??"]
+testpaths = ["test"]
 
 # https://beta.ruff.rs/docs/settings
 [tool.ruff]
