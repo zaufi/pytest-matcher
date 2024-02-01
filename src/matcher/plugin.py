@@ -352,7 +352,7 @@ def pytest_assertrepr_compare(op: str, left: object, right: object) -> list[str]
 # Add CLI option
 def pytest_addoption(parser) -> None:
     """Add plugin options to CLI and the configuration file."""
-    group = parser.getgroup('pattern-matcher')
+    group = parser.getgroup('pattern matcher')
     group.addoption(
         '--pm-save-patterns'
       , action='store_true'
