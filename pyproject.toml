@@ -211,7 +211,6 @@ ignore = [
   , "ANN101"    # Missing type annotation for `self` in method
   , "ANN201"    # Missing return type annotation for public function
   , "ANN202"    # Missing return type annotation for private function
-  , "ANN205"    # Missing return type annotation for staticmethod
   , "ANN401"    # Dynamically typed expressions (typing.Any) are disallowed
   ]
 line-length = 120

@@ -15,7 +15,7 @@ import re
 import shutil
 import sys
 import urllib.parse
-from typing import Final, cast
+from typing import Callable, Final, cast
 
 # Third party packages
 import pytest
@@ -66,7 +66,7 @@ class _ContentCheckOrStorePattern:
         self._expected_file_content: str | None = None
 
     @staticmethod
-    def _store_pattern_handle_error(fn):
+    def _store_pattern_handle_error(fn) -> Callable:
         def _inner(self, text, *args, **kwargs):
             # Check if `--save-patterns` has given to CLI
             if self._store:
