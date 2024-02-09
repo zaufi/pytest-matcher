@@ -221,7 +221,6 @@ class _yaml_check_or_store_pattern:
         self._expected_file = filename
         self._store = store
 
-
     def _store_pattern_file(self, result_file: pathlib.Path) -> None:
         assert self._store, 'Code review required!'
 
@@ -231,8 +230,6 @@ class _yaml_check_or_store_pattern:
         assert self._expected_file.parent.is_dir()
 
         shutil.copy(str(result_file), str(self._expected_file))
-
-
 
     def __eq__(self, result_file: object) -> bool:
         assert isinstance(result_file, pathlib.Path)
@@ -253,7 +250,6 @@ class _yaml_check_or_store_pattern:
             self._expected = yaml.safe_load(expected_fd)
 
             return bool(self._result == self._expected)
-
 
     def report_compare_mismatch(self, actual: pathlib.Path) -> list[str]:
         assert self._result is not None
