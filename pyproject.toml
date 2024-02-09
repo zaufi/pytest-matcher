@@ -213,7 +213,6 @@ ignore = [
   , "ANN202"    # Missing return type annotation for private function
   , "ANN205"    # Missing return type annotation for staticmethod
   , "ANN401"    # Dynamically typed expressions (typing.Any) are disallowed
-  , "N801"      # Class name `...` should use CapWords convention
   ]
 line-length = 120
 select = ["ALL"]

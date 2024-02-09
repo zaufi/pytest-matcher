@@ -27,7 +27,7 @@ else:
     _RE_NOFLAG: Final[re.RegexFlag] = re.NOFLAG
 
 
-class _content_match_result:
+class _ContentMatchResult:
     """TODO Is this job for Python `dataclass`?"""
 
     def __init__(self, *, result: bool, text: list[str], regex: str, filename: pathlib.Path) -> None:
@@ -58,7 +58,7 @@ class _content_match_result:
           ]
 
 
-class _content_check_or_store_pattern:
+class _ContentCheckOrStorePattern:
 
     def __init__(self, filename: pathlib.Path, *, store: bool) -> None:
         self._pattern_filename = filename
@@ -100,7 +100,7 @@ class _content_check_or_store_pattern:
         return self._expected_file_content == text
 
     @_store_pattern_handle_error
-    def match(self, text: str, flags: re.RegexFlag = _RE_NOFLAG) -> _content_match_result:
+    def match(self, text: str, flags: re.RegexFlag = _RE_NOFLAG) -> _ContentMatchResult:
         self._read_expected_file_content()
         content = (
             '.*\n' if flags & re.MULTILINE else ' '
@@ -119,7 +119,7 @@ class _content_check_or_store_pattern:
         text_lines = text.splitlines()
 
         m = what.fullmatch(('\n' if flags & re.MULTILINE else ' ').join(text_lines))
-        return _content_match_result(
+        return _ContentMatchResult(
             result=m is not None and bool(m)
           , text=text_lines
           , regex=self._expected_file_content               # type: ignore[arg-type]
@@ -200,7 +200,7 @@ def _make_expected_filename(request, ext: str, *, use_system_suffix=True) -> pat
 @pytest.fixture()
 def expected_out(request):
     """A pytest fixture to match `STDOUT` against a file."""
-    return _content_check_or_store_pattern(
+    return _ContentCheckOrStorePattern(
         _make_expected_filename(request, '.out')
       , store=request.config.getoption('--pm-save-patterns')
       )
@@ -209,13 +209,13 @@ def expected_out(request):
 @pytest.fixture()
 def expected_err(request):
     """A pytest fixture to match `STDERR` against a file."""
-    return _content_check_or_store_pattern(
+    return _ContentCheckOrStorePattern(
         _make_expected_filename(request, '.err')
       , store=request.config.getoption('--pm-save-patterns')
       )
 
 
-class _yaml_check_or_store_pattern:
+class _YAMLCheckOrStorePattern:
 
     def __init__(self, filename: pathlib.Path, *, store: bool) -> None:
         self._expected_file = filename
@@ -269,7 +269,7 @@ class _yaml_check_or_store_pattern:
 @pytest.fixture()
 def expected_yaml(request):
     """A pytest fixture to match YAML file content."""
-    return _yaml_check_or_store_pattern(
+    return _YAMLCheckOrStorePattern(
         _make_expected_filename(request, '.yaml', use_system_suffix=False)
       , store=request.config.getoption('--pm-save-patterns')
       )
@@ -321,25 +321,25 @@ def pytest_assertrepr_compare(op: str, left: object, right: object) -> list[str]
     """Hook into comparison failure."""
     if op == '==':
         match left, right:
-            case _content_match_result() as left, bool(right):
+            case _ContentMatchResult() as left, bool(right):
                 return left.report_regex_mismatch()
 
-            case _content_check_or_store_pattern() as left, str(right):
+            case _ContentCheckOrStorePattern() as left, str(right):
                 return left.report_compare_mismatch(right)
 
-            case str(left), _content_check_or_store_pattern() as right:
+            case str(left), _ContentCheckOrStorePattern() as right:
                 return right.report_compare_mismatch(left)
 
             # Enhance YAML checker failures
-            case _yaml_check_or_store_pattern() as left, pathlib.Path() as right:
+            case _YAMLCheckOrStorePattern() as left, pathlib.Path() as right:
                 return left.report_compare_mismatch(right)
 
-            case pathlib.Path() as left, _yaml_check_or_store_pattern() as right:
+            case pathlib.Path() as left, _YAMLCheckOrStorePattern() as right:
                 return right.report_compare_mismatch(left)
 
     elif op == 'is':
         match left, right:
-            case _content_match_result() as left,  bool(right):
+            case _ContentMatchResult() as left,  bool(right):
                 return left.report_regex_mismatch()
 
     return None
