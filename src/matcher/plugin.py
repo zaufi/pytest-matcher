@@ -66,8 +66,8 @@ class _ContentCheckOrStorePattern:
         self._expected_file_content: str | None = None
 
     @staticmethod
-    def _store_pattern_handle_error(fn) -> Callable:
-        def _inner(self, text, *args, **kwargs):
+    def _store_pattern_handle_error(fn: Callable) -> Callable:
+        def _inner(self, text: str, *args, **kwargs):       # NOQA: ANN001
             # Check if `--save-patterns` has given to CLI
             if self._store:
                 # Make a directory to store a pattern file if it doesn't exist yet
@@ -141,23 +141,28 @@ class _ContentCheckOrStorePattern:
           ]
 
 
-def _try_cli_option(request) -> tuple[pathlib.Path | None, bool]:
+def _try_cli_option(request: pytest.FixtureRequest) -> tuple[pathlib.Path | None, bool]:
     result = request.config.getoption('--pm-patterns-base-dir')
     return (pathlib.Path(result) if result is not None else None, True)
 
 
-def _try_ini_option(request) -> tuple[pathlib.Path | None, bool]:
+def _try_ini_option(request: pytest.FixtureRequest) -> tuple[pathlib.Path | None, bool]:
     result = request.config.getini('pm-patterns-base-dir')
     return (pathlib.Path(result) if result else None, False)
 
 
-def _try_module_path(request) -> tuple[pathlib.Path, bool]:
-    assert request.fspath.dirname is not None
+def _try_module_path(request: pytest.FixtureRequest) -> tuple[pathlib.Path, bool]:
+    assert request.path.parent is not None
     # NOTE Suppose the current test module's directory has `data/expected/` inside
-    return (pathlib.Path(request.fspath.dirname) / 'data' / 'expected', False)
+    return (pathlib.Path(request.path.parent) / 'data' / 'expected', False)
 
 
-def _make_expected_filename(request, ext: str, *, use_system_suffix=True) -> pathlib.Path:
+def _make_expected_filename(
+    request: pytest.FixtureRequest
+  , ext: str
+  , *
+  , use_system_suffix: bool = True
+  ) -> pathlib.Path:
     result: pathlib.Path | None = None
     use_cwd_as_base = False
     for alg in [_try_cli_option, _try_ini_option, _try_module_path]:
@@ -175,8 +180,8 @@ def _make_expected_filename(request, ext: str, *, use_system_suffix=True) -> pat
     if not result.is_absolute():
         if use_cwd_as_base:
             result = pathlib.Path.cwd()
-        elif request.config.inifile is not None:
-            result = pathlib.Path(request.config.inifile.dirname) / result
+        elif request.config.inipath is not None:
+            result = pathlib.Path(request.config.inipath.parent) / result
         else:
             # TODO Better error description.
             pytest.fail('Unable to determine the path to expectation files')
@@ -198,7 +203,7 @@ def _make_expected_filename(request, ext: str, *, use_system_suffix=True) -> pat
 
 
 @pytest.fixture()
-def expected_out(request):
+def expected_out(request: pytest.FixtureRequest):
     """A pytest fixture to match `STDOUT` against a file."""
     return _ContentCheckOrStorePattern(
         _make_expected_filename(request, '.out')
@@ -207,7 +212,7 @@ def expected_out(request):
 
 
 @pytest.fixture()
-def expected_err(request):
+def expected_err(request: pytest.FixtureRequest):
     """A pytest fixture to match `STDERR` against a file."""
     return _ContentCheckOrStorePattern(
         _make_expected_filename(request, '.err')
@@ -267,7 +272,7 @@ class _YAMLCheckOrStorePattern:
 
 
 @pytest.fixture()
-def expected_yaml(request):
+def expected_yaml(request: pytest.FixtureRequest):
     """A pytest fixture to match YAML file content."""
     return _YAMLCheckOrStorePattern(
         _make_expected_filename(request, '.yaml', use_system_suffix=False)
@@ -346,7 +351,7 @@ def pytest_assertrepr_compare(op: str, left: object, right: object) -> list[str]
 
 
 # Add CLI option
-def pytest_addoption(parser) -> None:
+def pytest_addoption(parser: pytest.Parser) -> None:
     """Add plugin options to CLI and the configuration file."""
     group = parser.getgroup('pattern matcher')
     group.addoption(
