@@ -94,7 +94,7 @@ dependencies = [
   , "isort"
   , "mypy"
   , "reuse"
-  , "ruff >= 0.1.15"
+  , "ruff >= 0.2.1"
   , "types-PyYAML"
   , "twine"
   , "vulture"
@@ -196,7 +196,11 @@ testpaths = ["test"]
 # https://beta.ruff.rs/docs/settings
 [tool.ruff]
 cache-dir = "build/.ruff_cache"
+line-length = 120
 output-format = "grouped"
+target-version = "py39"
+
+[tool.ruff.lint]
 ignore = [
     "COM812"    # Trailing comma missing
   , "FIX002"    # Line contains TODO (and it's OK ;-)
@@ -212,25 +216,22 @@ ignore = [
   , "ANN202"    # Missing return type annotation for private function
   , "ANN401"    # Dynamically typed expressions (typing.Any) are disallowed
   ]
-line-length = 120
 select = ["ALL"]
-show-source = true
-target-version = "py39"
 
-[tool.ruff.extend-per-file-ignores]
+[tool.ruff.lint.extend-per-file-ignores]
 "test/test_*.py" = [
     "ANN001"    # Missing type annotation for function argument
   , "D"         # Documentation issues
   , "PLR2004"   # Magic value used in comparison
   ]
 
-[tool.ruff.flake8-quotes]
+[tool.ruff.lint.flake8-quotes]
 inline-quotes = "single"
 
-[tool.ruff.isort]
+[tool.ruff.lint.isort]
 known-first-party = ["matcher"]
 
-[tool.ruff.pydocstyle]
+[tool.ruff.lint.pydocstyle]
 convention = "google"
 
 [tool.vulture]
