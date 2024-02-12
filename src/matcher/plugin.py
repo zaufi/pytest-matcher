@@ -203,7 +203,7 @@ def _make_expected_filename(
 
 
 @pytest.fixture()
-def expected_out(request: pytest.FixtureRequest):
+def expected_out(request: pytest.FixtureRequest) -> _ContentCheckOrStorePattern:
     """A pytest fixture to match `STDOUT` against a file."""
     return _ContentCheckOrStorePattern(
         _make_expected_filename(request, '.out')
@@ -212,7 +212,7 @@ def expected_out(request: pytest.FixtureRequest):
 
 
 @pytest.fixture()
-def expected_err(request: pytest.FixtureRequest):
+def expected_err(request: pytest.FixtureRequest) -> _ContentCheckOrStorePattern:
     """A pytest fixture to match `STDERR` against a file."""
     return _ContentCheckOrStorePattern(
         _make_expected_filename(request, '.err')
@@ -272,7 +272,7 @@ class _YAMLCheckOrStorePattern:
 
 
 @pytest.fixture()
-def expected_yaml(request: pytest.FixtureRequest):
+def expected_yaml(request: pytest.FixtureRequest) -> _YAMLCheckOrStorePattern:
     """A pytest fixture to match YAML file content."""
     return _YAMLCheckOrStorePattern(
         _make_expected_filename(request, '.yaml', use_system_suffix=False)
@@ -386,7 +386,7 @@ def pytest_addoption(parser: pytest.Parser) -> None:
 
 
 @pytest.hookimpl(trylast=True)
-def pytest_configure(config: pytest.Config):
+def pytest_configure(config: pytest.Config) -> None:
     """Register additional configuration."""
     if not config.getoption('--pm-reveal-unused-files'):
         return

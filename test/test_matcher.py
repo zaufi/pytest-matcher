@@ -8,7 +8,7 @@ import pytest
 pytest_plugins = ['pytester']
 
 @pytest.fixture()
-def ourtestdir(testdir):
+def ourtestdir(testdir: pytest.Testdir) -> pytest.Testdir:
     # Write a sample config file
     testdir.tmpdir.join('pytest.ini').write(
         '[pytest]\n'
