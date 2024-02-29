@@ -15,7 +15,7 @@ import re
 import shutil
 import sys
 import urllib.parse
-from typing import Callable, Final, cast
+from typing import Final, cast
 
 # Third party packages
 import pytest
@@ -65,42 +65,37 @@ class _ContentCheckOrStorePattern:
         self._store = store
         self._expected_file_content: str | None = None
 
-    @staticmethod
-    def _store_pattern_handle_error(fn: Callable) -> Callable:
-        def _inner(self, text: str, *args, **kwargs):       # NOQA: ANN001
-            # Check if `--save-patterns` has given to CLI
-            if self._store:
-                # Make a directory to store a pattern file if it doesn't exist yet
-                if not self._pattern_filename.parent.exists():
-                    self._pattern_filename.parent.mkdir(parents=True)
+    def _maybe_store_pattern(self, text: str) -> None:
+        if not self._store:
+            return
 
-                assert self._pattern_filename.parent.is_dir()
+        # Make a directory to store a pattern file if it doesn't exist yet
+        if not self._pattern_filename.parent.exists():
+            self._pattern_filename.parent.mkdir(parents=True)
 
-                # Store!
-                self._pattern_filename.write_text(text)
+        # Store!
+        self._pattern_filename.write_text(text)
 
-                return True
+        # Also mark the test as skipped!
+        pytest.skip(f'Pattern file has been saved `{self._pattern_filename}`')
 
-            # Ok, this is the "normal" check:
-            # - make sure the pattern file exists
-            if not self._pattern_filename.exists() or self._pattern_filename.is_dir():
-                pytest.skip(f'Pattern file not found `{self._pattern_filename}`')
+    def _read_expected_file_content(self) -> None:
+        if not (self._pattern_filename.exists() and self._pattern_filename.is_file()):
+            pytest.skip(f'Pattern file not found `{self._pattern_filename}`')
 
-            # - call wrapped function to
-            return fn(self, text, *args, **kwargs)
-
-        return _inner
-
-    def _read_expected_file_content(self):
         self._expected_file_content = self._pattern_filename.read_text()
 
-    @_store_pattern_handle_error
-    def __eq__(self, text: str) -> bool:
+    def __eq__(self, text: object) -> bool:
+        if not isinstance(text, str):
+            msg = 'An argument to `__eq__` must be `str` type'
+            raise TypeError(msg)
+
+        self._maybe_store_pattern(text)
         self._read_expected_file_content()
         return self._expected_file_content == text
 
-    @_store_pattern_handle_error
     def match(self, text: str, flags: re.RegexFlag = _RE_NOFLAG) -> _ContentMatchResult:
+        self._maybe_store_pattern(text)
         self._read_expected_file_content()
         content = (
             '.*\n' if flags & re.MULTILINE else ' '

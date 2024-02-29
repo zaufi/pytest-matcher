@@ -208,12 +208,8 @@ ignore = [
   , "TD002"     # Missing author in TODO
   , "TD003"     # Missing issue link on the line following this TODO
   , "TD004"     # Missing colon in TODO
-    # TODO Suppress everything for now, will fix after migration to `hatch`.
-  , "ANN002"    # Missing type annotation for `*args`
-  , "ANN003"    # Missing type annotation for `**kwargs`
+    # TODO How to annotate `self` for Python < 3.11?.
   , "ANN101"    # Missing type annotation for `self` in method
-  , "ANN202"    # Missing return type annotation for private function
-  , "ANN401"    # Dynamically typed expressions (typing.Any) are disallowed
   ]
 select = ["ALL"]
 
