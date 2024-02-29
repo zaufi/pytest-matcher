@@ -3,10 +3,12 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 #
 
+# Standard imports
 import pathlib
 from dataclasses import dataclass
 from typing import Final
 
+# Third party packages
 import pytest
 
 pytest_plugins = ['pytester']
