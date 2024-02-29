@@ -94,7 +94,7 @@ dependencies = [
   , "isort"
   , "mypy"
   , "reuse"
-  , "ruff >= 0.2.1"
+  , "ruff >= 0.2.2"
   , "types-PyYAML"
   , "twine"
   , "vulture"
