@@ -377,6 +377,7 @@ def pytest_addoption(parser: pytest.Parser) -> None:
         'pm-pattern-file-use-system-name'
       , help='expect a system name (`platform.system()`) to be a pattern filename suffix'
       , type='bool'
+      , default=False
       )
 
 
