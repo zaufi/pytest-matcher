@@ -55,6 +55,7 @@ repos:
       - id: editorconfig-checker
 
   - repo: https://github.com/codespell-project/codespell
+    # ALERT Don't forget to update `pyproject.toml:tool.hatch.envs.default`
     rev: v2.2.6
     hooks:
       - id: codespell
