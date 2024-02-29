@@ -193,11 +193,11 @@ python_classes = ["*Tester"]
 python_functions = ["*_test", "*_test_?", "*_test_??"]
 testpaths = ["test"]
 
-# https://beta.ruff.rs/docs/settings
+# https://docs.astral.sh/ruff/configuration/
 [tool.ruff]
 cache-dir = "build/.ruff_cache"
 line-length = 120
-output-format = "grouped"
+output-format = "full"
 target-version = "py39"
 
 [tool.ruff.lint]
