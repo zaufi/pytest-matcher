@@ -3,19 +3,24 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 #
 
+from typing import Final
+
 import pytest
 
 pytest_plugins = ['pytester']
 
 @pytest.fixture()
-def ourtestdir(testdir: pytest.Testdir) -> pytest.Testdir:
+def ourtestdir(pytester: pytest.Pytester) -> pytest.Pytester:
     # Write a sample config file
-    testdir.tmpdir.join('pytest.ini').write(
-        '[pytest]\n'
-        'addopts = -vv -ra\n'
-        f'pm-patterns-base-dir = {testdir.tmpdir}'
+    pytester.makefile(
+        '.ini'
+      , pytest=f"""
+            [pytest]
+            addopts = -vv -ra
+            pm-patterns-base-dir = {pytester.path!s}
+        """
       )
-    return testdir
+    return pytester
 
 
 def no_file_test(ourtestdir) -> None:
@@ -36,15 +41,16 @@ def no_file_test(ourtestdir) -> None:
 
 def simple_test(ourtestdir) -> None:
     # Write a sample expectations file
-    ourtestdir.tmpdir.join('test_sample_out.out').write('Hello Africa!\n')
-    # Write a sample test (finally)
+    ourtestdir.makefile('.out', test_sample_out='Hello Africa!')
+    # Write a sample test
     ourtestdir.makepyfile("""
         def test_sample_out(capfd, expected_out):
-            print('Hello Africa!')
+            print('Hello Africa!', end='')
             stdout, stderr = capfd.readouterr()
             assert expected_out == stdout
             assert stderr == ''
-    """)
+        """
+      )
 
     # Run all tests with pytest
     result = ourtestdir.runpytest()
@@ -53,8 +59,8 @@ def simple_test(ourtestdir) -> None:
 
 def failed_test(ourtestdir) -> None:
     # Write a sample expectations file
-    ourtestdir.tmpdir.join('test_not_matched.out').write('Hello Africa!')
-    # Write a sample test (finally)
+    ourtestdir.makefile('.out', test_not_matched='Hello Africa!')
+    # Write a sample test
     ourtestdir.makepyfile("""
         def test_not_matched(capfd, expected_out):
             print('Unexpected output')
@@ -77,8 +83,8 @@ def failed_test(ourtestdir) -> None:
 
 def regex_match_test(ourtestdir) -> None:
     # Write a sample expectations file
-    ourtestdir.tmpdir.join('test_sample_out.out').write('.*Africa!\nHello\\s+.*!\n')
-    # Write a sample test (finally)
+    ourtestdir.makefile('.out', test_sample_out='.*Africa!\nHello\\s+.*!\n')
+    # Write a sample test
     ourtestdir.makepyfile("""
         def test_sample_out(capfd, expected_out):
             print('Hello Africa!')
@@ -95,7 +101,7 @@ def regex_match_test(ourtestdir) -> None:
 
 def regex_fail_match_test(ourtestdir) -> None:
     # Write a sample expectations file
-    ourtestdir.tmpdir.join('test_sample_out.out').write('.*Africa!\nEhlo\\s+.*!\n')
+    ourtestdir.makefile('.out', test_sample_out='.*Africa!\nEhlo\\s+.*!\n')
     # Write a sample test (finally)
     ourtestdir.makepyfile("""
         def test_sample_out(capfd, expected_out):
@@ -115,7 +121,7 @@ def regex_fail_match_test(ourtestdir) -> None:
 
 
 def result_yaml_not_found_test(ourtestdir) -> None:
-    # Write a sample test (finally)
+    # Write a sample test
     ourtestdir.makepyfile("""
         import pathlib
         def test_yaml(capfd, expected_yaml):
@@ -141,7 +147,7 @@ def expected_yaml_not_found_test(ourtestdir) -> None:
             - dua
             - tiga
     """)
-    # Write a sample test (finally)
+    # Write a sample test
     ourtestdir.makepyfile("""
         import pathlib
         def test_yaml(capfd, expected_yaml):
@@ -177,7 +183,7 @@ def yaml_match_test(ourtestdir) -> None:
             - tiga
         some-key: some-value
     """)
-    # Write a sample test (finally)
+    # Write a sample test
     ourtestdir.makepyfile("""
         import pathlib
         def test_yaml(capfd, expected_yaml):
@@ -209,7 +215,7 @@ def yaml_match_failure_test(ourtestdir) -> None:
             - tiga
             - satu
     """)
-    # Write a sample test (finally)
+    # Write a sample test
     ourtestdir.makepyfile("""
         import pathlib
         def test_yaml(capfd, expected_yaml):
@@ -236,9 +242,9 @@ def parametrized_case_test(ourtestdir) -> None:
     ]
     # Write sample expectation files
     for values, decoration in testing_pairs:
-        ourtestdir.tmpdir.join(f'test_parametrized{decoration}.out').write(str(values) + '\n')
+        (ourtestdir.path / f'test_parametrized{decoration}.out').write_text(str(values) + '\n')
 
-    # Write a sample test (finally)
+    # Write a sample test
     ourtestdir.makepyfile(f"""
         import pytest
         @pytest.mark.parametrize('x,y', {[p[0] for p in testing_pairs]})
@@ -257,15 +263,19 @@ def parametrized_case_test(ourtestdir) -> None:
 @pytest.mark.parametrize(('return_codes', 'expected_code'), [(False, 0), (True, 1)])
 def reveal_unused_files_test(return_codes, expected_code, ourtestdir, monkeypatch) -> None:
     # Write sample expectation files
-    ourtestdir.tmpdir.join('test_a.out').write('')
-    ourtestdir.tmpdir.join('test_a.out.bak').write('')
-    ourtestdir.tmpdir.mkdir('TestClass')
-    ourtestdir.tmpdir.join('TestClass/test_a.out').write('')
-    # Write unused files
-    ourtestdir.tmpdir.join('test_a.err').write('')
-    ourtestdir.tmpdir.join('test_b.out').write('')
+    (ourtestdir.path / 'TestClass').mkdir()
+    paths: Final[list[str]] = [
+        'test_a.out'
+      , 'test_a.out.bak'
+      , 'TestClass/test_a.out'
+        # Write some unused files
+      , 'test_a.err'
+      , 'test_b.out'
+      ]
+    for p in paths:
+        (ourtestdir.path / p).write_text('')
 
-    # Write a sample test (finally)
+    # Write a sample test
     ourtestdir.makepyfile("""
         def test_a(expected_out): pass
         class TestClass:
@@ -279,6 +289,6 @@ def reveal_unused_files_test(return_codes, expected_code, ourtestdir, monkeypatc
     result = ourtestdir.runpytest('--pm-reveal-unused-files')
     assert result.ret == expected_code
     result.stdout.fnmatch_lines([
-        ourtestdir.tmpdir.join('test_a.err')
-      , ourtestdir.tmpdir.join('test_b.out')
+        f'{(ourtestdir.path / p)!s}'
+        for p in ('test_a.err', 'test_b.out')
       ])
