@@ -29,7 +29,8 @@ def no_file_test(ourtestdir) -> None:
         def test_no_expected_file(capfd, expected_out):
             stdout, stderr = capfd.readouterr()
             assert expected_out == stdout
-    """)
+        """
+      )
 
     # Run all tests with pytest
     result = ourtestdir.runpytest()
@@ -66,7 +67,8 @@ def failed_test(ourtestdir) -> None:
             print('Unexpected output')
             stdout, stderr = capfd.readouterr()
             assert expected_out == stdout
-    """)
+      """
+    )
 
     # Run all tests with pytest
     result = ourtestdir.runpytest()
@@ -92,7 +94,8 @@ def regex_match_test(ourtestdir) -> None:
             stdout, stderr = capfd.readouterr()
             assert expected_out.match(stdout) == True
             assert stderr == ''
-    """)
+        """
+      )
 
     # Run all tests with pytest
     result = ourtestdir.runpytest()
@@ -110,7 +113,8 @@ def regex_fail_match_test(ourtestdir) -> None:
             stdout, stderr = capfd.readouterr()
             assert expected_out.match(stdout) == True
             assert stderr == ''
-    """)
+        """
+      )
 
     # Run all tests with pytest
     result = ourtestdir.runpytest()
@@ -126,13 +130,12 @@ def result_yaml_not_found_test(ourtestdir) -> None:
         import pathlib
         def test_yaml(capfd, expected_yaml):
             assert expected_yaml == pathlib.Path('result.yaml')
-    """)
+        """
+      )
     # Run all tests with pytest
     result = ourtestdir.runpytest()
     result.assert_outcomes(skipped=1)
-    result.stdout.re_match_lines([
-        '.*Result YAML file not found `result.yaml`'
-      ])
+    result.stdout.re_match_lines(['.*Result YAML file not found `result.yaml`'])
 
 
 def expected_yaml_not_found_test(ourtestdir) -> None:
@@ -146,13 +149,15 @@ def expected_yaml_not_found_test(ourtestdir) -> None:
             - satu
             - dua
             - tiga
-    """)
+        """
+      )
     # Write a sample test
     ourtestdir.makepyfile("""
         import pathlib
         def test_yaml(capfd, expected_yaml):
             assert expected_yaml == pathlib.Path('result.yaml')
-    """)
+        """
+      )
     # Run all tests with pytest
     result = ourtestdir.runpytest()
     result.assert_outcomes(skipped=1)
@@ -172,7 +177,8 @@ def yaml_match_test(ourtestdir) -> None:
             - satu
             - dua
             - tiga
-    """)
+        """
+      )
     ourtestdir.makefile(
         '.yaml'
       , test_yaml="""
@@ -182,13 +188,15 @@ def yaml_match_test(ourtestdir) -> None:
             - dua
             - tiga
         some-key: some-value
-    """)
+        """
+      )
     # Write a sample test
     ourtestdir.makepyfile("""
         import pathlib
         def test_yaml(capfd, expected_yaml):
             assert expected_yaml == pathlib.Path('test_yaml.yaml')
-    """)
+        """
+      )
     # Run all tests with pytest
     result = ourtestdir.runpytest()
     result.assert_outcomes(passed=1)
@@ -205,7 +213,8 @@ def yaml_match_failure_test(ourtestdir) -> None:
             - satu
             - dua
             - tiga
-    """)
+        """
+      )
     ourtestdir.makefile(
         '.yaml'
       , test_yaml="""
@@ -214,13 +223,15 @@ def yaml_match_failure_test(ourtestdir) -> None:
             - dua
             - tiga
             - satu
-    """)
+        """
+      )
     # Write a sample test
     ourtestdir.makepyfile("""
         import pathlib
         def test_yaml(capfd, expected_yaml):
             assert expected_yaml == pathlib.Path('result.yaml')
-    """)
+        """
+      )
 
     # Run all tests with pytest
     result = ourtestdir.runpytest()
@@ -253,7 +264,8 @@ def parametrized_case_test(ourtestdir) -> None:
             stdout, stderr = capfd.readouterr()
             assert expected_out == stdout
             assert stderr == ''
-    """)
+        """
+      )
 
     # Run all tests with pytest
     result = ourtestdir.runpytest()
@@ -280,7 +292,8 @@ def reveal_unused_files_test(return_codes, expected_code, ourtestdir, monkeypatc
         def test_a(expected_out): pass
         class TestClass:
             def test_a(self, expected_out): pass
-    """)
+        """
+      )
 
     # Run all tests with pytest
     if return_codes:
