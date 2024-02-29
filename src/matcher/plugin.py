@@ -156,7 +156,7 @@ def _make_expected_filename(
     request: pytest.FixtureRequest
   , ext: str
   , *
-  , use_system_suffix: bool = True
+  , can_use_system_suffix: bool = True
   ) -> pathlib.Path:
     result: pathlib.Path | None = None
     use_cwd_as_base = False
@@ -167,9 +167,11 @@ def _make_expected_filename(
 
     assert result is not None
 
-    if use_system_suffix:
-        use_system_suffix = request.config.getini('pm-pattern-file-use-system-name')
-        use_system_suffix = use_system_suffix in ('true', '1')
+    use_system_suffix = (
+        request.config.getini('pm-pattern-file-use-system-name')
+        if can_use_system_suffix
+        else False
+      )
 
     # Make the found path absolute using pytest's rootdir as the base
     if not result.is_absolute():
@@ -270,7 +272,7 @@ class _YAMLCheckOrStorePattern:
 def expected_yaml(request: pytest.FixtureRequest) -> _YAMLCheckOrStorePattern:
     """A pytest fixture to match YAML file content."""
     return _YAMLCheckOrStorePattern(
-        _make_expected_filename(request, '.yaml', use_system_suffix=False)
+        _make_expected_filename(request, '.yaml', can_use_system_suffix=False)
       , store=request.config.getoption('--pm-save-patterns')
       )
 
