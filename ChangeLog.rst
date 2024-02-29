@@ -13,6 +13,16 @@ to `Semantic Versioning`_.
 .. _Keep a Changelog: http://keepachangelog.com/
 .. _Semantic Versioning: http://semver.org/
 
+Unreleased_
+===========
+
+Added
+-----
+
+- ``--pm-reveal-unused-files`` option to reveal unused pattern files.
+- run test with ``pytest`` 7.x and 8.x.
+
+
 1.5.1_ -- 2024-01-15
 ====================
 
