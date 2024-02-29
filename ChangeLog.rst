@@ -16,6 +16,13 @@ to `Semantic Versioning`_.
 Unreleased_
 ===========
 
+Fixed
+-----
+
+- **BREAKING CHANGE** The expectation files path has never used the
+  ``<test-module-name>`` component despite the ``README.rst`` claimed.
+
+
 
 1.6.0_ -- 2024-02-29
 ====================

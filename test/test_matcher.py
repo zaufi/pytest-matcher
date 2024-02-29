@@ -3,11 +3,37 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 #
 
+import pathlib
+from dataclasses import dataclass
 from typing import Final
 
 import pytest
 
 pytest_plugins = ['pytester']
+
+
+@dataclass
+class _ExpectDir:
+    path: pathlib.Path
+
+    def makepatternfile(self, ext: str, **kwargs: str) -> pathlib.Path:
+        ret = None
+        for name, content in kwargs.items():
+            # NOTE Getting an indentation (to remove) by the
+            # first line in the given snippet!
+            if content[0].isspace():
+                indent = len(content) - len(content.lstrip()) - 1
+                content = '\n'.join(                        # NOQA: PLW2901
+                    line[indent:]
+                    for line in content.splitlines()
+                  ).strip()
+            p = (self.path / name).with_suffix(ext)
+            p.write_text(content)
+            if ret is None:
+                ret = p
+        assert ret is not None
+        return ret
+
 
 @pytest.fixture()
 def ourtestdir(pytester: pytest.Pytester) -> pytest.Pytester:
@@ -21,6 +47,13 @@ def ourtestdir(pytester: pytest.Pytester) -> pytest.Pytester:
         """
       )
     return pytester
+
+
+@pytest.fixture()
+def expectdir(pytester: pytest.Pytester, request: pytest.FixtureRequest) -> _ExpectDir:
+    path = pytester.path / request.function.__name__
+    path.mkdir()
+    return _ExpectDir(path)
 
 
 def no_file_test(ourtestdir) -> None:
@@ -40,9 +73,9 @@ def no_file_test(ourtestdir) -> None:
       ])
 
 
-def simple_test(ourtestdir) -> None:
+def simple_test(ourtestdir, expectdir) -> None:
     # Write a sample expectations file
-    ourtestdir.makefile('.out', test_sample_out='Hello Africa!')
+    expectdir.makepatternfile('.out', test_sample_out='Hello Africa!')
     # Write a sample test
     ourtestdir.makepyfile("""
         def test_sample_out(capfd, expected_out):
@@ -58,9 +91,9 @@ def simple_test(ourtestdir) -> None:
     result.assert_outcomes(passed=1)
 
 
-def failed_test(ourtestdir) -> None:
+def failed_test(ourtestdir, expectdir) -> None:
     # Write a sample expectations file
-    ourtestdir.makefile('.out', test_not_matched='Hello Africa!')
+    expectdir.makepatternfile('.out', test_not_matched='Hello Africa!')
     # Write a sample test
     ourtestdir.makepyfile("""
         def test_not_matched(capfd, expected_out):
@@ -83,9 +116,9 @@ def failed_test(ourtestdir) -> None:
       ])
 
 
-def regex_match_test(ourtestdir) -> None:
+def regex_match_test(ourtestdir, expectdir) -> None:
     # Write a sample expectations file
-    ourtestdir.makefile('.out', test_sample_out='.*Africa!\nHello\\s+.*!\n')
+    expectdir.makepatternfile('.out', test_sample_out='.*Africa!\nHello\\s+.*!\n')
     # Write a sample test
     ourtestdir.makepyfile("""
         def test_sample_out(capfd, expected_out):
@@ -102,9 +135,9 @@ def regex_match_test(ourtestdir) -> None:
     result.assert_outcomes(passed=1)
 
 
-def regex_fail_match_test(ourtestdir) -> None:
+def regex_fail_match_test(ourtestdir, expectdir) -> None:
     # Write a sample expectations file
-    ourtestdir.makefile('.out', test_sample_out='.*Africa!\nEhlo\\s+.*!\n')
+    expectdir.makepatternfile('.out', test_sample_out='.*Africa!\nEhlo\\s+.*!\n')
     # Write a sample test (finally)
     ourtestdir.makepyfile("""
         def test_sample_out(capfd, expected_out):
@@ -166,11 +199,11 @@ def expected_yaml_not_found_test(ourtestdir) -> None:
       ])
 
 
-def yaml_match_test(ourtestdir) -> None:
+def yaml_match_test(ourtestdir, expectdir) -> None:
     # Write a sample result and expected file
     ourtestdir.makefile(
         '.yaml'
-      , expected_yaml="""
+      , test_yaml="""
         some-key: some-value
         another-key: another-value
         simple-array:
@@ -179,7 +212,7 @@ def yaml_match_test(ourtestdir) -> None:
           - tiga
         """
       )
-    ourtestdir.makefile(
+    expectdir.makepatternfile(
         '.yaml'
       , test_yaml="""
         another-key: another-value
@@ -202,7 +235,7 @@ def yaml_match_test(ourtestdir) -> None:
     result.assert_outcomes(passed=1)
 
 
-def yaml_match_failure_test(ourtestdir) -> None:
+def yaml_match_failure_test(ourtestdir, expectdir) -> None:
     # Write a sample result and expected file
     ourtestdir.makefile(
         '.yaml'
@@ -215,7 +248,7 @@ def yaml_match_failure_test(ourtestdir) -> None:
           - tiga
         """
       )
-    ourtestdir.makefile(
+    expectdir.makepatternfile(
         '.yaml'
       , test_yaml="""
         another-key: another-value
@@ -244,7 +277,7 @@ def yaml_match_failure_test(ourtestdir) -> None:
       ])
 
 
-def parametrized_case_test(ourtestdir) -> None:
+def parametrized_case_test(ourtestdir, expectdir) -> None:
     # Given testing argvalues and expected decorations
     testing_pairs = [
         ((0, 'y'), '[0-y]'),
@@ -253,7 +286,7 @@ def parametrized_case_test(ourtestdir) -> None:
     ]
     # Write sample expectation files
     for values, decoration in testing_pairs:
-        (ourtestdir.path / f'test_parametrized{decoration}.out').write_text(str(values) + '\n')
+        (expectdir.path / f'test_parametrized{decoration}.out').write_text(str(values) + '\n')
 
     # Write a sample test
     ourtestdir.makepyfile(f"""

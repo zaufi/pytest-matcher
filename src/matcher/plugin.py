@@ -187,6 +187,8 @@ def _make_expected_filename(
     if not result.exists():
         pytest.skip(f'Base directory for pattern-matcher do not exists: `{result}`')
 
+    result /= request.module.__name__.split('.')[-1]
+
     if request.cls is not None:
         result /= request.cls.__name__
 
