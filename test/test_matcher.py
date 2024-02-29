@@ -285,7 +285,7 @@ def reveal_unused_files_test(return_codes, expected_code, ourtestdir, monkeypatc
       , 'test_b.out'
       ]
     for p in paths:
-        (ourtestdir.path / p).write_text('')
+        (ourtestdir.path / p).touch()
 
     # Write a sample test
     ourtestdir.makepyfile("""
