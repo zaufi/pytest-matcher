@@ -13,6 +13,10 @@ to `Semantic Versioning`_.
 .. _Keep a Changelog: http://keepachangelog.com/
 .. _Semantic Versioning: http://semver.org/
 
+Unreleased_
+===========
+
+
 1.6.0_ -- 2024-02-29
 ====================
 
