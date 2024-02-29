@@ -10,7 +10,7 @@ build-backend = "hatchling.build"
 [project]
 # https://packaging.python.org/en/latest/specifications/pyproject-toml
 name = "pytest-matcher"
-description = "Keep a ChangeLog"
+description = "Easy way to match captured `pytest` output against expectations stored in files"
 readme = "README.rst"
 requires-python = ">=3.9"
 license = { file="LICENSES/GPL-3.0-or-later.txt" }
