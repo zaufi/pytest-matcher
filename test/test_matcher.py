@@ -146,9 +146,9 @@ def expected_yaml_not_found_test(ourtestdir) -> None:
         some-key: some-value
         another-key: another-value
         simple-array:
-            - satu
-            - dua
-            - tiga
+          - satu
+          - dua
+          - tiga
         """
       )
     # Write a sample test
@@ -174,9 +174,9 @@ def yaml_match_test(ourtestdir) -> None:
         some-key: some-value
         another-key: another-value
         simple-array:
-            - satu
-            - dua
-            - tiga
+          - satu
+          - dua
+          - tiga
         """
       )
     ourtestdir.makefile(
@@ -184,9 +184,9 @@ def yaml_match_test(ourtestdir) -> None:
       , test_yaml="""
         another-key: another-value
         simple-array:
-            - satu
-            - dua
-            - tiga
+          - satu
+          - dua
+          - tiga
         some-key: some-value
         """
       )
@@ -210,9 +210,9 @@ def yaml_match_failure_test(ourtestdir) -> None:
         some-key: some-value
         another-key: another-value
         simple-array:
-            - satu
-            - dua
-            - tiga
+          - satu
+          - dua
+          - tiga
         """
       )
     ourtestdir.makefile(
@@ -220,9 +220,9 @@ def yaml_match_failure_test(ourtestdir) -> None:
       , test_yaml="""
         another-key: another-value
         simple-array:
-            - dua
-            - tiga
-            - satu
+          - dua
+          - tiga
+          - satu
         """
       )
     # Write a sample test
