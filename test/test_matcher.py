@@ -343,36 +343,36 @@ def reveal_unused_files_test(return_codes, expected_code, ourtestdir, monkeypatc
 
 
 @pytest.mark.parametrize(
-    ('fmt', 'file_name', 'cls_name', 'fn_name', 'expected_path')
+    ('fmt', 'file_name', 'cls_name', 'expected_path')
   , [
         # Format w/ just a function name produces an expectation file in the base dir
-        ('{fn}',                 'simple_test',     None,      'test_fn', 'test_fn.out')
+        ('{fn}',                 'simple_test',     None,      'test_fn.out')
         # Any leading `/` doesn't produce any files in the FS root
-      , ('/{fn}',                'simple_test',     None,      'test_fn', 'test_fn.out')
+      , ('/{fn}',                'simple_test',     None,      'test_fn.out')
         # Any trailing slashes also ignored
-      , ('{fn}/',                'simple_test',     None,      'test_fn', 'test_fn.out')
+      , ('{fn}/',                'simple_test',     None,      'test_fn.out')
         # Play w/ other components...
-      , ('{module}-{fn}',        'simple_test',     None,      'test_fn', 'simple_test-test_fn.out')
-      , ('{module}/{fn}',        'subdir_test',     None,      'test_fn', 'subdir_test/test_fn.out')
+      , ('{module}-{fn}',        'simple_test',     None,      'simple_test-test_fn.out')
+      , ('{module}/{fn}',        'subdir_test',     None,      'subdir_test/test_fn.out')
         # ... patterns may include some static text
-      , ('py-{module}/exp-{fn}', 'pfx_subdir_test', None,      'test_fn', 'py-pfx_subdir_test/exp-test_fn.out')
+      , ('py-{module}/exp-{fn}', 'pfx_subdir_test', None,      'py-pfx_subdir_test/exp-test_fn.out')
         # Missed class name means no corresponding subdir
-      , ('{class}/{fn}',         'subdir_test',     None,      'test_fn', 'test_fn.out')
+      , ('{class}/{fn}',         'subdir_test',     None,      'test_fn.out')
         # Missed class name in the format is Ok
-      , ('{fn}',                 'simple_test',     'TestCls', 'test_fn', 'test_fn.out')
+      , ('{fn}',                 'simple_test',     'TestCls', 'test_fn.out')
         # Play w/ other components...
-      , ('{class}+{fn}',         'simple_test',     'TestCls', 'test_fn', 'TestCls+test_fn.out')
-      , ('{module}/{class}/{fn}','simple_test',     'TestCls', 'test_fn', 'simple_test/TestCls/test_fn.out')
+      , ('{class}+{fn}',         'simple_test',     'TestCls', 'TestCls+test_fn.out')
+      , ('{module}/{class}/{fn}','simple_test',     'TestCls', 'simple_test/TestCls/test_fn.out')
         # Redundant '/' just ignored
-      , ('{module}//{class}//{fn}','simple_test',   'TestCls', 'test_fn', 'simple_test/TestCls/test_fn.out')
+      , ('{module}//{class}//{fn}','simple_test',   'TestCls', 'simple_test/TestCls/test_fn.out')
         # '.' is meaningless
-      , ('./{class}/{fn}',         'simple_test',   'TestCls', 'test_fn', 'TestCls/test_fn.out')
-      , ('{class}/./{fn}',         'simple_test',   'TestCls', 'test_fn', 'TestCls/test_fn.out')
+      , ('./{class}/{fn}',         'simple_test',   'TestCls', 'TestCls/test_fn.out')
+      , ('{class}/./{fn}',         'simple_test',   'TestCls', 'TestCls/test_fn.out')
         # Directory traversal also ignored
-      , ('../{class}/../{fn}',     'simple_test',   'TestCls', 'test_fn', 'TestCls/test_fn.out')
+      , ('../{class}/../{fn}',     'simple_test',   'TestCls', 'TestCls/test_fn.out')
     ]
   )
-def fn_fmt_test(pytester: pytest.Pytester, fmt, file_name, cls_name, fn_name, expected_path) -> None:
+def fn_fmt_test(pytester: pytest.Pytester, fmt, file_name, cls_name, expected_path) -> None:
     # Write a sample config file
     pytester.makefile(
         '.ini'
@@ -393,7 +393,7 @@ def fn_fmt_test(pytester: pytest.Pytester, fmt, file_name, cls_name, fn_name, ex
     indent = ' ' * (4 if cls_name is not None else 0)
     kwargs = {file_name: f"""
         {('class ' + cls_name + ':') if cls_name is not None else ''}
-        {indent}def {fn_name}({'self, ' if cls_name is not None else ''}capfd, expected_out):
+        {indent}def test_fn({'self, ' if cls_name is not None else ''}capfd, expected_out):
         {indent}    print('Hello Africa!', end='')
         {indent}    stdout, stderr = capfd.readouterr()
         {indent}    assert expected_out == stdout
