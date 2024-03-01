@@ -27,7 +27,7 @@ Fixed
 - **BREAKING CHANGE** The expectation files path has never used the
   ``<test-module-name>`` component despite the ``README.rst`` claimed.
   Existed projects could set ``pm-pattern-file-fmt`` to
-  ``{class}\{fn}{callspec}{suffix}`` to preserve backward compatibility.
+  ``{class}/{fn}{callspec}{suffix}`` to preserve backward compatibility.
 
 
 1.6.0_ -- 2024-02-29
