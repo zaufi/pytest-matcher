@@ -217,6 +217,7 @@ select = ["ALL"]
 "test/test_*.py" = [
     "ANN001"    # Missing type annotation for function argument
   , "D"         # Documentation issues
+  , "PLR0913"   # Too many arguments in function definition
   , "PLR2004"   # Magic value used in comparison
   ]
 

@@ -391,6 +391,12 @@ def pytest_addoption(parser: pytest.Parser) -> None:
       , type='string'
       , default='{module}/{class}/{fn}{callspec}'
       )
+    parser.addini(
+        'pm-pattern-file-fmt'
+      , help='pattern filename format can use placeholders: `module`, `class`, `fn`, `callspec`, `system`'
+      , type='string'
+      , default='{module}/{class}/{fn}{callspec}{suffix}'
+      )
 
 
 @pytest.hookimpl(trylast=True)
