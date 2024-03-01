@@ -63,7 +63,7 @@ repos:
 
   - repo: https://github.com/charliermarsh/ruff-pre-commit
     # ALERT Don't forget to update `pyproject.toml:tool.hatch.envs.default`
-    rev: v0.2.2
+    rev: v0.3.0
     hooks:
       - id: ruff
 
