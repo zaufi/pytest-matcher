@@ -8,6 +8,7 @@
 from __future__ import annotations
 
 # Standard imports
+import functools
 import os
 import pathlib
 import platform
@@ -152,6 +153,17 @@ def _try_module_path(request: pytest.FixtureRequest) -> tuple[pathlib.Path, bool
     return (pathlib.Path(request.path.parent) / 'data' / 'expected', False)
 
 
+def _subst_pattern_parts(result: pathlib.Path, current: str, **kwargs: str) -> pathlib.Path:
+    # ATTENTION If pattern format started w/ `/`
+    # (or containing it in any place), just ignore it!
+    # ATTENTION Directory traversal also just SILENTLY ignored!
+    # TODO Or must be alerted?
+    if current in ('/', '..'):
+        return result
+    part = current.format(**kwargs)
+    return result / part if part else result
+
+
 def _make_expected_filename(
     request: pytest.FixtureRequest
   , ext: str
@@ -187,18 +199,22 @@ def _make_expected_filename(
     if not result.exists():
         pytest.skip(f'Base directory for pattern-matcher do not exists: `{result}`')
 
-    result /= request.module.__name__.split('.')[-1]
+    subst: dict[str, str] = {
+        'module': request.module.__name__.split('.')[-1]
+      , 'class': request.cls.__name__ if request.cls is not None else ''
+      , 'fn': request.function.__name__
+      , 'callspec': urllib.parse.quote(
+            request.node.name[len(request.function.__name__):]
+          , safe='[]'
+          )
+      , 'suffix': '-' + platform.system() if use_system_suffix else ''
+      }
 
-    if request.cls is not None:
-        result /= request.cls.__name__
-
-    result /= (                                             # type: ignore[operator]
-        urllib.parse.quote(request.node.name, safe='[]')
-      + ('-' + platform.system() if use_system_suffix else '')
-      + ext
-      )
-
-    return result
+    return functools.reduce(
+        functools.partial(_subst_pattern_parts, **subst)
+      , pathlib.Path(request.config.getini('pm-pattern-file-fmt')).parts
+      , result
+      ).with_suffix(ext)
 
 
 @pytest.fixture()
@@ -382,6 +398,12 @@ def pytest_addoption(parser: pytest.Parser) -> None:
       , help='expect a system name (`platform.system()`) to be a pattern filename suffix'
       , type='bool'
       , default=False
+      )
+    parser.addini(
+        'pm-pattern-file-fmt'
+      , help='pattern filename format can use placeholders: `module`, `class`, `fn`, `callspec`, `system`'
+      , type='string'
+      , default='{module}/{class}/{fn}{callspec}{suffix}'
       )
 
 

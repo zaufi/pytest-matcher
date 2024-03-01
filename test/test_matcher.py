@@ -340,3 +340,68 @@ def reveal_unused_files_test(return_codes, expected_code, ourtestdir, monkeypatc
         f'{(ourtestdir.path / p)!s}'
         for p in ('test_a.err', 'test_b.out')
       ])
+
+
+@pytest.mark.parametrize(
+    ('fmt', 'file_name', 'cls_name', 'fn_name', 'expected_path')
+  , [
+        # Format w/ just a function name produces an expectation file in the base dir
+        ('{fn}',                 'simple_test',     None,      'test_fn', 'test_fn.out')
+        # Any leading `/` doesn't produce any files in the FS root
+      , ('/{fn}',                'simple_test',     None,      'test_fn', 'test_fn.out')
+        # Any trailing slashes also ignored
+      , ('{fn}/',                'simple_test',     None,      'test_fn', 'test_fn.out')
+        # Play w/ other components...
+      , ('{module}-{fn}',        'simple_test',     None,      'test_fn', 'simple_test-test_fn.out')
+      , ('{module}/{fn}',        'subdir_test',     None,      'test_fn', 'subdir_test/test_fn.out')
+        # ... patterns may include some static text
+      , ('py-{module}/exp-{fn}', 'pfx_subdir_test', None,      'test_fn', 'py-pfx_subdir_test/exp-test_fn.out')
+        # Missed class name means no corresponding subdir
+      , ('{class}/{fn}',         'subdir_test',     None,      'test_fn', 'test_fn.out')
+        # Missed class name in the format is Ok
+      , ('{fn}',                 'simple_test',     'TestCls', 'test_fn', 'test_fn.out')
+        # Play w/ other components...
+      , ('{class}+{fn}',         'simple_test',     'TestCls', 'test_fn', 'TestCls+test_fn.out')
+      , ('{module}/{class}/{fn}','simple_test',     'TestCls', 'test_fn', 'simple_test/TestCls/test_fn.out')
+        # Redundant '/' just ignored
+      , ('{module}//{class}//{fn}','simple_test',   'TestCls', 'test_fn', 'simple_test/TestCls/test_fn.out')
+        # '.' is meaningless
+      , ('./{class}/{fn}',         'simple_test',   'TestCls', 'test_fn', 'TestCls/test_fn.out')
+      , ('{class}/./{fn}',         'simple_test',   'TestCls', 'test_fn', 'TestCls/test_fn.out')
+        # Directory traversal also ignored
+      , ('../{class}/../{fn}',     'simple_test',   'TestCls', 'test_fn', 'TestCls/test_fn.out')
+    ]
+  )
+def fn_fmt_test(pytester: pytest.Pytester, fmt, file_name, cls_name, fn_name, expected_path) -> None:
+    # Write a sample config file
+    pytester.makefile(
+        '.ini'
+      , pytest=f"""
+            [pytest]
+            addopts = -vv -ra
+            pm-patterns-base-dir = {pytester.path!s}
+            pm-pattern-file-fmt = {fmt}
+        """
+      )
+
+    # Write a sample expectations file
+    path = pytester.path / expected_path
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text('Hello Africa!')
+
+    # Write a sample test
+    indent = ' ' * (4 if cls_name is not None else 0)
+    kwargs = {file_name: f"""
+        {('class ' + cls_name + ':') if cls_name is not None else ''}
+        {indent}def {fn_name}({'self, ' if cls_name is not None else ''}capfd, expected_out):
+        {indent}    print('Hello Africa!', end='')
+        {indent}    stdout, stderr = capfd.readouterr()
+        {indent}    assert expected_out == stdout
+        {indent}    assert stderr == ''
+        """
+      }
+    pytester.makepyfile(**kwargs)
+
+    # Run all tests with pytest
+    result = pytester.runpytest()
+    result.assert_outcomes(passed=1)
