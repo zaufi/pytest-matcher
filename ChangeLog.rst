@@ -20,6 +20,10 @@ Added
 -----
 - Introduce ``pm-pattern-file-fmt`` configuration parameter to give full
   control over the path to pattern files.
+- Test can be marked with ``@pytest.mark.expect_suffix([args..., suffix=<arg>])``
+  to have an arbitrary suffix in the pattern filenames.
+  The ``pm-pattern-file-fmt`` format string should have the ``{suffix}`` placeholder
+  to make it work. See issue #22.
 
 Fixed
 -----

@@ -162,12 +162,7 @@ def _subst_pattern_parts(result: pathlib.Path, current: str, **kwargs: str) -> p
     return result / part if part else result
 
 
-def _make_expected_filename(
-    request: pytest.FixtureRequest
-  , ext: str
-  , *
-  , can_use_system_suffix: bool = True
-  ) -> pathlib.Path:
+def _make_expected_filename(request: pytest.FixtureRequest, ext: str) -> pathlib.Path:
     result: pathlib.Path | None = None
     use_cwd_as_base = False
     for alg in [_try_cli_option, _try_ini_option, _try_module_path]:
@@ -191,6 +186,21 @@ def _make_expected_filename(
     if not result.exists():
         pytest.skip(f'Base directory for pattern-matcher do not exists: `{result}`')
 
+    # Check if a test function has been marked as having a
+    # suffix for a pattern filename.
+    args: list[str] = []
+    if sfx_makrer := request.node.get_closest_marker('expect_suffix'):
+        # Process positional args first
+        args = [f'{arg!s}' for arg in sfx_makrer.args]
+        # Also, check if `suffix` has been given as a named parameter
+        if 'suffix' in sfx_makrer.kwargs:
+            args.append(f'{sfx_makrer.kwargs["suffix"]!s}')
+
+        # NOTE If marker has added w/o any arguments, assume
+        # it should be a system name suffix.
+        if not args:
+            args.append(platform.system())
+
     subst: dict[str, str] = {
         'module': request.module.__name__.split('.')[-1]
       , 'class': request.cls.__name__ if request.cls is not None else ''
@@ -199,7 +209,7 @@ def _make_expected_filename(
             request.node.name[len(request.function.__name__):]
           , safe='[]'
           )
-      , 'suffix': '-' + platform.system() if can_use_system_suffix else ''
+      , 'suffix': ('','-')[int(bool(args))] + '-'.join(args)
       }
 
     return functools.reduce(
@@ -282,7 +292,7 @@ class _YAMLCheckOrStorePattern:
 def expected_yaml(request: pytest.FixtureRequest) -> _YAMLCheckOrStorePattern:
     """A pytest fixture to match YAML file content."""
     return _YAMLCheckOrStorePattern(
-        _make_expected_filename(request, '.yaml', can_use_system_suffix=False)
+        _make_expected_filename(request, '.yaml')
       , store=request.config.getoption('--pm-save-patterns')
       )
 
