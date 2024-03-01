@@ -18,8 +18,8 @@ Unreleased_
 
 Added
 -----
-- introduce ``pm-pattern-file-fmt`` configuration parameter to give a full
-  control over path to pattern files.
+- introduce ``pm-pattern-file-fmt`` configuration parameter to give full
+  control over the path to pattern files.
 
 Fixed
 -----
