@@ -31,6 +31,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install hatch
           hatch env create
+          hatch env create doc
 
       - name: Build a package
         run: hatch build
@@ -54,3 +55,6 @@ jobs:
 
       - name: Run dead code check
         run: hatch run dead-check
+
+      - name: Run dead links check
+        run: hatch run doc:link-check

@@ -83,10 +83,6 @@ dev-mode-dirs = ["src"]
 [tool.hatch.build.targets.wheel]
 packages = ["src/matcher"]
 
-[tool.hatch.version]
-source = "vcs"
-tag-pattern = "release/(.*)"
-
 [tool.hatch.envs.default]
 description = "Development environment"
 dependencies = [
@@ -123,6 +119,20 @@ annotate-misc = "reuse annotate -c \"$(git config --get user.name) <$(git config
 dist = "hatch build -t wheel"
 fix-spelling = "codespell -i 3 -w"
 
+[tool.hatch.envs.doc]
+verbosity = 1
+template = "doc"
+description = "Environment to build documentation"
+dependencies = [
+    "sphinx"
+  , "sphinx_rtd_theme"
+  ]
+
+[tool.hatch.envs.doc.scripts]
+build = "sphinx-build --color -j auto doc/ build/sphinx/html/"
+link-check = "sphinx-build --color -b linkcheck doc/ build/sphinx/link-check/"
+show = "xdg-open build/sphinx/html/index.html"
+
 [tool.hatch.envs.test]
 description = "Unit tests environment"
 
@@ -141,6 +151,10 @@ matrix.pytest.dependencies = [
 cov = "pytest --cov-report term --cov-report html:build/coverage-{matrix:pytest} --cov=matcher"
 show-cov = "xdg-open build/coverage-{matrix:pytest}/index.html"
 test = "pytest -o cache_dir=build/.{matrix:pytest}_cache {verbosity:flag} {args}"
+
+[tool.hatch.version]
+source = "vcs"
+tag-pattern = "release/(.*)"
 
 [tool.isort]
 multi_line_output = 3
@@ -190,7 +204,7 @@ markers = [
 minversion = "7.0"
 python_files = ["test_*.py"]
 python_classes = ["*Tester"]
-python_functions = ["*_test", "*_test_?", "*_test_??"]
+python_functions = ["*_test", "*_test_?", "*_test_??", "test_*"]
 testpaths = ["test"]
 
 # https://docs.astral.sh/ruff/configuration/
@@ -214,10 +228,20 @@ ignore = [
 select = ["ALL"]
 
 [tool.ruff.lint.extend-per-file-ignores]
+"doc/conf.py" = [
+    "INP001"
+  , "D100"      # Missing docstring in public module
+  , "A001"      # Variable `copyright` is shadowing a Python builtin
+  ]
 "test/test_*.py" = [
     "ANN001"    # Missing type annotation for function argument
   , "D"         # Documentation issues
   , "PLR2004"   # Magic value used in comparison
+  ]
+"test/test_foo.py" = [
+    "T201"      # `print` found
+  , "E712"      # Comparison to `True`
+  , "DTZ005"    # The use of `datetime.datetime.now()` without `tz` argument is not allowed
   ]
 
 [tool.ruff.lint.flake8-quotes]

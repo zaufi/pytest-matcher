@@ -4,7 +4,7 @@ Upstream-Contact: Alex Turbov <zaufi@pm.me>
 Source: https://github.com/zaufi/pytest-matcher
 
 # NOTE It's not possible to have comments in any way in JSON files!
-Files: test/data/*.json
+Files: test/data/*
 Copyright: 2024 Alex Turbov <zaufi@pm.me>
 License: CC0-1.0
 
