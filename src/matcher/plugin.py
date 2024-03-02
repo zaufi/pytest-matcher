@@ -137,12 +137,12 @@ class _ContentCheckOrStorePattern:
           ]
 
 
-def _get_base_dir(request: pytest.FixtureRequest) -> tuple[pathlib.Path, bool]:
-    result: pathlib.Path | None = request.config.getoption('--pm-patterns-base-dir')
+def _get_base_dir(config: pytest.Config) -> tuple[pathlib.Path, bool]:
+    result: pathlib.Path | None = config.getoption('--pm-patterns-base-dir')
     if result is not None:
         return (pathlib.Path(result) if result is not None else None, True)
 
-    result = request.config.getini('pm-patterns-base-dir')
+    result = config.getini('pm-patterns-base-dir')
     assert result is not None
     return (pathlib.Path(result), False)
 
@@ -157,7 +157,7 @@ def _subst_pattern_parts(result: pathlib.Path, current: str, **kwargs: str) -> p
 
 
 def _make_expected_filename(request: pytest.FixtureRequest, ext: str) -> pathlib.Path:
-    result, use_cwd_as_base = _get_base_dir(request)
+    result, use_cwd_as_base = _get_base_dir(request.config)
 
     # Make the found path absolute using pytest's rootdir as the base
     if not result.is_absolute():
@@ -294,7 +294,7 @@ class _UnusedFilesReporter:
         if not session.items:
             return
 
-        patterns_base_dir, _ = _get_base_dir(session.items[0]._request)  # type: ignore[attr-defined] # NOQA: SLF001
+        patterns_base_dir, _ = _get_base_dir(session.config)
         known_extensions = '.out', '.err'
 
         all_paths = {
