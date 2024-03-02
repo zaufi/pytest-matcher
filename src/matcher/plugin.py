@@ -156,9 +156,7 @@ def _try_module_path(request: pytest.FixtureRequest) -> tuple[pathlib.Path, bool
 def _subst_pattern_parts(result: pathlib.Path, current: str, **kwargs: str) -> pathlib.Path:
     # ATTENTION If pattern format started w/ `/`
     # (or containing it in any place), just ignore it!
-    # ATTENTION Directory traversal also just SILENTLY ignored!
-    # TODO Or must be alerted?
-    if current in ('/', '..'):
+    if current == '/':
         return result
     part = current.format(**kwargs)
     return result / part if part else result
@@ -409,7 +407,12 @@ def pytest_addoption(parser: pytest.Parser) -> None:
 
 @pytest.hookimpl(trylast=True)
 def pytest_configure(config: pytest.Config) -> None:
-    """Register additional configuration."""
+    """Validate configuration and register additional reporter."""
+    # ALERT Prevent directory traversal!
+    if any(part == '..' for part in pathlib.Path(config.getini('pm-pattern-file-fmt')).parts):
+        msg = 'Directory traversal is not allowed for `pm-pattern-file-fmt` option'
+        raise pytest.UsageError(msg)
+
     if not config.getoption('--pm-reveal-unused-files'):
         return
 

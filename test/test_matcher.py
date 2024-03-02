@@ -368,8 +368,6 @@ def reveal_unused_files_test(return_codes, expected_code, ourtestdir, monkeypatc
         # '.' is meaningless
       , ('./{class}/{fn}',         'simple_test',   'TestCls', 'TestCls/test_fn.out')
       , ('{class}/./{fn}',         'simple_test',   'TestCls', 'TestCls/test_fn.out')
-        # Directory traversal also ignored
-      , ('../{class}/../{fn}',     'simple_test',   'TestCls', 'TestCls/test_fn.out')
     ]
   )
 def fn_fmt_test(pytester: pytest.Pytester, fmt, file_name, cls_name, expected_path) -> None:
@@ -405,3 +403,21 @@ def fn_fmt_test(pytester: pytest.Pytester, fmt, file_name, cls_name, expected_pa
     # Run all tests with pytest
     result = pytester.runpytest()
     result.assert_outcomes(passed=1)
+
+
+def pm_pattern_file_fmt_directory_traversal_test(pytester: pytest.Pytester) -> None:
+    # Write a sample config file
+    pytester.makefile(
+        '.ini'
+      , pytest=f"""
+            [pytest]
+            addopts = -vv -ra
+            pm-patterns-base-dir = {pytester.path!s}
+            pm-pattern-file-fmt = ../{{class}}/../{{fn}}
+        """
+      )
+    # Run all tests with pytest
+    result = pytester.runpytest()
+    result.stderr.re_match_lines([
+        'ERROR: Directory traversal is not allowed for `pm-pattern-file-fmt` option'
+      ])
