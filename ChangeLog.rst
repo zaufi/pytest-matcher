@@ -23,7 +23,7 @@ Added
 - A test can be marked with ``@pytest.mark.expect_suffix([args..., suffix=<arg>])``
   to have an arbitrary suffix in the pattern filenames.
   The ``pm-pattern-file-fmt`` format string should have the ``{suffix}`` placeholder
-  to make it work. See issue #22.
+  to make it work. See :issue:`22`.
 
 Fixed
 -----
@@ -65,7 +65,7 @@ Fixed
 Added
 -----
 
-- [4_] Make it possible to use ``expected_xxx`` with parameterized tests.
+- Make it possible to use ``expected_xxx`` with parameterized tests. See :issue:`4`.
 
 
 1.4.0_ -- 2021-12-10
@@ -79,7 +79,7 @@ Added
 Changed
 -------
 
-- Migrate to ``setup.py``-less build (using PEP517 and PEP660).
+- Migrate to ``setup.py``-less build (using :pep:`517` and :pep:`660`).
 
 
 1.3.3_ -- 2019-06-27
@@ -97,7 +97,7 @@ Fixed
 Fixed
 -----
 
-- When a caller use ``re.MULTILINE`` the plugin do not use ``splitlines``.
+- When a caller uses ``re.MULTILINE``, the plugin does not use ``splitlines``.
 
 
 1.3.1_ -- 2019-04-04
@@ -134,9 +134,9 @@ Added
 -----
 
 - Add an INI-file option ``pm-pattern-file-use-system-name`` to control if the system
-  name suffix is expected to be in a pattern filename. E.g. this allows having patterns with
-  different CR/LF conventions;
-- Add ``expected_yaml`` fixture to match YAML files;
+  name suffix is expected to be in a pattern filename. For example, this allows patterns with
+  different CR/LF conventions to be created.
+- Add ``expected_yaml`` fixture to match YAML files.
 - Introduce unit tests.
 
 
@@ -162,7 +162,8 @@ Changed
 Added
 -----
 
-- Add pretty printer for failed asserts with ``expected_out`` fixture and equal comparison operator.
+- Add a pretty printer for failed assertions with the ``expected_out`` fixture and equal
+  comparison operator.
 
 
 .. _Unreleased: https://github.com/zaufi/pytest-matcher/compare/release/1.6.0...HEAD
@@ -178,4 +179,3 @@ Added
 .. _1.2.0: https://github.com/zaufi/pytest-matcher/compare/release/1.1.0...release/1.2.0
 .. _1.1.0: https://github.com/zaufi/pytest-matcher/compare/release/1.0.0...release/1.1.0
 .. _1.0.0: https://github.com/zaufi/pytest-matcher/compare/release/0.9.0...release/1.0.0
-.. _4: https://github.com/zaufi/pytest-matcher/issues/4

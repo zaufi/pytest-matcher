@@ -40,13 +40,8 @@ needs_sphinx = '7.0'
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
-    'sphinx.ext.autodoc'
-  , 'sphinx.ext.doctest'
+    'sphinx.ext.extlinks'
   , 'sphinx.ext.todo'
-  , 'sphinx.ext.coverage'
-  , 'sphinx.ext.viewcode'
-  , 'sphinx.ext.intersphinx'
-  , 'sphinx.ext.autosectionlabel'
 ]
 
 # The suffix(es) of source filenames.
@@ -85,6 +80,14 @@ html_show_sourcelink = True
 html_short_title = f'{project} {version} documentation'
 
 # -- Extension configuration -------------------------------------------------
+
+# -- Options for extlinks extension ------------------------------------------
+# TODO Any way to get and use project's metadata URL?
+extlinks = {
+    'issue': ('https://github.com/zaufi/pytest-matcher/issues/%s', 'issue #%s')
+  , 'pr': ('https://github.com/zaufi/pytest-matcher/pull/%s', 'PR #%s')
+  }
+extlinks_detect_hardcoded_links = True
 
 # -- Options for todo extension ----------------------------------------------
 

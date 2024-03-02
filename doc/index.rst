@@ -14,6 +14,7 @@ Welcome to Pytest Matcher documentation!
     cli
     configuration
     api
+    latest-changelog
 
 
 Indices and tables
