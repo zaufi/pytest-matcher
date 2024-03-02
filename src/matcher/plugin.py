@@ -150,6 +150,7 @@ def _try_ini_option(request: pytest.FixtureRequest) -> tuple[pathlib.Path | None
 def _try_module_path(request: pytest.FixtureRequest) -> tuple[pathlib.Path, bool]:
     assert request.path.parent is not None
     # NOTE Suppose the current test module's directory has `data/expected/` inside
+    # TODO Add default value for 'pm-patterns-base-dir' and just remove this function!
     return (pathlib.Path(request.path.parent) / 'data' / 'expected', False)
 
 
