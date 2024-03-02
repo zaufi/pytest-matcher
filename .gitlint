@@ -146,6 +146,6 @@ min-length=0
 # under [general] section above.
 [contrib-title-conventional-commits]
 # Specify allowed commit types. For details see: https://www.conventionalcommits.org/
-types=build,ci,chore,docs,feat,fix,impr,misc,perf,refactor,release,revert,style,test,wip
+types=build,ci,chore,docs,feat,fix,impr,misc,package,perf,refactor,release,revert,style,test,wip
 
 # kate: hl ini;
