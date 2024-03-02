@@ -13,6 +13,15 @@ to `Semantic Versioning`_.
 .. _Keep a Changelog: http://keepachangelog.com/
 .. _Semantic Versioning: http://semver.org/
 
+.. Types of changes (https://keepachangelog.com/en/1.1.0/#types)
+..   ✔ ``Added`` for new features.
+..   ✔ ``Changed`` for changes in existing functionality.
+..   ✔ ``Deprecated`` for soon-to-be removed features.
+..   ✔ ``Removed`` for now removed features.
+..   ✔ ``Fixed`` for any bug fixes.
+..   ✔ ``Security`` in case of vulnerabilities.
+
+
 Unreleased_
 ===========
 
