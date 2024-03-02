@@ -375,8 +375,18 @@ def pytest_addoption(parser: pytest.Parser) -> None:
 @pytest.hookimpl(trylast=True)
 def pytest_configure(config: pytest.Config) -> None:
     """Validate configuration and register additional reporter."""
-    # ALERT Prevent directory traversal!
-    if any(part == '..' for part in pathlib.Path(config.getini('pm-pattern-file-fmt')).parts):
+    # ALERT Make sure the patterns base directory isn't an absolute path!
+    basedir = _get_base_dir(config)
+    if basedir.is_absolute():
+        msg = 'The patterns base directory must be relative'
+        raise pytest.UsageError(msg)
+
+    def _path_have_dot_dot(path: pathlib.Path) -> bool:
+        return any(part == '..' for part in path.parts)
+
+    # ALERT Prevent directory traversal in
+    # `pm-pattern-file-fmt` and `pm-patterns-base-dir` parameters!
+    if any(map(_path_have_dot_dot, (basedir, pathlib.Path(config.getini('pm-pattern-file-fmt'))))):
         msg = 'Directory traversal is not allowed for `pm-pattern-file-fmt` option'
         raise pytest.UsageError(msg)
 

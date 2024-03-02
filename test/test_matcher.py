@@ -330,7 +330,7 @@ def fn_fmt_test(pytester: pytest.Pytester, fmt, file_name, cls_name, expected_pa
       , pytest=f"""
             [pytest]
             addopts = -vv -ra
-            pm-patterns-base-dir = {pytester.path!s}
+            pm-patterns-base-dir = .
             pm-pattern-file-fmt = {fmt}
         """
       )
@@ -362,10 +362,10 @@ def pm_pattern_file_fmt_directory_traversal_test(pytester: pytest.Pytester) -> N
     # Write a sample config file
     pytester.makefile(
         '.ini'
-      , pytest=f"""
+      , pytest="""
             [pytest]
             addopts = -vv -ra
-            pm-patterns-base-dir = {pytester.path!s}
+            pm-patterns-base-dir = .
             pm-pattern-file-fmt = ../{{class}}/../{{fn}}
         """
       )
@@ -401,11 +401,11 @@ def suffix_test(pytester, sfx, filename) -> None:
     # Write a sample config file
     pytester.makefile(
         '.ini'
-      , pytest=f"""
+      , pytest="""
             [pytest]
             addopts = -vv -ra
-            pm-patterns-base-dir = {pytester.path!s}
-            pm-pattern-file-fmt = {{fn}}{{suffix}}
+            pm-patterns-base-dir = .
+            pm-pattern-file-fmt = {fn}{suffix}
         """
       )
 

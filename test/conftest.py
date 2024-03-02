@@ -43,10 +43,10 @@ def ourtestdir(pytester: pytest.Pytester) -> pytest.Pytester:
     """Pytest fixture to write a sample `pytest.ini` w/ `pm-patterns-base-dir` preset."""
     pytester.makefile(
         '.ini'
-      , pytest=f"""
+      , pytest="""
             [pytest]
             addopts = -vv -ra
-            pm-patterns-base-dir = {pytester.path!s}
+            pm-patterns-base-dir = .
         """
       )
     return pytester
