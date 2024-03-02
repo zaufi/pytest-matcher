@@ -18,7 +18,7 @@ The usage is trivial as the following:
 
         assert stdout == expected_out
 
-If you run ``pytest`` now, it'll skip the test due to a missed output expectations file:
+If you run :command:`pytest` now, it'll skip the test due to a missed output expectations file:
 
 .. code-block:: console
     :emphasize-lines: 5,6
@@ -35,7 +35,7 @@ If you run ``pytest`` now, it'll skip the test due to a missed output expectatio
 
 Add the :option:`pm-patterns-base-dir` option to the `Pytest configuration file`_
 pointing, for example, to :file:`test/data/expected`. Add the :option:`--pm-save-patterns`
-``pytest`` CLI option to write the initial output expectations file:
+:command:`pytest` CLI option to write the initial output expectations file:
 
 .. code-block:: console
     :emphasize-lines: 5,6
@@ -58,7 +58,7 @@ Review the stored pattern file :file:`test/data/expected/test_foo/test_foo.out` 
 
 
 
-Now, when the expected output file exists, you can rerun ``pytest`` to see that the test output
+Now, when the expected output file exists, you can rerun :command:`pytest` to see that the test output
 is matching expectations:
 
 .. code-block:: console
@@ -90,7 +90,7 @@ or filesystem paths, it's possible to match the output using regular expressions
 
         assert expected_out.match(stdout) == True
 
-Store the pattern file for this test and rerun ``pytest`` with ``-vv``:
+Store the pattern file for this test and rerun :command:`pytest` with ``-vv`` option:
 
 .. code-block:: console
     :emphasize-lines: 24,28
