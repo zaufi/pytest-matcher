@@ -5,6 +5,7 @@
 
 # Standard imports
 import pathlib
+import platform
 from dataclasses import dataclass
 from typing import Final
 
@@ -421,3 +422,59 @@ def pm_pattern_file_fmt_directory_traversal_test(pytester: pytest.Pytester) -> N
     result.stderr.re_match_lines([
         'ERROR: Directory traversal is not allowed for `pm-pattern-file-fmt` option'
       ])
+
+
+@pytest.mark.parametrize(
+    ('sfx', 'filename')
+  , [
+        # No args marker
+        ('', f'test_sfx-{platform.system()}.out')
+        # Positional arg marker
+      , ('platform.system()', f'test_sfx-{platform.system()}.out')
+        # Positional args marker
+      , (
+            '"py", f"{sys.version_info.major}", platform.system()'
+          , f'test_sfx-py-3-{platform.system()}.out'
+        )
+        # KW arg marker
+      , ('suffix=platform.system()', f'test_sfx-{platform.system()}.out')
+        # Positional and KW args marker
+      , (
+            '"py", f"{sys.version_info.major}", suffix=platform.system()'
+          , f'test_sfx-py-3-{platform.system()}.out'
+        )
+    ]
+  )
+def suffix_test(pytester, sfx, filename) -> None:
+    # Write a sample config file
+    pytester.makefile(
+        '.ini'
+      , pytest=f"""
+            [pytest]
+            addopts = -vv -ra
+            pm-patterns-base-dir = {pytester.path!s}
+            pm-pattern-file-fmt = {{fn}}{{suffix}}
+        """
+      )
+
+    # Write a sample expectations file
+    (pytester.path / filename).write_text('Hello Africa!\n')
+
+    # Write a sample test
+    pytester.makepyfile(f"""
+        import platform
+        import pytest
+        import sys
+
+        @pytest.mark.expect_suffix({sfx})
+        def test_sfx(capfd, expected_out):
+            print('Hello Africa!')
+            stdout, stderr = capfd.readouterr()
+            assert expected_out == stdout
+            assert stderr == ''
+        """
+      )
+
+    # Run all tests with pytest
+    result = pytester.runpytest()
+    result.assert_outcomes(passed=1)
