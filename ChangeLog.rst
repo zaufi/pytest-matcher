@@ -117,12 +117,8 @@ Added
 
 - Show actual and expected output on failed ``expected_out.match()``.
 
-
-1.2.2_ -- 2019-04-04
-====================
-
-Fixed
------
+Changed
+-------
 
 - Update code for modern ``pytest`` (4.4.0) and ``PyYAML`` (5.1).
 
@@ -182,8 +178,7 @@ Added
 .. _1.4.0: https://github.com/zaufi/pytest-matcher/compare/release/1.3.3...release/1.4.0
 .. _1.3.3: https://github.com/zaufi/pytest-matcher/compare/release/1.3.2...release/1.3.3
 .. _1.3.2: https://github.com/zaufi/pytest-matcher/compare/release/1.3.1...release/1.3.2
-.. _1.3.1: https://github.com/zaufi/pytest-matcher/compare/release/1.2.2...release/1.3.1
-.. _1.2.2: https://github.com/zaufi/pytest-matcher/compare/release/1.2.1...release/1.2.2
+.. _1.3.1: https://github.com/zaufi/pytest-matcher/compare/release/1.2.1...release/1.3.1
 .. _1.2.1: https://github.com/zaufi/pytest-matcher/compare/release/1.2.0...release/1.2.1
 .. _1.2.0: https://github.com/zaufi/pytest-matcher/compare/release/1.1.0...release/1.2.0
 .. _1.1.0: https://github.com/zaufi/pytest-matcher/compare/release/1.0.0...release/1.1.0
