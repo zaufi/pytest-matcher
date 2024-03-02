@@ -12,10 +12,6 @@ paths are based on the test module name, test class name, and test function name
 
     <base-dir>/<test-module-name>/[test-class-name/]<test-function-name>[[<callspec-id>]]
 
-Note, that for non-class test functions, the *test-class-name* part is absent.
-For parametrized tests, the *callspec-id* part containing %XX-escaped information
-about the parametrization is added.
-
 Having output expectations/pattern files separate from tests helps to reduce the code of the
 latter and match the output more than just a few lines.
 

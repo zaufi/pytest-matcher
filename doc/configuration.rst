@@ -28,6 +28,9 @@ The following options can be set in the `Pytest configuration file`_.
 
         {module}/{class}/{fn}{callspec}{suffix}
 
+    Note that for non-class test functions, the ``{class}`` placeholder part will be empty.
+    For parametrized tests, the ``{callspec}`` placeholder containing ``%XX``-escaped information
+    about the parametrization is added.
 
 .. include:: include-traversal-warning.rst
 
