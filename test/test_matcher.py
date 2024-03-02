@@ -4,59 +4,11 @@
 #
 
 # Standard imports
-import pathlib
 import platform
-from dataclasses import dataclass
 from typing import Final
 
 # Third party packages
 import pytest
-
-pytest_plugins = ['pytester']
-
-
-@dataclass
-class _ExpectDir:
-    path: pathlib.Path
-
-    def makepatternfile(self, ext: str, **kwargs: str) -> pathlib.Path:
-        ret = None
-        for name, content in kwargs.items():
-            # NOTE Getting an indentation (to remove) by the
-            # first line in the given snippet!
-            if content[0].isspace():
-                indent = len(content) - len(content.lstrip()) - 1
-                content = '\n'.join(                        # NOQA: PLW2901
-                    line[indent:]
-                    for line in content.splitlines()
-                  ).strip()
-            p = (self.path / name).with_suffix(ext)
-            p.write_text(content)
-            if ret is None:
-                ret = p
-        assert ret is not None
-        return ret
-
-
-@pytest.fixture()
-def ourtestdir(pytester: pytest.Pytester) -> pytest.Pytester:
-    # Write a sample config file
-    pytester.makefile(
-        '.ini'
-      , pytest=f"""
-            [pytest]
-            addopts = -vv -ra
-            pm-patterns-base-dir = {pytester.path!s}
-        """
-      )
-    return pytester
-
-
-@pytest.fixture()
-def expectdir(pytester: pytest.Pytester, request: pytest.FixtureRequest) -> _ExpectDir:
-    path = pytester.path / request.function.__name__
-    path.mkdir()
-    return _ExpectDir(path)
 
 
 def no_file_test(ourtestdir) -> None:
