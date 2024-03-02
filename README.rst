@@ -4,7 +4,7 @@
 What is this
 ============
 
-|Latest Release|
+|Latest Release| |nbsp| |Tests|
 
 This is a ``pytest`` plugin that provides a couple of fixtures to match
 test output against patterns stored in files.
@@ -32,7 +32,14 @@ See Also
 
 * `How it works <http://zaufi.github.io/programming/2017/07/05/extend-pytest-with-fixtures>`_
 
-.. |Latest Release| image:: https://badge.fury.io/py/pytest-matcher.svg
+
+.. |Latest Release| image:: https://img.shields.io/pypi/v/pytest-matcher
     :target: https://pypi.org/project/pytest-matcher/#history
+    :alt: PyPI - Version
+
+.. |Tests| image:: https://github.com/zaufi/pytest-matcher/actions/workflows/run-tests.yaml/badge.svg
+    :target: https://github.com/zaufi/pytest-matcher/actions/workflows/run-tests.yaml
+    :alt: Run Tests Result
+
 .. |nbsp| unicode:: 0xA0
    :trim:
