@@ -33,6 +33,7 @@ Added
   to have an arbitrary suffix in the pattern filenames.
   The ``pm-pattern-file-fmt`` format string should have the ``{suffix}`` placeholder
   to make it work. See :issue:`22`.
+- `Documentation`_.
 
 Fixed
 -----
@@ -183,3 +184,4 @@ Added
 .. _1.2.0: https://github.com/zaufi/pytest-matcher/compare/release/1.1.0...release/1.2.0
 .. _1.1.0: https://github.com/zaufi/pytest-matcher/compare/release/1.0.0...release/1.1.0
 .. _1.0.0: https://github.com/zaufi/pytest-matcher/compare/release/0.9.0...release/1.0.0
+.. _Documentation: https://pytest-matcher.readthedocs.io/en/latest/index.html
