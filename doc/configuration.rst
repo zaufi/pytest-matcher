@@ -29,4 +29,6 @@ The following options can be set in the `Pytest configuration file`_.
         {module}/{class}/{fn}{callspec}{suffix}
 
 
+.. include:: include-traversal-warning.rst
+
 .. _Pytest configuration file: https://docs.pytest.org/en/8.0.x/reference/customize.html

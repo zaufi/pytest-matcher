@@ -22,3 +22,5 @@ Plugin Command Line Options
     Reveal and print unused pattern files. If :envvar:`PYTEST_MATCHER_RETURN_CODES` is
     set to the *true value* (one of ``1``, ``true``, ``yes``) and found any unused
     pattern files, the exit code will be ``1``.
+
+.. include:: include-traversal-warning.rst
