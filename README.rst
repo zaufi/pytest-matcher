@@ -9,11 +9,6 @@ What is this
 This is a ``pytest`` plugin that provides a couple of fixtures to match
 test output against patterns stored in files.
 
-The plugin extends pytest with the following CLI options:
-
-- ``--pm-save-patterns`` -- to store the output to a pattern file (instead of checking);
-- ``--pm-patterns-base-dir`` to specify a base directory, where to lookup pattern files.
-
 Pattern files are stored in a base directory, and additional paths, based on the test
 module name, test class name, and test function name, are as follows:
 
@@ -26,33 +21,10 @@ For parametrized tests, the *callspec-id* part containing %XX-escaped informatio
 about the parametrization is added.
 
 
-Quick Start
-===========
+Documentation
+-------------
 
-The plugin provides ``expected_out`` and ``expected_err``
-named fixture functions.
-
-
-.. code-block:: python
-
-    def test_foo(capfd, expected_out):
-        print('foo')
-
-        stdout, stderr = capfd.readouterr()
-
-        assert stdout == expected_out
-
-Add ``pm-patterns-base-dir`` option to ``pytest.ini`` file and ``pytest`` section
-pointing, for example, to ``test/data/expected``. The ``pyproject.toml`` example
-can be found in this repository. For the first ``pytest`` run, it would
-fail because there is no expected pattern file present. To write it, one can use
-``pytest`` CLI:
-
-::
-
-    $ pytest --pm-save-patterns test/test_foo.py::test_foo
-
-Review the stored pattern file and add it to your VCS.
+The latest documentation could be found `here <https://pytest-matcher.readthedocs.io/en/latest/>`_.
 
 
 See Also
