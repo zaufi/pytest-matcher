@@ -137,14 +137,13 @@ class _ContentCheckOrStorePattern:
           ]
 
 
-def _get_base_dir(config: pytest.Config) -> tuple[pathlib.Path, bool]:
+def _get_base_dir(config: pytest.Config) -> pathlib.Path:
     result: pathlib.Path | None = config.getoption('--pm-patterns-base-dir')
-    if result is not None:
-        return (pathlib.Path(result) if result is not None else None, True)
-
-    result = config.getini('pm-patterns-base-dir')
-    assert result is not None
-    return (pathlib.Path(result), False)
+    return (
+        result
+        if result is not None
+        else pathlib.Path(config.getini('pm-patterns-base-dir'))
+      )
 
 
 def _subst_pattern_parts(result: pathlib.Path, current: str, **kwargs: str) -> pathlib.Path:
@@ -157,17 +156,7 @@ def _subst_pattern_parts(result: pathlib.Path, current: str, **kwargs: str) -> p
 
 
 def _make_expected_filename(request: pytest.FixtureRequest, ext: str) -> pathlib.Path:
-    result, use_cwd_as_base = _get_base_dir(request.config)
-
-    # Make the found path absolute using pytest's rootdir as the base
-    if not result.is_absolute():
-        if use_cwd_as_base:
-            result = pathlib.Path.cwd()
-        elif request.config.inipath is not None:
-            result = pathlib.Path(request.config.inipath.parent) / result
-        else:
-            # TODO Better error description.
-            pytest.fail('Unable to determine the path to expectation files')
+    result = request.config.rootpath / _get_base_dir(request.config)
 
     # Make sure base directory exists
     if not result.exists():
@@ -294,7 +283,7 @@ class _UnusedFilesReporter:
         if not session.items:
             return
 
-        patterns_base_dir, _ = _get_base_dir(session.config)
+        patterns_base_dir = session.config.rootpath / _get_base_dir(session.config)
         known_extensions = '.out', '.err'
 
         all_paths = {
