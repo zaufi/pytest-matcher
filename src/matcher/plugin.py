@@ -137,21 +137,14 @@ class _ContentCheckOrStorePattern:
           ]
 
 
-def _try_cli_option(request: pytest.FixtureRequest) -> tuple[pathlib.Path | None, bool]:
-    result = request.config.getoption('--pm-patterns-base-dir')
-    return (pathlib.Path(result) if result is not None else None, True)
+def _get_base_dir(request: pytest.FixtureRequest) -> tuple[pathlib.Path, bool]:
+    result: pathlib.Path | None = request.config.getoption('--pm-patterns-base-dir')
+    if result is not None:
+        return (pathlib.Path(result) if result is not None else None, True)
 
-
-def _try_ini_option(request: pytest.FixtureRequest) -> tuple[pathlib.Path | None, bool]:
     result = request.config.getini('pm-patterns-base-dir')
-    return (pathlib.Path(result) if result else None, False)
-
-
-def _try_module_path(request: pytest.FixtureRequest) -> tuple[pathlib.Path, bool]:
-    assert request.path.parent is not None
-    # NOTE Suppose the current test module's directory has `data/expected/` inside
-    # TODO Add default value for 'pm-patterns-base-dir' and just remove this function!
-    return (pathlib.Path(request.path.parent) / 'data' / 'expected', False)
+    assert result is not None
+    return (pathlib.Path(result), False)
 
 
 def _subst_pattern_parts(result: pathlib.Path, current: str, **kwargs: str) -> pathlib.Path:
@@ -164,14 +157,7 @@ def _subst_pattern_parts(result: pathlib.Path, current: str, **kwargs: str) -> p
 
 
 def _make_expected_filename(request: pytest.FixtureRequest, ext: str) -> pathlib.Path:
-    result: pathlib.Path | None = None
-    use_cwd_as_base = False
-    for alg in [_try_cli_option, _try_ini_option, _try_module_path]:
-        result, use_cwd_as_base = alg(request)
-        if result is not None:
-            break
-
-    assert result is not None
+    result, use_cwd_as_base = _get_base_dir(request)
 
     # Make the found path absolute using pytest's rootdir as the base
     if not result.is_absolute():
@@ -308,14 +294,7 @@ class _UnusedFilesReporter:
         if not session.items:
             return
 
-        for alg in [_try_cli_option, _try_ini_option]:
-            patterns_base_dir, _ = alg(session.items[0]._request)  # type: ignore[attr-defined] # NOQA: SLF001
-            if patterns_base_dir:
-                break
-        else:
-            message = 'Failed to determine a patterns base directory'
-            raise pytest.UsageError(message)
-
+        patterns_base_dir, _ = _get_base_dir(session.items[0]._request)  # type: ignore[attr-defined] # NOQA: SLF001
         known_extensions = '.out', '.err'
 
         all_paths = {
@@ -394,7 +373,7 @@ def pytest_addoption(parser: pytest.Parser) -> None:
     parser.addini(
         'pm-patterns-base-dir'
       , help='base directory to read/write pattern files'
-      , default=None
+      , default=pathlib.Path('test/data/expected')
       )
     parser.addini(
         'pm-pattern-file-fmt'
