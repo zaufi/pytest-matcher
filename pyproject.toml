@@ -45,8 +45,8 @@ dynamic = ["version"]
 pytest_matcher = "matcher.plugin"
 
 [project.urls]
-HowItWorks = "http://zaufi.github.io/programming/2017/07/05/extend-pytest-with-fixtures"
 Code = "https://github.com/zaufi/pytest-matcher"
+Documentation = "https://pytest-matcher.readthedocs.io"
 'Issues Tracker' = "https://github.com/zaufi/pytest-matcher/issues"
 'Report an Issue' = "https://github.com/zaufi/pytest-matcher/issues/new/choose"
 
