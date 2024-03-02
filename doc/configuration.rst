@@ -6,6 +6,7 @@ Plugin Configuration Options
 
 .. program:: pytest-matcher
 
+.. include:: include-traversal-warning.rst
 
 The following options can be set in the `Pytest configuration file`_.
 
@@ -32,6 +33,5 @@ The following options can be set in the `Pytest configuration file`_.
     For parametrized tests, the ``{callspec}`` placeholder containing ``%XX``-escaped information
     about the parametrization is added.
 
-.. include:: include-traversal-warning.rst
 
 .. _Pytest configuration file: https://docs.pytest.org/en/8.0.x/reference/customize.html
