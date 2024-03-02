@@ -177,12 +177,6 @@ def _make_expected_filename(
 
     assert result is not None
 
-    use_system_suffix = (
-        request.config.getini('pm-pattern-file-use-system-name')
-        if can_use_system_suffix
-        else False
-      )
-
     # Make the found path absolute using pytest's rootdir as the base
     if not result.is_absolute():
         if use_cwd_as_base:
@@ -205,7 +199,7 @@ def _make_expected_filename(
             request.node.name[len(request.function.__name__):]
           , safe='[]'
           )
-      , 'suffix': '-' + platform.system() if use_system_suffix else ''
+      , 'suffix': '-' + platform.system() if can_use_system_suffix else ''
       }
 
     return functools.reduce(
@@ -392,16 +386,10 @@ def pytest_addoption(parser: pytest.Parser) -> None:
       , default=None
       )
     parser.addini(
-        'pm-pattern-file-use-system-name'
-      , help='expect a system name (`platform.system()`) to be a pattern filename suffix'
-      , type='bool'
-      , default=False
-      )
-    parser.addini(
         'pm-pattern-file-fmt'
       , help='pattern filename format can use placeholders: `module`, `class`, `fn`, `callspec`, `system`'
       , type='string'
-      , default='{module}/{class}/{fn}{callspec}{suffix}'
+      , default='{module}/{class}/{fn}{callspec}'
       )
 
 

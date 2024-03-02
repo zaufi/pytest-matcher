@@ -27,7 +27,14 @@ Fixed
 - **BREAKING CHANGE** The expectation files path has never used the
   ``<test-module-name>`` component despite the ``README.rst`` claimed.
   Existed projects could set ``pm-pattern-file-fmt`` to
-  ``{class}/{fn}{callspec}{suffix}`` to preserve backward compatibility.
+  ``{class}/{fn}{callspec}`` to preserve backward compatibility.
+
+Removed
+-------
+
+- **BREAKING CHANGE** The ``pm-pattern-file-use-system-name`` configuration
+  parameter has been removed. Having ``{suffix}`` in the ``pm-pattern-file-fmt``
+  one can have a system name suffix whenever he needs it.
 
 
 1.6.0_ -- 2024-02-29
