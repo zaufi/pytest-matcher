@@ -10,11 +10,15 @@ Plugin Configuration Options
 
 The following options can be set in the `Pytest configuration file`_.
 
-.. option:: pm-patterns-base-dir
+.. option:: pm-mismatch-style
 
-    :Default: :file:`test/data/expected`
+    :Choice: ``full``, ``diff``
+    :Default: ``full``
 
-    The base directory is used to place expectations/pattern files.
+    In case of expected output mismatch, specifies how to report a test failure:
+
+    - ``full`` -- shows actual and expected separately (default).
+    - ``diff`` -- shows a unified diff between actual and expected text.
 
 
 .. option:: pm-pattern-file-fmt
@@ -34,15 +38,11 @@ The following options can be set in the `Pytest configuration file`_.
     about the parametrization is added.
 
 
-.. option:: pm-mismatch-style
+.. option:: pm-patterns-base-dir
 
-    :Choice: ``full``, ``diff``
-    :Default: ``full``
+    :Default: :file:`test/data/expected`
 
-    In case of expected output mismatch, specifies how to report a test failure:
-
-    - ``full`` -- shows actual and expected separately (default).
-    - ``diff`` -- shows a unified diff between actual and expected text.
+    The base directory is used to place expectations/pattern files.
 
 
 .. _Pytest configuration file: https://docs.pytest.org/en/8.0.x/reference/customize.html

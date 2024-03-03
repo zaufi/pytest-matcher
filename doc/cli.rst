@@ -8,10 +8,9 @@ Plugin Command Line Options
 
 .. include:: include-traversal-warning.rst
 
-.. option:: --pm-save-patterns
+.. option:: --pm-mismatch-style <diff|full>
 
-    Write the captured output to the expectations file instead of performing actual tests.
-    The option helps collect initial content to match in further tests and skips the test.
+    Overrides the value of :option:`pm-mismatch-style` configuration parameter.
 
 
 .. option:: --pm-patterns-base-dir
@@ -26,6 +25,7 @@ Plugin Command Line Options
     pattern files, the exit code will be ``1``.  The tests will not run.
 
 
-.. option:: --pm-mismatch-style <diff|full>
+.. option:: --pm-save-patterns
 
-    Overrides the value of :option:`pm-mismatch-style` configuration parameter.
+    Write the captured output to the expectations file instead of performing actual tests.
+    The option helps collect initial content to match in further tests and skips the test.
