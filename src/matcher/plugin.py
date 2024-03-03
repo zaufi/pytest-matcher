@@ -375,6 +375,11 @@ def pytest_addoption(parser: pytest.Parser) -> None:
 @pytest.hookimpl(trylast=True)
 def pytest_configure(config: pytest.Config) -> None:
     """Validate configuration and register additional reporter."""
+    config.addinivalue_line(
+        'markers'
+      , 'expect_suffix(args..., *, suffix="..."): mark test to have suffixed pattern file'
+      )
+
     # ALERT Make sure the patterns base directory isn't an absolute path!
     basedir = _get_base_dir(config)
     if basedir.is_absolute():
