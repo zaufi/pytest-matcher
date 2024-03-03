@@ -13,7 +13,7 @@ Plugin Command Line Options
     Overrides the value of :option:`pm-mismatch-style` configuration parameter.
 
 
-.. option:: --pm-patterns-base-dir
+.. option:: --pm-patterns-base-dir <DIR>
 
     Specify the base directory to find expectation/pattern files.
 
