@@ -18,11 +18,25 @@ import re
 import shutil
 import sys
 import urllib.parse
-from typing import Final, cast
+from typing import Final, TextIO, cast
 
 # Third party packages
 import pytest
 import yaml
+
+try:
+    from pygments import highlight
+    from pygments.formatters import TerminalFormatter
+    from pygments.lexers import DiffLexer
+    HAVE_PYGMENTS = True
+    # ATTENTION THIS IS THE UGLY IMPORT OF PYTEST IMPLEMENTATION DETAILS
+    # BUT UNFORTUNATELY I SEE NO OTHER WAY (and I don't like copy-n-paste %-)
+    from _pytest._io.terminalwriter import should_do_markup
+except ImportError:
+    HAVE_PYGMENTS = False
+    def should_do_markup(_: TextIO) -> bool:                # type: ignore[misc]
+        """A dummy stub if not possible to import smth."""
+        return False
 
 if sys.version_info < (3, 11):
     _RE_NOFLAG: Final[re.RegexFlag] = cast(re.RegexFlag, 0)
@@ -130,7 +144,7 @@ class _ContentCheckOrStorePattern:
           , filename=self._pattern_filename
           )
 
-    def _report_mismatch_text(self, actual: str) -> list[str]:
+    def _report_mismatch_text(self, actual: str, *, color: bool) -> list[str]:  # NOQA: ARG002
         assert self._expected_file_content is not None
         return [
             ''
@@ -144,28 +158,41 @@ class _ContentCheckOrStorePattern:
           , '---[END expected output]---'
           ]
 
-    def _report_mismatch_diff(self, actual: str) -> list[str]:
+    def _report_mismatch_diff(self, actual: str, *, color: bool) -> list[str]:
         assert self._expected_file_content is not None
+        expected = self._expected_file_content
+        diff=[
+            *difflib.unified_diff(
+                expected.replace('\n','↵\n').splitlines()
+              , actual.replace('\n','↵\n').splitlines()
+              , fromfile='expected'
+              , tofile='actual'
+              , lineterm=''
+              )
+          ]
+
+        if HAVE_PYGMENTS and color:
+            colored_diff = highlight(
+                '\n'.join(diff)
+              , DiffLexer()
+              , TerminalFormatter()
+              )
+            diff = colored_diff.splitlines()
+
         return [
             ''
           , "The test output doesn't equal to the expected"
           , f'(from `{self._pattern_filename}`):'
           , '---[BEGIN expected vs actual diff]---'
-          , *difflib.unified_diff(
-                self._expected_file_content.splitlines(keepends=True)
-              , actual.splitlines(keepends=True)
-              , fromfile='expected'
-              , tofile='actual'
-              , lineterm=''
-              )
+          , *diff
           , '---[END expected vs actual diff]---'
           ]
 
-    def report_compare_mismatch(self, actual: str, *, style: _MismatchStyle) -> list[str]:
+    def report_compare_mismatch(self, actual: str, *, color: bool, style: _MismatchStyle) -> list[str]:
         return (
-            self._report_mismatch_diff(actual)
+            self._report_mismatch_diff(actual, color=color)
             if style == _MismatchStyle.DIFF
-            else self._report_mismatch_text(actual)
+            else self._report_mismatch_text(actual, color=color)
           )
 
 
@@ -356,15 +383,24 @@ def pytest_assertrepr_compare(                              # NOQA: PLR0911
   ) -> list[str] | None:
     """Hook into comparison failure."""
     if op == '==':
+        assert hasattr(config, 'pm_color_output')
         match left, right:
             case _ContentMatchResult() as left, bool(right):
                 return left.report_regex_mismatch()
 
             case _ContentCheckOrStorePattern() as left, str(right):
-                return left.report_compare_mismatch(right, style=_get_mismatch_output_style(config))
+                return left.report_compare_mismatch(
+                    right
+                  , style=_get_mismatch_output_style(config)
+                  , color=config.pm_color_output
+                  )
 
             case str(left), _ContentCheckOrStorePattern() as right:
-                return right.report_compare_mismatch(left, style=_get_mismatch_output_style(config))
+                return right.report_compare_mismatch(
+                    left
+                  , style=_get_mismatch_output_style(config)
+                  , color=config.pm_color_output
+                  )
 
             # Enhance YAML checker failures
             case _YAMLCheckOrStorePattern() as left, pathlib.Path() as right:
@@ -452,6 +488,8 @@ def pytest_configure(config: pytest.Config) -> None:
     if any(map(_path_have_dot_dot, (basedir, pathlib.Path(config.getini('pm-pattern-file-fmt'))))):
         msg = 'Directory traversal is not allowed for `pm-pattern-file-fmt` option'
         raise pytest.UsageError(msg)
+
+    config.pm_color_output = should_do_markup(sys.stdout)   # type: ignore[attr-defined]
 
     if not config.getoption('--pm-reveal-unused-files'):
         return
