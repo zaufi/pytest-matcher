@@ -6,6 +6,18 @@ Getting Started
 
 .. program:: pytest-matcher
 
+Install the package in the variant you want:
+
+.. code-block:: console
+
+    $ pip install pytest-matcher
+
+or with ``diff`` mode highlighted with ``Pygments``:
+
+.. code-block:: console
+
+    $ pip install pytest-matcher[pygments]
+
 The plugin provides :py:data:`expected_out` and :py:data:`expected_err` named fixture functions.
 The usage is trivial as the following:
 

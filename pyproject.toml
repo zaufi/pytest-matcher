@@ -41,6 +41,9 @@ dependencies = [
   ]
 dynamic = ["version"]
 
+[project.optional-dependencies]
+pygments = ["Pygments"]
+
 [project.entry-points.pytest11]
 pytest_matcher = "matcher.plugin"
 
