@@ -34,7 +34,7 @@ If you run :command:`pytest` now, it'll skip the test due to a missed output exp
 
 
 Add the :option:`pm-patterns-base-dir` option to the `Pytest configuration file`_
-pointing, for example, to :file:`test/data/expected`. Add the :option:`--pm-save-patterns`
+pointing, for example, to :file:`test/data/expected`.  Add the :option:`--pm-save-patterns`
 :command:`pytest` CLI option to write the initial output expectations file:
 
 .. code-block:: console
@@ -53,8 +53,8 @@ Review the stored pattern file :file:`test/data/expected/test_foo/test_foo.out` 
 
 .. note::
 
-    It’s recommended that the exact test name(s) be specified when writing the expectations
-    file. Otherwise, the plugin will overwrite all files that are most likely not what you want ;-)
+    It’s recommended that the exact test name(s) be specified when writing the expectations file.
+    Otherwise, the plugin will overwrite all files that are most likely not what you want ;-)
 
 
 
@@ -131,7 +131,8 @@ Store the pattern file for this test and rerun :command:`pytest` with ``-vv`` op
     FAILED test/test_foo.py::test_regex - AssertionError: assert
     ============================== 1 failed in 0.03s ===============================
 
-To make it match, edit the expected output file and replace changing parts with regular expressions:
+To make it match, edit the expected output file and replace changing parts with regular
+expressions:
 
 .. code-block::
     :caption: ``test/data/expect/test_foo/test_regex.out``
