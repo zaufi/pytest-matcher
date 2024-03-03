@@ -16,6 +16,7 @@ Plugin Command Line Options
 .. option:: --pm-patterns-base-dir <DIR>
 
     Specify the base directory to find expectation/pattern files.
+    See also :option:`pm-patterns-base-dir`.
 
 
 .. option:: --pm-reveal-unused-files
