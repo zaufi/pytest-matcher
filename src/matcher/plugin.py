@@ -44,6 +44,8 @@ else:
     _RE_NOFLAG: Final[re.RegexFlag] = re.NOFLAG
 
 
+PM_COLOR_OUTPUT = pytest.StashKey[bool]()
+
 class _MismatchStyle(enum.Enum):
     FULL = enum.auto()
     DIFF = enum.auto()
@@ -389,7 +391,6 @@ def pytest_assertrepr_compare(                              # NOQA: PLR0911
   ) -> list[str] | None:
     """Hook into comparison failure."""
     if op == '==':
-        assert hasattr(config, 'pm_color_output')
         match left, right:
             case _ContentMatchResult() as left, bool(right):
                 return left.report_regex_mismatch()
@@ -398,14 +399,14 @@ def pytest_assertrepr_compare(                              # NOQA: PLR0911
                 return left.report_compare_mismatch(
                     right
                   , style=_get_mismatch_output_style(config)
-                  , color=config.pm_color_output
+                  , color=config.stash[PM_COLOR_OUTPUT]
                   )
 
             case str(left), _ContentCheckOrStorePattern() as right:
                 return right.report_compare_mismatch(
                     left
                   , style=_get_mismatch_output_style(config)
-                  , color=config.pm_color_output
+                  , color=config.stash[PM_COLOR_OUTPUT]
                   )
 
             # Enhance YAML checker failures
@@ -504,7 +505,7 @@ def pytest_configure(config: pytest.Config) -> None:
           )
         raise pytest.UsageError(msg)
 
-    config.pm_color_output = should_do_markup(sys.stdout)   # type: ignore[attr-defined]
+    config.stash[PM_COLOR_OUTPUT] = should_do_markup(sys.stdout)
 
     if not config.getoption('--pm-reveal-unused-files'):
         return
