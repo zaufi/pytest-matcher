@@ -58,8 +58,9 @@ Marker
 
     If output may have system-specific content (e.g., different EOL styles), adding an arbitrary
     system-specific suffix to the pattern file makes storing different variants in separate files
-    possible.  Arguments to the marker will be dash-concatenated and prefixed with leading ``-``
-    and then used as the ``{suffix}`` placeholder of the :option:`pm-pattern-file-fmt` option.
+    possible.  Arguments to the marker will be ``%XX``-escaped, dash-concatenated and prefixed with
+    leading ``-`` and then used as the ``{suffix}`` placeholder of the :option:`pm-pattern-file-fmt`
+    option.
 
     Usage example:
 
