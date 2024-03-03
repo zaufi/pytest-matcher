@@ -8,6 +8,8 @@
 from __future__ import annotations
 
 # Standard imports
+import difflib
+import enum
 import functools
 import os
 import pathlib
@@ -26,6 +28,11 @@ if sys.version_info < (3, 11):
     _RE_NOFLAG: Final[re.RegexFlag] = cast(re.RegexFlag, 0)
 else:
     _RE_NOFLAG: Final[re.RegexFlag] = re.NOFLAG
+
+
+class _MismatchStyle(enum.Enum):
+    FULL = enum.auto()
+    DIFF = enum.auto()
 
 
 class _ContentMatchResult:
@@ -123,7 +130,7 @@ class _ContentCheckOrStorePattern:
           , filename=self._pattern_filename
           )
 
-    def report_compare_mismatch(self, actual: str) -> list[str]:
+    def _report_mismatch_text(self, actual: str) -> list[str]:
         assert self._expected_file_content is not None
         return [
             ''
@@ -136,6 +143,30 @@ class _ContentCheckOrStorePattern:
           , *self._expected_file_content.splitlines()
           , '---[END expected output]---'
           ]
+
+    def _report_mismatch_diff(self, actual: str) -> list[str]:
+        assert self._expected_file_content is not None
+        return [
+            ''
+          , "The test output doesn't equal to the expected"
+          , f'(from `{self._pattern_filename}`):'
+          , '---[BEGIN expected vs actual diff]---'
+          , *difflib.unified_diff(
+                self._expected_file_content.splitlines(keepends=True)
+              , actual.splitlines(keepends=True)
+              , fromfile='expected'
+              , tofile='actual'
+              , lineterm=''
+              )
+          , '---[END expected vs actual diff]---'
+          ]
+
+    def report_compare_mismatch(self, actual: str, *, style: _MismatchStyle) -> list[str]:
+        return (
+            self._report_mismatch_diff(actual)
+            if style == _MismatchStyle.DIFF
+            else self._report_mismatch_text(actual)
+          )
 
 
 def _get_base_dir(config: pytest.Config) -> pathlib.Path:
@@ -307,9 +338,22 @@ class _UnusedFilesReporter:
                 pytest.exit('Found unused pattern files', 1)
 
 
+def _get_mismatch_output_style(config: pytest.Config) -> _MismatchStyle:
+    style_str = config.getoption('--pm-mismatch-style')
+    if style_str is None:
+        style_str = config.getini('pm-mismatch-style')
+    assert style_str is not None
+    return _MismatchStyle[style_str.upper()]
+
+
 # BEGIN Pytest hooks
 
-def pytest_assertrepr_compare(op: str, left: object, right: object) -> list[str] | None:  # NOQA: PLR0911
+def pytest_assertrepr_compare(                              # NOQA: PLR0911
+    config: pytest.Config
+  , op: str
+  , left: object
+  , right: object
+  ) -> list[str] | None:
     """Hook into comparison failure."""
     if op == '==':
         match left, right:
@@ -317,10 +361,10 @@ def pytest_assertrepr_compare(op: str, left: object, right: object) -> list[str]
                 return left.report_regex_mismatch()
 
             case _ContentCheckOrStorePattern() as left, str(right):
-                return left.report_compare_mismatch(right)
+                return left.report_compare_mismatch(right, style=_get_mismatch_output_style(config))
 
             case str(left), _ContentCheckOrStorePattern() as right:
-                return right.report_compare_mismatch(left)
+                return right.report_compare_mismatch(left, style=_get_mismatch_output_style(config))
 
             # Enhance YAML checker failures
             case _YAMLCheckOrStorePattern() as left, pathlib.Path() as right:
@@ -348,6 +392,13 @@ def pytest_addoption(parser: pytest.Parser) -> None:
       , help='store matching patterns instead of checking them'
       )
     group.addoption(
+        '--pm-mismatch-style'
+      , type=str
+      , help='output style on expected/actual mismatch'
+      , choices=[style.name.lower() for style in _MismatchStyle]
+      , default=None
+      )
+    group.addoption(
         '--pm-patterns-base-dir'
       , metavar='PATH'
       , help='base directory to read/write pattern files'
@@ -370,6 +421,12 @@ def pytest_addoption(parser: pytest.Parser) -> None:
       , help='pattern filename format can use placeholders: `module`, `class`, `fn`, `callspec`, `system`'
       , type='string'
       , default='{module}/{class}/{fn}{callspec}'
+      )
+    parser.addini(
+        'pm-mismatch-style'
+      , help='output style on expected/actual mismatch'
+      , type='string'
+      , default=_MismatchStyle.FULL.name.lower()
       )
 
 

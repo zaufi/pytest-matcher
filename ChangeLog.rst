@@ -34,6 +34,7 @@ Added
   The ``pm-pattern-file-fmt`` format string should have the ``{suffix}`` placeholder
   to make it work. See :issue:`22`.
 - `Documentation`_.
+- Introduce :option:`pm-mismatch-style`.
 
 Fixed
 -----

@@ -206,6 +206,7 @@ python_files = ["test_*.py"]
 python_classes = ["*Tester"]
 python_functions = ["*_test", "*_test_?", "*_test_??", "test_*"]
 testpaths = ["test"]
+xfail_strict = true
 
 # https://docs.astral.sh/ruff/configuration/
 [tool.ruff]

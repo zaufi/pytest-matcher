@@ -8,6 +8,9 @@
 # Standard imports
 from datetime import datetime
 
+# Third party packages
+import pytest
+
 
 def test_foo(capfd, expected_out) -> None:
     """Plain text demo test."""
@@ -26,3 +29,12 @@ def test_regex(capfd, expected_out) -> None:
     stdout, _ = capfd.readouterr()
 
     assert expected_out.match(stdout) ==True
+
+@pytest.mark.xfail(reason='Demo for diff show')
+def test_diff(capfd, expected_out) -> None:
+    """Plain text demo test with diff."""
+    print('Hello Africa!\nHow are you doing?', end='')
+
+    stdout, _ = capfd.readouterr()
+
+    assert stdout == expected_out

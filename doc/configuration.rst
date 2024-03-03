@@ -34,4 +34,15 @@ The following options can be set in the `Pytest configuration file`_.
     about the parametrization is added.
 
 
+.. option:: pm-mismatch-style
+
+    :Choice: ``full``, ``diff``
+    :Default: ``full``
+
+    In case of expected output mismatch, specifies how to report a test failure:
+
+    - ``full`` -- shows actual and expected separately (default).
+    - ``diff`` -- shows a unified diff between actual and expected text.
+
+
 .. _Pytest configuration file: https://docs.pytest.org/en/8.0.x/reference/customize.html
