@@ -175,7 +175,13 @@ class _ContentCheckOrStorePattern:
             colored_diff = highlight(
                 '\n'.join(diff)
               , DiffLexer()
-              , TerminalFormatter()
+              , TerminalFormatter(
+                    # NOTE Here we don't care about incorrect values
+                    # of envvars cuz `pytest` already made an instance
+                    # of `TerminalWriter` which handles this situation!
+                    bg=os.getenv('PYTEST_THEME_MODE', 'dark')
+                  , style=os.getenv('PYTEST_THEME')
+                  )
               )
             diff = colored_diff.splitlines()
 
