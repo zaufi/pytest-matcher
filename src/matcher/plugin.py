@@ -38,13 +38,14 @@ except ImportError:
         """A dummy stub if not possible to import smth."""
         return False
 
+
+PM_COLOR_OUTPUT = pytest.StashKey[bool]()
+
 if sys.version_info < (3, 11):
     _RE_NOFLAG: Final[re.RegexFlag] = cast(re.RegexFlag, 0)
 else:
     _RE_NOFLAG: Final[re.RegexFlag] = re.NOFLAG
 
-
-PM_COLOR_OUTPUT = pytest.StashKey[bool]()
 
 class _MismatchStyle(enum.Enum):
     FULL = enum.auto()
