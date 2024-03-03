@@ -395,6 +395,8 @@ def pm_pattern_file_fmt_directory_traversal_test(pytester: pytest.Pytester) -> N
             '"py", f"{sys.version_info.major}", suffix=platform.system()'
           , f'test_sfx-py-3-{platform.system()}.out'
         )
+        # URL-escape has applied
+      , ('"[%&()*+/]"', 'test_sfx-[%25%26%28%29%2A%2B%2F].out')
     ]
   )
 def suffix_test(pytester, sfx, filename) -> None:

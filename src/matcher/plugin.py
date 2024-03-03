@@ -185,7 +185,7 @@ def _make_expected_filename(request: pytest.FixtureRequest, ext: str) -> pathlib
             request.node.name[len(request.function.__name__):]
           , safe='[]'
           )
-      , 'suffix': ('','-')[int(bool(args))] + '-'.join(args)
+      , 'suffix': ('','-')[int(bool(args))] + urllib.parse.quote('-'.join(args), safe='[]')
       }
 
     return functools.reduce(
