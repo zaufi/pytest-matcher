@@ -63,7 +63,7 @@ def failed_test(ourtestdir, expectdir) -> None:
     result.assert_outcomes(failed=1)
     result.stdout.fnmatch_lines([
         'E         ---[BEGIN actual output]---'
-      , 'E         Unexpected output'
+      , 'E         Unexpected output↵'
       , 'E         ---[END actual output]---'
       , 'E         ---[BEGIN expected output]---'
       , 'E         Hello Africa!'

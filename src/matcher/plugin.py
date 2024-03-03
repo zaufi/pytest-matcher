@@ -154,10 +154,10 @@ class _ContentCheckOrStorePattern:
           , "The test output doesn't equal to the expected"
           , f'(from `{self._pattern_filename}`):'
           , '---[BEGIN actual output]---'
-          , *actual.splitlines()
+          , *actual.replace('\n','↵\n').splitlines()
           , '---[END actual output]---'
           , '---[BEGIN expected output]---'
-          , *self._expected_file_content.splitlines()
+          , *self._expected_file_content.replace('\n','↵\n').splitlines()
           , '---[END expected output]---'
           ]
 
