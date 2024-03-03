@@ -495,6 +495,15 @@ def pytest_configure(config: pytest.Config) -> None:
         msg = 'Directory traversal is not allowed for `pm-pattern-file-fmt` option'
         raise pytest.UsageError(msg)
 
+    style_str = config.getini('pm-mismatch-style')
+
+    if style_str.upper() not in [item.name for item in _MismatchStyle]:
+        msg = (
+            f"'pm-mismatch-style' option have an invalid value `{style_str}`. "
+            "Valid values are: `full`, `diff`."
+          )
+        raise pytest.UsageError(msg)
+
     config.pm_color_output = should_do_markup(sys.stdout)   # type: ignore[attr-defined]
 
     if not config.getoption('--pm-reveal-unused-files'):
