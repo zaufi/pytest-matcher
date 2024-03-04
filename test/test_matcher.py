@@ -372,7 +372,7 @@ def pm_pattern_file_fmt_directory_traversal_test(pytester: pytest.Pytester) -> N
     # Run all tests with pytest
     result = pytester.runpytest()
     result.stderr.re_match_lines([
-        'ERROR: Directory traversal is not allowed for `pm-pattern-file-fmt` option'
+        'ERROR: Directory traversal is not allowed for `pm-pattern-file-fmt` or `pm-patterns-base-dir` option'
       ])
 
 

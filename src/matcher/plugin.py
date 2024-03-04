@@ -494,7 +494,7 @@ def pytest_configure(config: pytest.Config) -> None:
     # ALERT Prevent directory traversal in
     # `pm-pattern-file-fmt` and `pm-patterns-base-dir` parameters!
     if any(map(_path_have_dot_dot, (basedir, pathlib.Path(config.getini('pm-pattern-file-fmt'))))):
-        msg = 'Directory traversal is not allowed for `pm-pattern-file-fmt` option'
+        msg = 'Directory traversal is not allowed for `pm-pattern-file-fmt` or `pm-patterns-base-dir` option'
         raise pytest.UsageError(msg)
 
     style_str = config.getini('pm-mismatch-style')
