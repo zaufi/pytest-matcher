@@ -199,6 +199,7 @@ notes = []
 
 [tool.pytest.ini_options]
 addopts = "-ra"
+cache_dir = "build/.pytest.8x_cache"
 log_cli = true
 markers = [
     "wip: work in progress"
