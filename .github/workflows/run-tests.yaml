@@ -13,8 +13,6 @@ on:
       - master
 
 env:
-  HATCH_DATA_DIR: .cache/hatch
-  PIP_CACHE_DIR: .cache/pip
   PIP_DISABLE_PIP_VERSION_CHECK: 1
 
 jobs:
@@ -37,7 +35,9 @@ jobs:
         with:
           # TODO Hashing the whole `pyproject.toml` isn't nice!
           key: py${{ matrix.python-version }}-hatch-${{ hashFiles('pyproject.toml') }}
-          path: ${{ env.GITHUB_WORKSPACE }}/.cache
+          path:
+            ~/.cache/pip
+            ~/.local/share/hatch
 
       - name: Set up Python
         uses: actions/setup-python@v5
