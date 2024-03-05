@@ -30,6 +30,7 @@ def test_regex(capfd, expected_out) -> None:
 
     assert expected_out.match(stdout) ==True
 
+
 @pytest.mark.xfail(reason='Demo for diff show')
 def test_diff(capfd, expected_out) -> None:
     """Plain text demo test with diff."""
