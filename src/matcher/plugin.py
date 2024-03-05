@@ -41,6 +41,8 @@ except ImportError:
 
 PM_COLOR_OUTPUT = pytest.StashKey[bool]()
 
+_EOL_RE: Final[re.Pattern] = re.compile('(\r?\n|\r)')
+
 if sys.version_info < (3, 11):
     _RE_NOFLAG: Final[re.RegexFlag] = cast(re.RegexFlag, 0)
 else:
@@ -147,17 +149,21 @@ class _ContentCheckOrStorePattern:
           , filename=self._pattern_filename
           )
 
+    def _make_newlines_visible(self, text: str) -> str:
+        return _EOL_RE.sub(r'↵\1', text)
+
     def _report_mismatch_text(self, actual: str, *, color: bool) -> list[str]:  # NOQA: ARG002
         assert self._expected_file_content is not None
+        expected = self._expected_file_content
         return [
             ''
           , "The test output doesn't equal to the expected"
           , f'(from `{self._pattern_filename}`):'
           , '---[BEGIN actual output]---'
-          , *actual.replace('\n','↵\n').splitlines()
+          , *self._make_newlines_visible(actual).splitlines()
           , '---[END actual output]---'
           , '---[BEGIN expected output]---'
-          , *self._expected_file_content.replace('\n','↵\n').splitlines()
+          , *self._make_newlines_visible(expected).splitlines()
           , '---[END expected output]---'
           ]
 
@@ -166,8 +172,8 @@ class _ContentCheckOrStorePattern:
         expected = self._expected_file_content
         diff=[
             *difflib.unified_diff(
-                expected.replace('\n','↵\n').splitlines()
-              , actual.replace('\n','↵\n').splitlines()
+                self._make_newlines_visible(expected).splitlines()
+              , self._make_newlines_visible(actual).splitlines()
               , fromfile='expected'
               , tofile='actual'
               , lineterm=''

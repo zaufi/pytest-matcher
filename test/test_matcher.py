@@ -46,16 +46,17 @@ def simple_test(ourtestdir, expectdir) -> None:
     result.assert_outcomes(passed=1)
 
 
-def failed_test(ourtestdir, expectdir) -> None:
+@pytest.mark.parametrize('eol', [r'\r', r'\n', r'\r\n'])
+def failed_test(eol, ourtestdir, expectdir) -> None:
     # Write a sample expectations file
     expectdir.makepatternfile('.out', test_not_matched='Hello Africa!')
     # Write a sample test
-    ourtestdir.makepyfile("""
+    ourtestdir.makepyfile(f"""
         def test_not_matched(capfd, expected_out):
-            print('Unexpected output')
+            print('Unexpected output', end='{eol}')
             stdout, stderr = capfd.readouterr()
             assert expected_out == stdout
-      """
+        """
     )
 
     # Run all tests with pytest

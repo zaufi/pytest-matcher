@@ -35,6 +35,7 @@ Added
   to make it work. See :issue:`22`.
 - `Documentation`_.
 - Introduce :option:`pm-mismatch-style`.
+- Show newlines in the ``full`` mismatch mode.
 
 Fixed
 -----
