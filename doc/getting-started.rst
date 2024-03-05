@@ -21,14 +21,9 @@ or with ``diff`` mode highlighted with ``Pygments``:
 The plugin provides :py:data:`expected_out` and :py:data:`expected_err` named fixture functions.
 The usage is trivial as the following:
 
-.. code-block:: python
-
-    def test_foo(capfd, expected_out):
-        print('foo')
-
-        stdout, stderr = capfd.readouterr()
-
-        assert stdout == expected_out
+.. literalinclude:: ../test/test_foo.py
+    :language: python
+    :pyobject: test_foo
 
 If you run :command:`pytest` now, it'll skip the test due to a missed output expectations file:
 
@@ -90,17 +85,10 @@ is matching expectations:
 If the captured output has something that could change from run to run, for example, timestamps
 or filesystem paths, it's possible to match the output using regular expressions:
 
-.. code-block:: python
+.. literalinclude:: ../test/test_foo.py
+    :language: python
+    :pyobject: test_regex
 
-    from datetime import datetime
-
-    def test_regex(capfd, expected_out):
-        print(f"Current date: {datetime.now()}")
-        print(f"Current working dir: {Path.cwd()}")
-
-        stdout, _ = capfd.readouterr()
-
-        assert expected_out.match(stdout) == True
 
 Store the pattern file for this test and rerun :command:`pytest` with ``-vv`` option:
 
