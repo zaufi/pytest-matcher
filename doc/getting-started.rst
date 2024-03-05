@@ -89,7 +89,6 @@ or filesystem paths, it's possible to match the output using regular expressions
     :language: python
     :pyobject: test_regex
 
-
 Store the pattern file for this test and rerun :command:`pytest` with ``-vv`` option:
 
 .. code-block:: console
