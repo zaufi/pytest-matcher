@@ -45,6 +45,7 @@ Fixed
   ``<test-module-name>`` component despite the :file:`README.rst` claimed.
   Existed projects could set :option:`pm-pattern-file-fmt` to
   ``{class}/{fn}{callspec}`` to preserve backward compatibility.
+- Keep original line endings when reading expectation files.
 
 Removed
 -------

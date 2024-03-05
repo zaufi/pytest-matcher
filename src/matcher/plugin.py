@@ -111,7 +111,8 @@ class _ContentCheckOrStorePattern:
             pytest.skip(f'Pattern file not found `{self._pattern_filename}`')
 
         if self._expected_file_content is None:
-            self._expected_file_content = self._pattern_filename.read_text()
+            with self._pattern_filename.open(newline='') as f:
+                self._expected_file_content = f.read()
 
     def __eq__(self, text: object) -> bool:
         if not isinstance(text, str):

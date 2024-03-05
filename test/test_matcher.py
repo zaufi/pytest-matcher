@@ -433,3 +433,21 @@ def suffix_test(pytester, sfx, filename) -> None:
     # Run all tests with pytest
     result = pytester.runpytest()
     result.assert_outcomes(passed=1)
+
+
+def crlf_test(ourtestdir, expectdir) -> None:
+    # Write a sample expectations file
+    expectdir.makepatternfile('.out', test_sample_out='Hello Africa!\r\n')
+    # Write a sample test
+    ourtestdir.makepyfile(r"""
+        def test_sample_out(capfd, expected_out):
+            print('Hello Africa!\r\n', end='')
+            stdout, stderr = capfd.readouterr()
+            assert expected_out == stdout
+            assert stderr == ''
+        """
+      )
+
+    # Run all tests with pytest
+    result = ourtestdir.runpytest()
+    result.assert_outcomes(passed=1)
