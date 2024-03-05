@@ -49,7 +49,7 @@ Fixed
 Removed
 -------
 
-- **BREAKING CHANGE** The ``pm-pattern-file-use-system-name`` configuration
+- **BREAKING CHANGE** The :option:`!pm-pattern-file-use-system-name` configuration
   parameter has been removed. Having ``{suffix}`` in the :option:`pm-pattern-file-fmt`
   one can have a system name suffix whenever he needs it.
 
@@ -142,7 +142,7 @@ Fixed
 Added
 -----
 
-- Add an INI-file option ``pm-pattern-file-use-system-name`` to control if the system
+- Add an INI-file option :option:`!pm-pattern-file-use-system-name` to control if the system
   name suffix is expected to be in a pattern filename. For example, this allows patterns with
   different CR/LF conventions to be created.
 - Add :py:data:`expected_yaml` fixture to match YAML files.
