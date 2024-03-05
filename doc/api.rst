@@ -24,6 +24,7 @@ Fixture
             assert expected_stderr == stderr
 
     .. py:function:: expected_out.match(output: str) -> bool
+    .. py:function:: expected_err.match(output: str) -> bool
 
         If the output has data changed from run to run (like timestamps or paths), one can edit the
         expected output file using regular expressions and use this function to match them.
