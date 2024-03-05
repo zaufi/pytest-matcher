@@ -12,6 +12,9 @@ on:
     branches:
       - master
 
+env:
+  PIP_DISABLE_PIP_VERSION_CHECK: 1
+
 jobs:
   test:
     name: Hatch run unit tests

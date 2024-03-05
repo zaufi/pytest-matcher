@@ -12,6 +12,9 @@ on:
     branches:
       - master
 
+env:
+  PIP_DISABLE_PIP_VERSION_CHECK: 1
+
 jobs:
   linters:
     name: Run various linters
