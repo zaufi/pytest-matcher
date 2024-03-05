@@ -44,6 +44,7 @@ Fixed
   ``<test-module-name>`` component despite the ``README.rst`` claimed.
   Existed projects could set ``pm-pattern-file-fmt`` to
   ``{class}/{fn}{callspec}`` to preserve backward compatibility.
+- Keep original line endings when reading expectation files.
 
 Removed
 -------
