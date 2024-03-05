@@ -13,8 +13,8 @@ on:
       - master
 
 env:
-  HATCH_DATA_DIR: ${{ GITHUB_WORKSPACE }}/.cache/hatch
-  PIP_CACHE_DIR: ${{ GITHUB_WORKSPACE }}/.cache/pip
+  HATCH_DATA_DIR: .cache/hatch
+  PIP_CACHE_DIR: .cache/pip
   PIP_DISABLE_PIP_VERSION_CHECK: 1
 
 jobs:
