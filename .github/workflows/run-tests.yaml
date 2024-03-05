@@ -30,16 +30,27 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
+      - name: Prepare Cache
+        uses: actions/cache@v4
+        with:
+          # TODO Hashing the whole `pyproject.toml` isn't nice!
+          key: py${{ matrix.python-version }}-hatch-${{ hashFiles('pyproject.toml') }}-tests
+          path: |
+            ~/.cache/pip
+            ~/.local/share/hatch
+
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
-          cache: pip
 
       - name: Install Dependencies
         run: |
           pip install hatch
 
       - name: Run tests
+        # NOTE Run tests per environment to avoid `default` environment activation
+        # when `hatch run test` running.
         run: |
-          hatch run test
+          hatch run test.pytest.7x:test
+          hatch run test.pytest.8x:test
