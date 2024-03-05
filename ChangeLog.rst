@@ -1,6 +1,8 @@
 .. SPDX-FileCopyrightText: 2017-now, See ``CONTRIBUTORS.lst``
 .. SPDX-License-Identifier: CC0-1.0
 
+.. program:: pytest-matcher
+
 ==========
 Change Log
 ==========
