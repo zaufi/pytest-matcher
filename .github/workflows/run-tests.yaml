@@ -50,4 +50,5 @@ jobs:
 
       - name: Run tests
         run: |
-          hatch run test
+          hatch run test.pytest.7x:test
+          hatch run test.pytest.8x:test
