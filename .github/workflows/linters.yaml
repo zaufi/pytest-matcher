@@ -28,7 +28,7 @@ jobs:
         uses: actions/cache@v4
         with:
           # TODO Hashing the whole `pyproject.toml` isn't nice!
-          key: py3.12-hatch-${{ hashFiles('pyproject.toml') }}
+          key: py3.12-hatch-${{ hashFiles('pyproject.toml') }}-lint
           path: |
             ~/.cache/pip
             ~/.local/share/hatch
