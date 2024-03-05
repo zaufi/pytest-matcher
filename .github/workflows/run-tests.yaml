@@ -35,7 +35,7 @@ jobs:
         with:
           # TODO Hashing the whole `pyproject.toml` isn't nice!
           key: py${{ matrix.python-version }}-hatch-${{ hashFiles('pyproject.toml') }}
-          path:
+          path: |
             ~/.cache/pip
             ~/.local/share/hatch
 
