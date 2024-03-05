@@ -21,17 +21,18 @@ to `Semantic Versioning`_.
 ..   ✔ ``Fixed`` for any bug fixes.
 ..   ✔ ``Security`` in case of vulnerabilities.
 
+.. program:: pytest-matcher
 
 Unreleased_
 ===========
 
 Added
 -----
-- Introduce ``pm-pattern-file-fmt`` configuration parameter to give full
+- Introduce :option:`pm-pattern-file-fmt` configuration parameter to give full
   control over the path to pattern files.
-- A test can be marked with ``@pytest.mark.expect_suffix([args..., suffix=<arg>])``
+- A test can be marked with :py:func:`@pytest.mark.expect_suffix <expect_suffix>`
   to have an arbitrary suffix in the pattern filenames.
-  The ``pm-pattern-file-fmt`` format string should have the ``{suffix}`` placeholder
+  The :option:`pm-pattern-file-fmt` format string should have the ``{suffix}`` placeholder
   to make it work. See :issue:`22`.
 - `Documentation`_.
 - Introduce :option:`pm-mismatch-style`.
@@ -41,15 +42,15 @@ Fixed
 -----
 
 - **BREAKING CHANGE** The expectation files path has never used the
-  ``<test-module-name>`` component despite the ``README.rst`` claimed.
-  Existed projects could set ``pm-pattern-file-fmt`` to
+  ``<test-module-name>`` component despite the :file:`README.rst` claimed.
+  Existed projects could set :option:`pm-pattern-file-fmt` to
   ``{class}/{fn}{callspec}`` to preserve backward compatibility.
 
 Removed
 -------
 
 - **BREAKING CHANGE** The ``pm-pattern-file-use-system-name`` configuration
-  parameter has been removed. Having ``{suffix}`` in the ``pm-pattern-file-fmt``
+  parameter has been removed. Having ``{suffix}`` in the :option:`pm-pattern-file-fmt`
   one can have a system name suffix whenever he needs it.
 
 
@@ -59,8 +60,8 @@ Removed
 Added
 -----
 
-- ``--pm-reveal-unused-files`` option to reveal unused pattern files.
-- run test with ``pytest`` 7.x and 8.x.
+- :option:`--pm-reveal-unused-files` option to reveal unused pattern files.
+- run test with :command:`pytest` 7.x and 8.x.
 
 
 1.5.1_ -- 2024-01-15
@@ -77,7 +78,7 @@ Fixed
 Added
 -----
 
-- Make it possible to use ``expected_xxx`` with parameterized tests. See :issue:`4`.
+- Make it possible to use :py:data:`expected_xxx <expected_out>` with parameterized tests. See :issue:`4`.
 
 
 1.4.0_ -- 2021-12-10
@@ -91,7 +92,7 @@ Added
 Changed
 -------
 
-- Migrate to ``setup.py``-less build (using :pep:`517` and :pep:`660`).
+- Migrate to :file:`setup.py`-less build (using :pep:`517` and :pep:`660`).
 
 
 1.3.3_ -- 2019-06-27
@@ -100,7 +101,7 @@ Changed
 Fixed
 -----
 
-- Fix backward compatibility w/ Python less than 3.6.
+- Fix backward compatibility with Python less than 3.6.
 
 
 1.3.2_ -- 2019-06-26
@@ -118,12 +119,12 @@ Fixed
 Added
 -----
 
-- Show actual and expected output on failed ``expected_out.match()``.
+- Show actual and expected output on failed :py:func:`expected_out.match()`.
 
 Changed
 -------
 
-- Update code for modern ``pytest`` (4.4.0) and ``PyYAML`` (5.1).
+- Update code for the modern ``pytest`` (4.4.0) and ``PyYAML`` (5.1).
 
 
 1.2.1_ -- 2018-03-30
@@ -144,7 +145,7 @@ Added
 - Add an INI-file option ``pm-pattern-file-use-system-name`` to control if the system
   name suffix is expected to be in a pattern filename. For example, this allows patterns with
   different CR/LF conventions to be created.
-- Add ``expected_yaml`` fixture to match YAML files.
+- Add :py:data:`expected_yaml` fixture to match YAML files.
 - Introduce unit tests.
 
 
@@ -161,7 +162,7 @@ Added
 Changed
 -------
 
-- Ensure full pattern match for ``expected_xxx.match()`` named fixtures.
+- Ensure full pattern match for :py:func:`expected_xxx.match <expected_out.match>` named fixtures.
 
 
 1.0.0_ -- 2017-08-25
@@ -170,7 +171,7 @@ Changed
 Added
 -----
 
-- Add a pretty printer for failed assertions with the ``expected_out`` fixture and equal
+- Add a pretty printer for failed assertions with the :py:data:`expected_out` fixture and equal
   comparison operator.
 
 
