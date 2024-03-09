@@ -44,7 +44,7 @@ dynamic = ["version"]
 pygments = ["Pygments"]
 
 [project.entry-points.pytest11]
-pytest_matcher = "matcher.plugin"
+pytest_matcher = "pytest_matcher.plugin"
 
 [project.urls]
 Code = "https://github.com/zaufi/pytest-matcher"
@@ -83,7 +83,7 @@ data_file = "build/.coverage"
 dev-mode-dirs = ["src"]
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/matcher"]
+packages = ["src/pytest_matcher"]
 
 [tool.hatch.envs.default]
 description = "Development environment"
@@ -105,13 +105,13 @@ all = [
     "dead-check", "dist-check", "license-check", "lint-check", "pyproject-check", "spell-check", "type-check"
   ]
 # Various linter commands
-dead-check = "vulture src/matcher"
+dead-check = "vulture src/pytest_matcher"
 dist-check = "twine check dist/*"
 license-check = "reuse lint"
-lint-check = "ruff check src/matcher test"
+lint-check = "ruff check src/pytest_matcher test"
 pyproject-check = "validate-pyproject {root:real}/pyproject.toml"
 spell-check = "codespell"
-type-check = "mypy src/matcher test"
+type-check = "mypy src/pytest_matcher test"
 # Testing commands
 cov = "hatch env run -e test cov"
 test = "hatch env run -e test test"
@@ -150,7 +150,7 @@ matrix.pytest.dependencies = [
   ]
 
 [tool.hatch.envs.test.scripts]
-cov = "pytest --cov-report term --cov-report html:build/coverage-{matrix:pytest} --cov=matcher"
+cov = "pytest --cov-report term --cov-report html:build/coverage-{matrix:pytest} --cov=pytest_matcher"
 show-cov = "xdg-open build/coverage-{matrix:pytest}/index.html"
 test = "pytest -o cache_dir=build/.{matrix:pytest}_cache {verbosity:flag} {args}"
 
@@ -252,7 +252,7 @@ select = ["ALL"]
 inline-quotes = "single"
 
 [tool.ruff.lint.isort]
-known-first-party = ["matcher"]
+known-first-party = ["pytest_matcher"]
 
 [tool.ruff.lint.pydocstyle]
 convention = "google"
