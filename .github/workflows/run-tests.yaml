@@ -46,7 +46,6 @@ jobs:
       - name: Prepare Cache
         uses: actions/cache@v4
         with:
-          # TODO Hashing the whole `pyproject.toml` isn't nice!
           key: py${{ matrix.python-version }}-hatch-${{ env.CACHE_KEY }}-tests
           path: |
             ~/.cache/pip
