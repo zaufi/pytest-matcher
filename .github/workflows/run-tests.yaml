@@ -30,11 +30,18 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
+      - name: Get Cache Key
+        run: |
+          echo "CACHE_KEY=$( \
+              .github/workflows/get-key.py --json --hash tool.hatch.envs.test.overrides.matrix.pytest.dependencies \
+            )" | tee -a "${GITHUB_ENV}"
+
+        shell: bash
       - name: Prepare Cache
         uses: actions/cache@v4
         with:
           # TODO Hashing the whole `pyproject.toml` isn't nice!
-          key: py${{ matrix.python-version }}-hatch-${{ hashFiles('pyproject.toml') }}-tests
+          key: py${{ matrix.python-version }}-hatch-${{ env.CACHE_KEY }}-tests
           path: |
             ~/.cache/pip
             ~/.local/share/hatch

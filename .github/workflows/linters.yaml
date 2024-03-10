@@ -24,11 +24,17 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
+      - name: Get Cache Key
+        run: |
+          echo "CACHE_KEY=$( \
+              .github/workflows/get-key.py --hash tool.hatch.envs.default.dependencies \
+            )" | tee -a "${GITHUB_ENV}"
+        shell: bash
+
       - name: Prepare Cache
         uses: actions/cache@v4
         with:
-          # TODO Hashing the whole `pyproject.toml` isn't nice!
-          key: py3.12-hatch-${{ hashFiles('pyproject.toml') }}-lint
+          key: py3.12-hatch-${{ env.CACHE_KEY }}-lint
           path: |
             ~/.cache/pip
             ~/.local/share/hatch
