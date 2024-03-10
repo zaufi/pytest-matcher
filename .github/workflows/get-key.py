@@ -8,7 +8,6 @@ import argparse
 import functools
 import hashlib
 import json
-import pathlib
 import sys
 
 try:
@@ -45,7 +44,7 @@ def main() -> None:
 
     args = parser.parse_args()
 
-    with pathlib.Path.open(args.file_path, 'rb') as fd:
+    with open(args.file_path, 'rb') as fd:
         data = tomllib.load(fd)
 
     try:

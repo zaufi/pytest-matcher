@@ -233,7 +233,8 @@ select = ["ALL"]
 
 [tool.ruff.lint.extend-per-file-ignores]
 ".github/workflows/get-key.py" = [
-    "S324"      # Probable use of insecure hash functions in `hashlib`: `sha1`
+    "PTH123"    # `open()` should be replaced by `Path.open()`
+  , "S324"      # Probable use of insecure hash functions in `hashlib`: `sha1`
   , "T201"      # `print` found
   , "TRY301"    # Abstract `raise` to an inner function
   ]
