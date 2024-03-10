@@ -40,8 +40,8 @@ jobs:
           echo "CACHE_KEY=$( \
               .github/workflows/get-key.py --json --hash tool.hatch.envs.test.overrides.matrix.pytest.dependencies \
             )" | tee -a "${GITHUB_ENV}"
-
         shell: bash
+
       - name: Prepare Cache
         uses: actions/cache@v4
         with:
