@@ -30,19 +30,27 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Prepare Cache
-        uses: actions/cache@v4
-        with:
-          # TODO Hashing the whole `pyproject.toml` isn't nice!
-          key: py${{ matrix.python-version }}-hatch-${{ hashFiles('pyproject.toml') }}-tests
-          path: |
-            ~/.cache/pip
-            ~/.local/share/hatch
-
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
+
+      - name: Get Cache Key
+        run: |
+          [[ '${{ matrix.python-version }}' == '3.10' ]] && pip install tomli
+          echo "CACHE_KEY=$( \
+              .github/workflows/get-key.py --json --hash tool.hatch.envs.test.overrides.matrix.pytest.dependencies \
+            )" | tee -a "${GITHUB_ENV}"
+        shell: bash
+
+      - name: Prepare Cache
+        uses: actions/cache@v4
+        with:
+          # TODO Hashing the whole `pyproject.toml` isn't nice!
+          key: py${{ matrix.python-version }}-hatch-${{ env.CACHE_KEY }}-tests
+          path: |
+            ~/.cache/pip
+            ~/.local/share/hatch
 
       - name: Install Dependencies
         run: |
