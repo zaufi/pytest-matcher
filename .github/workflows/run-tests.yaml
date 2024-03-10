@@ -37,6 +37,7 @@ jobs:
 
       - name: Get Cache Key
         run: |
+          [[ '${{ matrix.python-version }}' == '3.10' ]] && pip install tomli
           echo "CACHE_KEY=$( \
               .github/workflows/get-key.py --json --hash tool.hatch.envs.test.overrides.matrix.pytest.dependencies \
             )" | tee -a "${GITHUB_ENV}"
