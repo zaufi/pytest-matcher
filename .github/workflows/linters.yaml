@@ -45,8 +45,7 @@ jobs:
             ~/.local/share/hatch
 
       - name: Install Dependencies
-        run: |
-          pip install hatch
+        run: pip install hatch
 
       - name: Build a package
         run: hatch build
