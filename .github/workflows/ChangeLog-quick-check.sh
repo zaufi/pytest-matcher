@@ -4,6 +4,11 @@
 
 set -e
 
+if [[ ! -f ChangeLog.rst ]]; then
+    echo "$0: Must be run from the project root directory." >&2
+    exit 1
+fi
+
 # NOTE Not far than 5 lines below this marker should
 # be a top (now released) version title.
 declare -r MARKER='.. program:: pytest-matcher'
