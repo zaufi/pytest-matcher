@@ -19,7 +19,7 @@ latter and match the output more than just a few lines.
 Documentation
 -------------
 
-The latest documentation could be found `here <https://pytest-matcher.readthedocs.io/en/latest/>`_.
+The latest documentation could be found `here <https://pytest-matcher.readthedocs.io>`_.
 
 
 See Also
