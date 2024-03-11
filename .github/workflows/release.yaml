@@ -61,8 +61,9 @@ jobs:
             | sed -e 's,-,.post,' -e 's,-g.*,,' \
             )" | tee -a "${GITHUB_ENV}"
 
-      # TODO Check that the `ChangeLog.rst` has an entry for the current release
-      # and has no `Unreleased_` section!
+      - name: Check the ChangeLog
+        if: startsWith(github.ref, 'refs/tags/')
+        run: .github/workflows/ChangeLog-quick-check.sh
 
       - name: Build a package
         run: hatch build

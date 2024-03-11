@@ -26,6 +26,16 @@ to `Semantic Versioning`_.
 Unreleased_
 ===========
 
+Added
+-----
+
+- Quick check for the :file:`ChangeLog.rst`.
+
+Fixed
+-----
+
+- Release GitHub workflow has been fixed to use modern versions of involved actions.
+
 
 2.0.0_ -- 2024-03-11
 ====================
