@@ -7,7 +7,7 @@ set -e
 # NOTE Not far than 5 lines below this marker should
 # be a top (now released) version title.
 declare -r MARKER='.. program:: pytest-matcher'
-declare -r VERSION_RE="^${SETUPTOOLS_SCM_PRETEND_VERSION:?} -- 20[0-9][0-9]-[0-9][0-9]-[0-9][0-9]$"
+declare -r VERSION_RE="^${SETUPTOOLS_SCM_PRETEND_VERSION:?}_ -- 20[0-9][0-9]-[0-9][0-9]-[0-9][0-9]$"
 
 if grep -A 5 "${MARKER}" ChangeLog.rst | grep -q "${VERSION_RE}"; then
     echo "$0: ✔ Found ${SETUPTOOLS_SCM_PRETEND_VERSION} on top"
