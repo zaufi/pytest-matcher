@@ -170,12 +170,32 @@ import_heading_localfolder = "Local imports"
 [tool.mypy]
 cache_dir = "build/.mypy_cache"
 check_untyped_defs = true
+disallow_any_decorated = true
+disallow_incomplete_defs = true
+disallow_untyped_defs = true
 ignore_missing_imports = true
+no_implicit_optional = true
 pretty = true
+show_column_numbers = true
+show_error_codes = true
+sqlite_cache = true
+strict_equality = true
+warn_no_return = true
+warn_redundant_casts = true
 warn_return_any = true
+warn_unreachable = true
 warn_unused_configs = true
 warn_unused_ignores = true
-warn_unreachable = true
+
+[[tool.mypy.overrides]]
+module = [
+    "test.test_foo"
+  , "test.test_matcher"
+  ]
+disallow_any_decorated = false
+disallow_incomplete_defs = false
+disallow_untyped_defs = false
+
 
 [tool.pylint.BASIC]
 const-naming-style = "UPPER_CASE"
