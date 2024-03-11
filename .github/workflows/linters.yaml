@@ -47,6 +47,21 @@ jobs:
       - name: Install Dependencies
         run: pip install hatch
 
+      - name: Git Describe
+        id: ghd
+        uses: proudust/gh-describe@v2
+
+      - name: Prepare Version
+        shell: bash
+        # NOTE It's not exactly the same as in the `release.yaml` workflow!
+        # This one don't strips _local version_!
+        run: |
+          echo "SETUPTOOLS_SCM_PRETEND_VERSION=$( \
+              echo '${{ steps.ghd.outputs.describe }}' \
+            | cut -d / -f 2 \
+            | sed -e 's,-,.post,' -e 's,-g,+g,' \
+            )" | tee -a "${GITHUB_ENV}"
+
       - name: Build a package
         run: hatch build
 

@@ -50,6 +50,8 @@ jobs:
         id: ghd
         uses: proudust/gh-describe@v2
 
+        # NOTE It's not exactly the same as in the `linters.yaml` workflow!
+        # This one strips _local version_!
       - name: Prepare Version
         shell: bash
         run: |
