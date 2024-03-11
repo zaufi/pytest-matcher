@@ -23,6 +23,10 @@ to `Semantic Versioning`_.
 
 .. program:: pytest-matcher
 
+Unreleased_
+===========
+
+
 2.0.0_ -- 2024-03-11
 ====================
 
