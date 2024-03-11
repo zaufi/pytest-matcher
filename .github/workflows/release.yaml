@@ -59,6 +59,9 @@ jobs:
             | sed -e 's,-,.post,' -e 's,-g.*,,' \
             )" | tee -a "${GITHUB_ENV}"
 
+      # TODO Check that the `ChangeLog.rst` has an entry for the current release
+      # and has no `Unreleased_` section!
+
       - name: Build a package
         run: hatch build
 
