@@ -239,6 +239,7 @@ def parametrized_case_test(ourtestdir, expectdir) -> None:
         ((0, 'y'), '[0-y]'),
         ((1, 'some words'), '[1-some%20words]'),
         ((2, '~/some/path/'), '[2-~%2Fsome%2Fpath%2F]'),
+        ((3, 'with.dot'), '[3-with.dot]'),
     ]
     # Write sample expectation files
     for values, decoration in testing_pairs:
@@ -258,7 +259,7 @@ def parametrized_case_test(ourtestdir, expectdir) -> None:
 
     # Run all tests with pytest
     result = ourtestdir.runpytest()
-    result.assert_outcomes(passed=3)
+    result.assert_outcomes(passed=4)
 
 
 @pytest.mark.parametrize(('return_codes', 'expected_code'), [(False, 0), (True, 1)])
@@ -384,6 +385,7 @@ def pm_pattern_file_fmt_directory_traversal_test(pytester: pytest.Pytester) -> N
         ('', f'test_sfx-{platform.system()}.out')
         # Positional arg marker
       , ('platform.system()', f'test_sfx-{platform.system()}.out')
+      , ('"with.dot"', 'test_sfx-with.dot.out')
         # Positional args marker
       , (
             '"py", f"{sys.version_info.major}", platform.system()'
