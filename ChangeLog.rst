@@ -35,6 +35,8 @@ Fixed
 -----
 
 - Release GitHub workflow has been fixed to use modern versions of involved actions.
+- Do not override the path suffix-like part (separated by a dot) with a pattern
+  filename extension.
 
 
 2.0.0_ -- 2024-03-11

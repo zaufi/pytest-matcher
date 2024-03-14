@@ -262,11 +262,12 @@ def _make_expected_filename(request: pytest.FixtureRequest, ext: str) -> pathlib
       , 'suffix': ('','-')[int(bool(args))] + urllib.parse.quote('-'.join(args), safe='[]')
       }
 
-    return functools.reduce(
+    result = functools.reduce(
         functools.partial(_subst_pattern_parts, **subst)
       , pathlib.Path(request.config.getini('pm-pattern-file-fmt')).parts
       , result
-      ).with_suffix(ext)
+      )
+    return result.with_suffix(result.suffix + ext)
 
 
 @pytest.fixture()
