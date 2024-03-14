@@ -236,11 +236,11 @@ def yaml_match_failure_test(ourtestdir, expectdir) -> None:
 def parametrized_case_test(ourtestdir, expectdir) -> None:
     # Given testing argvalues and expected decorations
     testing_pairs = [
-        ((0, 'y'), '[0-y]'),
-        ((1, 'some words'), '[1-some%20words]'),
-        ((2, '~/some/path/'), '[2-~%2Fsome%2Fpath%2F]'),
-        ((3, 'with.dot'), '[3-with.dot]'),
-    ]
+        ((0, 'y'), '[0-y]')
+      , ((1, 'some words'), '[1-some%20words]')
+      , ((2, '~/some/path/'), '[2-~%2Fsome%2Fpath%2F]')
+      , ((3, 'with.dot'), '[3-with.dot]')
+      ]
     # Write sample expectation files
     for values, decoration in testing_pairs:
         (expectdir.path / f'test_parametrized{decoration}.out').write_text(str(values) + '\n')
