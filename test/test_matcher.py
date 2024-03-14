@@ -259,7 +259,7 @@ def parametrized_case_test(ourtestdir, expectdir) -> None:
 
     # Run all tests with pytest
     result = ourtestdir.runpytest()
-    result.assert_outcomes(passed=4)
+    result.assert_outcomes(passed=len(testing_pairs))
 
 
 @pytest.mark.parametrize(('return_codes', 'expected_code'), [(False, 0), (True, 1)])
