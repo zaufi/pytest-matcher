@@ -40,8 +40,6 @@ repos:
     hooks:
       - id: gitlint
         name: Commit message check
-        language: python
-        entry: gitlint --msg-filename
         stages: [commit-msg]
 
   - repo: https://github.com/editorconfig-checker/editorconfig-checker.python
