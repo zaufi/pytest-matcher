@@ -1,0 +1,72 @@
+{
+  "templates": [
+    {
+      "patterns": [
+        "*.rst"
+      ],
+      "extra_reuse_cli_options": {
+        "style": "rst"
+      }
+    },
+    {
+      "patterns": [
+        "*.md"
+      ],
+      "extra_reuse_cli_options": {
+        "style": "html"
+      }
+    },
+    {
+      "patterns": [
+        "*.jinja2"
+      ],
+      "extra_reuse_cli_options": {
+        "force_dot_license": true
+      }
+    },
+    {
+      "patterns": [
+        "*.py"
+      ],
+      "extra_reuse_cli_options": {
+        "style": "python",
+        "template": "code"
+      }
+    },
+    {
+      "patterns": [
+        "*"
+      ],
+      "extra_reuse_cli_options": {
+        "template": "misc"
+      }
+    }
+  ],
+  "licenses": [
+    {
+      "ref": "GPL-3.0-or-later",
+      "patterns": [
+        "*.py",
+        "*.rst"
+      ]
+    },
+    {
+      "ref": "CC0-1.0",
+      "patterns": [
+        "*"
+      ]
+    }
+  ],
+  "copyright_headers": [
+    {
+      "text": "%reuse.name% <%reuse.email%>",
+      "patterns": [
+        "*"
+      ]
+    }
+  ],
+  "extra_reuse_cli_options": {
+    "copyright_prefix": "spdx",
+    "merge_copyrights": true
+  }
+}
