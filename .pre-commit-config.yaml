@@ -33,12 +33,7 @@ repos:
     rev: 3.0.0
     hooks:
       - id: git-check
-        # ATTENTION This hook doesn't need any files to check.
-        # Instead, it checks the whole repo against settings in the
-        # `.gitattributes`. So, better to minimize the amount of
-        # useless file names passed to it. See also, BUG
-        # https://github.com/jumanjihouse/pre-commit-hooks/issues/40
-        files: 'README.rst'
+        pass_filenames: false
 
   - repo: https://github.com/jorisroovers/gitlint
     rev: v0.19.1
