@@ -98,6 +98,7 @@ dependencies = [
   , "vulture"
   , "validate-pyproject[all] >= 0.18"
   ]
+installer = "uv"
 
 [tool.hatch.envs.default.scripts]
 # Some shortcut commands
@@ -122,13 +123,14 @@ dist = "hatch build -t wheel"
 fix-spelling = "codespell -i 3 -w"
 
 [tool.hatch.envs.doc]
-verbosity = 1
-template = "doc"
 description = "Environment to build documentation"
 dependencies = [
     "sphinx"
   , "sphinx_rtd_theme"
   ]
+installer = "uv"
+verbosity = 1
+template = "doc"
 
 [tool.hatch.envs.doc.scripts]
 build = "sphinx-build --color -j auto doc/ build/sphinx/html/"
