@@ -88,15 +88,15 @@ packages = ["src/pytest_matcher"]
 [tool.hatch.envs.default]
 description = "Development environment"
 dependencies = [
-    "codespell >= 2.2.6"
+    "codespell >= 2.3.0"
   , "isort"
   , "mypy"
   , "reuse"
-  , "ruff >= 0.3.7"
+  , "ruff >= 0.5.5"
   , "types-PyYAML"
   , "twine"
   , "vulture"
-  , "validate-pyproject[all] >= 0.16"
+  , "validate-pyproject[all] >= 0.18"
   ]
 
 [tool.hatch.envs.default.scripts]

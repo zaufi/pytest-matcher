@@ -49,14 +49,14 @@ repos:
 
   - repo: https://github.com/codespell-project/codespell
     # ALERT Don't forget to update `pyproject.toml:tool.hatch.envs.default`
-    rev: v2.2.6
+    rev: v2.3.0
     hooks:
       - id: codespell
         additional_dependencies: ['tomli']
 
   - repo: https://github.com/charliermarsh/ruff-pre-commit
     # ALERT Don't forget to update `pyproject.toml:tool.hatch.envs.default`
-    rev: v0.3.7
+    rev: v0.5.5
     hooks:
       - id: ruff
 
@@ -67,7 +67,7 @@ repos:
       - id: rst-directive-colons
 
   - repo: https://github.com/abravalheri/validate-pyproject
-    rev: v0.16
+    rev: v0.18
     hooks:
       - id: validate-pyproject
 
