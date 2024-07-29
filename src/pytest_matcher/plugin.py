@@ -263,7 +263,9 @@ def _make_expected_filename(request: pytest.FixtureRequest, ext: str) -> pathlib
       }
 
     result = functools.reduce(
-        functools.partial(_subst_pattern_parts, **subst)
+        # TODO Argument 1 to "_subst_pattern_parts" has incompatible type
+        # "**dict[str, str]"; expected "Path"  [arg-type]
+        functools.partial(_subst_pattern_parts, **subst)    # type: ignore[arg-type]
       , pathlib.Path(request.config.getini('pm-pattern-file-fmt')).parts
       , result
       )
