@@ -283,6 +283,14 @@ known-first-party = ["pytest_matcher"]
 [tool.ruff.lint.pydocstyle]
 convention = "google"
 
+[tool.typos.default]
+check-file = true
+check-filename = true
+locale = "en-us"
+extend-ignore-re = [
+    "(?s)(#|//)\\s*(NOQA|noqa):? spellcheck(: *|=| +)off.*?\\n\\s*(#|//)\\s*(NOQA|noqa):? spellcheck(: *|=| +)on"
+  ]
+
 [tool.vulture]
 min_confidence = 61
 ignore_names = ["kwargs", "args"]

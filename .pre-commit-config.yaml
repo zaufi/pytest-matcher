@@ -54,6 +54,14 @@ repos:
       - id: codespell
         additional_dependencies: ['tomli']
 
+  - repo: https://github.com/crate-ci/typos
+    rev: v1.23.5
+    hooks:
+      - id: typos
+        # NOTE Override hook provided args to prevent automatic
+        # fixing of found typos. Let the dev decide what to fix!
+        args: [--force-exclude]
+
   - repo: https://github.com/charliermarsh/ruff-pre-commit
     # ALERT Don't forget to update `pyproject.toml:tool.hatch.envs.default`
     rev: v0.5.5

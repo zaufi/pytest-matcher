@@ -18,6 +18,6 @@ declare -r PRETEND_RE="${SETUPTOOLS_SCM_PRETEND_VERSION:?${SETUPTOOLS_SCM_PRETEN
 if grep -A 5 "${MARKER_RE}" ChangeLog.rst | grep -E "${VERSION_RE}" | grep -q "${PRETEND_RE}"; then
     echo "$0: ✔ Found ${SETUPTOOLS_SCM_PRETEND_VERSION} on top"
 else
-    echo "$0: ❌ Error: ChageLog must be updated to include release ${SETUPTOOLS_SCM_PRETEND_VERSION}!" >&2
+    echo "$0: ❌ Error: ChangeLog must be updated to include release ${SETUPTOOLS_SCM_PRETEND_VERSION}!" >&2
     exit 1
 fi
