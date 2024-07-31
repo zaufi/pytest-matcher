@@ -21,9 +21,10 @@ Plugin Command Line Options
 
 .. option:: --pm-reveal-unused-files
 
-    Reveal and print unused pattern files.  If :envvar:`PYTEST_MATCHER_RETURN_CODES` is
-    set to the *true value* (one of ``1``, ``true``, ``yes``) and found any unused
-    pattern files, the exit code will be ``1``.  The tests will not run.
+    Reveal and print unused pattern files.  If :envvar:`PYTEST_MATCHER_RETURN_CODES`
+    environment variable is set to the *true value* (one of ``1``, ``true``, ``yes``)
+    and found any unused pattern files, the exit code will be ``1``.
+    The tests will not run.
 
 
 .. option:: --pm-save-patterns
