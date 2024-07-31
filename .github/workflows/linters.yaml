@@ -42,6 +42,7 @@ jobs:
           key: py3.12-hatch-${{ env.CACHE_KEY }}-lint
           path: |
             ~/.cache/pip
+            ~/.cache/uv
             ~/.local/share/hatch
 
       - name: Install Dependencies
