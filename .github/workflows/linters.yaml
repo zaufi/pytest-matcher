@@ -63,6 +63,9 @@ jobs:
             | sed -e 's,-,.post,' -e 's,-g,+g,' \
             )" | tee -a "${GITHUB_ENV}"
 
+      - name: Build a manual
+        run: hatch run doc:build
+
       - name: Build a package
         run: hatch build
 
