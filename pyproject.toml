@@ -12,7 +12,7 @@ build-backend = "hatchling.build"
 name = "pytest-matcher"
 description = "Easy way to match captured `pytest` output against expectations stored in files"
 readme = "README.rst"
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 license = { file="LICENSES/GPL-3.0-or-later.txt" }
 authors = [{ name="Alex Turbov", email="zaufi@pm.me" }]
 maintainers = [{ name="Alex Turbov", email="zaufi@pm.me" }]
@@ -28,7 +28,6 @@ classifiers = [
   , "Natural Language :: English"
   , "Operating System :: OS Independent"
   , "Programming Language :: Python :: 3 :: Only"
-  , "Programming Language :: Python :: 3.9"
   , "Programming Language :: Python :: 3.10"
   , "Programming Language :: Python :: 3.11"
   , "Programming Language :: Python :: 3.12"
