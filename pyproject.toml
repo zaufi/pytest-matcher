@@ -125,8 +125,8 @@ fix-spelling = "codespell -i 3 -w"
 [tool.hatch.envs.doc]
 description = "Environment to build documentation"
 dependencies = [
-    "sphinx"
-  , "sphinx_rtd_theme"
+    "sphinx < 8.0.0"
+  , "sphinx_rtd_theme >= 2.0.0"
   ]
 installer = "uv"
 verbosity = 1
