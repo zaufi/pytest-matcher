@@ -129,7 +129,6 @@ dependencies = [
   , "sphinx_rtd_theme >= 2.0.0"
   ]
 installer = "uv"
-verbosity = 1
 template = "doc"
 
 [tool.hatch.envs.doc.scripts]
