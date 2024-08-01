@@ -30,6 +30,7 @@ Changed
 -------
 
 - **BREAKING CHANGE** Remove Python 3.9 from classifiers (ought to be done in 1.6.0).
+- Little improvements in documentation.
 
 
 2.0.1_ -- 2024-03-15
