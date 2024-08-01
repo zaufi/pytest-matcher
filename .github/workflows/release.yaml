@@ -53,6 +53,10 @@ jobs:
       - name: Git Describe
         id: ghd
         uses: proudust/gh-describe@v2
+        env:
+          CLICOLOR: 0
+          CLICOLOR_FORCE: 0
+          FORCE_COLOR: 0
 
         # NOTE It's not exactly the same as in the `linters.yaml` workflow!
         # This one strips _local version_!
