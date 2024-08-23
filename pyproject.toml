@@ -54,10 +54,10 @@ Documentation = "https://pytest-matcher.readthedocs.io"
 [tool.codespell]
 builtin = "clear,rare,names,code,en-GB_to_en-US"
 check-filenames = ""
-context = 2
+context = 3
 enable-colors = true
 quiet-level = 3
-skip = ".git,.venv,build,dist"
+skip = "./build,./dist"
 
 [tool.coverage.html]
 skip_empty = true
