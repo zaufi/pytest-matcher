@@ -137,6 +137,7 @@ show = "xdg-open build/sphinx/html/index.html"
 
 [tool.hatch.envs.test]
 description = "Unit tests environment"
+template = "test"
 installer = "uv"
 
 [[tool.hatch.envs.test.matrix]]
