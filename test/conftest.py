@@ -38,7 +38,7 @@ class _ExpectDir:
         return ret
 
 
-@pytest.fixture()
+@pytest.fixture
 def ourtestdir(pytester: pytest.Pytester) -> pytest.Pytester:
     """Pytest fixture to write a sample `pytest.ini` w/ `pm-patterns-base-dir` preset."""
     pytester.makefile(
@@ -52,7 +52,7 @@ def ourtestdir(pytester: pytest.Pytester) -> pytest.Pytester:
     return pytester
 
 
-@pytest.fixture()
+@pytest.fixture
 def expectdir(pytester: pytest.Pytester, request: pytest.FixtureRequest) -> _ExpectDir:
     """Pytest fixture to write sample pattern files."""
     path = pytester.path / request.function.__name__

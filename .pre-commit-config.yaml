@@ -53,9 +53,10 @@ repos:
     hooks:
       - id: codespell
         additional_dependencies: ['tomli']
+        stages: [commit-msg, pre-commit]
 
   - repo: https://github.com/crate-ci/typos
-    rev: v1.23.5
+    rev: v1.23.7
     hooks:
       - id: typos
         # NOTE Override hook provided args to prevent automatic
@@ -64,7 +65,7 @@ repos:
 
   - repo: https://github.com/charliermarsh/ruff-pre-commit
     # ALERT Don't forget to update `pyproject.toml:tool.hatch.envs.default`
-    rev: v0.5.5
+    rev: v0.6.2
     hooks:
       - id: ruff
 
@@ -75,11 +76,13 @@ repos:
       - id: rst-directive-colons
 
   - repo: https://github.com/abravalheri/validate-pyproject
-    rev: v0.18
+    # ALERT Don't forget to update `pyproject.toml:tool.hatch.envs.default`
+    rev: v0.19
     hooks:
       - id: validate-pyproject
 
   - repo: https://github.com/fsfe/reuse-tool
+    # ALERT Don't forget to update `pyproject.toml:tool.hatch.envs.default`
     rev: v4.0.3
     hooks:
       - id: reuse
@@ -91,3 +94,8 @@ repos:
         args: ['--shell=bash', '--color=always']
         files: '\.sh$'
         types: ['file', 'text']
+
+  - repo: https://github.com/sphinx-contrib/sphinx-lint
+    rev: v0.9.1
+    hooks:
+      - id: sphinx-lint

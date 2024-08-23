@@ -7,6 +7,12 @@ SPDX-PackageSupplier = "Alex Turbov <zaufi@pm.me>"
 SPDX-PackageDownloadLocation = "https://github.com/zaufi/pytest-matcher"
 
 [[annotations]]
+path = ".github/commit-message.template"
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2024 Alex Turbov <zaufi@pm.me>"
+SPDX-License-Identifier = "CC0-1.0"
+
+[[annotations]]
 path = ".github/pull_request_template.md"
 precedence = "aggregate"
 SPDX-FileCopyrightText = "2024 Alex Turbov <zaufi@pm.me>"

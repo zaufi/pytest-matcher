@@ -272,7 +272,7 @@ def _make_expected_filename(request: pytest.FixtureRequest, ext: str) -> pathlib
     return result.with_suffix(result.suffix + ext)
 
 
-@pytest.fixture()
+@pytest.fixture
 def expected_out(request: pytest.FixtureRequest) -> _ContentCheckOrStorePattern:
     """A pytest fixture to match `STDOUT` against a file."""
     return _ContentCheckOrStorePattern(
@@ -281,7 +281,7 @@ def expected_out(request: pytest.FixtureRequest) -> _ContentCheckOrStorePattern:
       )
 
 
-@pytest.fixture()
+@pytest.fixture
 def expected_err(request: pytest.FixtureRequest) -> _ContentCheckOrStorePattern:
     """A pytest fixture to match `STDERR` against a file."""
     return _ContentCheckOrStorePattern(
@@ -341,7 +341,7 @@ class _YAMLCheckOrStorePattern:
           ]
 
 
-@pytest.fixture()
+@pytest.fixture
 def expected_yaml(request: pytest.FixtureRequest) -> _YAMLCheckOrStorePattern:
     """A pytest fixture to match YAML file content."""
     return _YAMLCheckOrStorePattern(

@@ -90,12 +90,12 @@ dependencies = [
     "codespell >= 2.3.0"
   , "isort"
   , "mypy"
-  , "reuse"
-  , "ruff >= 0.5.5"
+  , "reuse >= 4.0"
+  , "ruff >= 0.6.2"
   , "types-PyYAML"
   , "twine"
   , "vulture"
-  , "validate-pyproject[all] >= 0.18"
+  , "validate-pyproject[all] >= 0.19"
   ]
 installer = "uv"
 
@@ -137,6 +137,7 @@ show = "xdg-open build/sphinx/html/index.html"
 
 [tool.hatch.envs.test]
 description = "Unit tests environment"
+installer = "uv"
 
 [[tool.hatch.envs.test.matrix]]
 pytest = ["pytest.8x", "pytest.7x"]
@@ -195,7 +196,6 @@ module = [
 disallow_any_decorated = false
 disallow_incomplete_defs = false
 disallow_untyped_defs = false
-
 
 [tool.pylint.BASIC]
 const-naming-style = "UPPER_CASE"
@@ -290,6 +290,9 @@ locale = "en-us"
 extend-ignore-re = [
     "(?s)(#|//)\\s*(NOQA|noqa):? spellcheck(: *|=| +)off.*?\\n\\s*(#|//)\\s*(NOQA|noqa):? spellcheck(: *|=| +)on"
   ]
+
+[tool.typos.default.extend-words]
+ret = "ret"
 
 [tool.vulture]
 min_confidence = 61
