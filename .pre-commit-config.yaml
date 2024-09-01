@@ -62,6 +62,7 @@ repos:
         # NOTE Override hook provided args to prevent automatic
         # fixing of found typos. Let the dev decide what to fix!
         args: [--force-exclude]
+        stages: [commit-msg, pre-commit]
 
   - repo: https://github.com/charliermarsh/ruff-pre-commit
     # ALERT Don't forget to update `pyproject.toml:tool.hatch.envs.default`
