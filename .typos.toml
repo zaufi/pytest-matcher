@@ -1,0 +1,28 @@
+# SPDX-FileCopyrightText: 2024 Alex Turbov <zaufi@pm.me>
+# SPDX-License-Identifier: CC0-1.0
+
+#
+# NOTE The manual about all configuration options is here:
+# https://github.com/crate-ci/typos/blob/master/docs/reference.md
+#
+
+[default]
+check-file = true
+check-filename = true
+extend-ignore-re = [
+    # NOTE Allow to mark block of text to exclude from spellchecking
+    "(?s)(#|//)\\s*(NOQA|noqa):? spellcheck(: *|=| +)off.*?\\n\\s*(#|//)\\s*(NOQA|noqa):? spellcheck(: *|=| +)on"
+    # NOTE Allow to mark a line to exclude from spellchecking
+  , "(?Rm)^.*(#|//)\\s*(NOQA|noqa):? spellcheck(: *|=| +)disable-line$"
+    # Exclude Git hashes (a whole line with `index` in the `COMMIT_EDITMSG` file)
+    # BUG https://github.com/crate-ci/typos/issues/1117
+  , "(?Rm)^index [0-9a-f]{9}\\.\\.[0-9a-f]{9} [0-9]+$"
+  ]
+locale = "en-us"
+
+[default.extend-words]
+# NOTE Add repo-wide false positives here in the form of `word = "word"`.
+# Check the manual for details.
+
+[files]
+ignore-vcs = true
