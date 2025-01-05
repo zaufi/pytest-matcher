@@ -57,7 +57,7 @@ repos:
         stages: [commit-msg, pre-commit]
 
   - repo: https://github.com/crate-ci/typos
-    rev: v1.28.4
+    rev: dictgen-v0.3.1
     hooks:
       - id: typos
         # NOTE Override hook provided args to prevent automatic
@@ -67,7 +67,7 @@ repos:
 
   - repo: https://github.com/charliermarsh/ruff-pre-commit
     # ALERT Don't forget to update `pyproject.toml:tool.hatch.envs.default`
-    rev: v0.8.4
+    rev: v0.8.6
     hooks:
       - id: ruff
 
