@@ -44,7 +44,7 @@ PM_COLOR_OUTPUT = pytest.StashKey[bool]()
 _EOL_RE: Final[re.Pattern] = re.compile('(\r?\n|\r)')
 
 if sys.version_info < (3, 11):
-    _RE_NOFLAG: Final[re.RegexFlag] = cast(re.RegexFlag, 0)
+    _RE_NOFLAG: Final[re.RegexFlag] = cast('re.RegexFlag', 0)
 else:
     _RE_NOFLAG: Final[re.RegexFlag] = re.NOFLAG
 
