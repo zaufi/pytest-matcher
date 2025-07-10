@@ -19,6 +19,7 @@ import shutil
 import sys
 import urllib.parse
 from typing import Final, TextIO, cast
+from dataclasses import dataclass
 
 # Third party packages
 import pytest
@@ -54,33 +55,31 @@ class _MismatchStyle(enum.Enum):
     DIFF = enum.auto()
 
 
+@dataclass
 class _ContentMatchResult:
-    """TODO Is this job for Python `dataclass`?"""
+    """Result of matching text content against a regex."""
 
-    def __init__(self, *, result: bool, text: list[str], regex: str, filename: pathlib.Path) -> None:
-        self._result = result
-        self._text = text
-        self._regex = regex
-        self._filename = filename
+    result: bool
+    text: list[str]
+    regex: str
+    filename: pathlib.Path
 
     def __eq__(self, other: object) -> bool:
-        if isinstance(other, bool):
-            return self._result == other
-        return False
+        return isinstance(other, bool) and self.result == other
 
     def __bool__(self) -> bool:
-        return self._result
+        return self.result
 
     def report_regex_mismatch(self) -> list[str]:
         return [
             ''
           , "The test output doesn't match to the expected regex"
-          , f'(from `{self._filename}`):'
+          , f'(from `{self.filename}`):'
           , '---[BEGIN actual output]---'
-          , *self._text
+          , *self.text
           , '---[END actual output]---'
           , '---[BEGIN expected regex]---'
-          , *self._regex.splitlines()
+          , *self.regex.splitlines()
           , '---[END expected regex]---'
           ]
 
