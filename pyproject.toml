@@ -96,6 +96,7 @@ dependencies = [
   , "twine"
   , "vulture"
   , "validate-pyproject[all] >= 0.19"
+  , "teamcity-messages >= 1.31"
   ]
 installer = "uv"
 
