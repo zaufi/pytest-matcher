@@ -18,8 +18,8 @@ import re
 import shutil
 import sys
 import urllib.parse
-from typing import Final, TextIO, cast
 from dataclasses import dataclass
+from typing import Final, TextIO, cast
 
 # Third party packages
 import pytest
