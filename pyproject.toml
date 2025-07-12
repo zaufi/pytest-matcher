@@ -96,7 +96,6 @@ dependencies = [
   , "twine"
   , "vulture"
   , "validate-pyproject[all] >= 0.19"
-  , "teamcity-messages >= 1.31"
   ]
 installer = "uv"
 
@@ -148,6 +147,7 @@ pytest = ["pytest.8x", "pytest.7x"]
 matrix.pytest.dependencies = [
     "coverage[toml]"
   , "pytest-cov"
+  , "teamcity-messages >= 1.33"
   , { value = "pytest ~= 8.0", if = ["pytest.8x"] }
   , { value = "pytest ~= 7.0", if = ["pytest.7x"] }
   ]
