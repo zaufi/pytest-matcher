@@ -441,8 +441,7 @@ def pytest_addoption(parser: pytest.Parser) -> None:
     group.addoption(
         '--pm-save-patterns'
       , action='store_true'
-        # TODO Better description
-      , help='store matching patterns instead of checking them'
+      , help='write captured output to pattern files and skip the test'
       )
     group.addoption(
         '--pm-mismatch-style'
