@@ -233,7 +233,7 @@ python_functions = ["*_test", "*_test_?", "*_test_??", "test_*"]
 testpaths = ["test"]
 xfail_strict = true
 
-# https://docs.astral.sh/ruff/configuration/
+# https://docs.astral.sh/ruff/configuration
 [tool.ruff]
 cache-dir = "build/.ruff_cache"
 line-length = 120
