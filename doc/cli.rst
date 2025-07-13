@@ -12,20 +12,22 @@ Plugin Command Line Options
 
     Override the value of the :option:`pm-mismatch-style` configuration parameter.
 
-
 .. option:: --pm-patterns-base-dir <DIR>
 
     Specify the base directory used to find expectation/pattern files.
     See also :option:`pm-patterns-base-dir`.
 
-
 .. option:: --pm-reveal-unused-files
 
-    Reveal and print unused pattern files. If the environment variable
-    :envvar:`PYTEST_MATCHER_RETURN_CODES` is set to a true value (one of ``1``,
-    ``true``, ``yes``) and any unused pattern files are found, the exit code will be ``1``.
-    Tests will not run.
+    Reveal and print unused pattern files.  The tests will not run.
 
+.. option:: --pm-fail-on-unused-files
+
+    If unused expectaation file(s) have found by the :option:`!--pm-reveal-unused-files`
+    option, exit with failure code ``1``.
+
+    Also, the :envvar:`PYTEST_MATCHER_RETURN_CODES` environment variable can be set to the
+    *true value* (one of ``1``, ``true``, ``yes``) for the same effect.
 
 .. option:: --pm-save-patterns
 
