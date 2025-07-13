@@ -144,7 +144,7 @@ class _ContentCheckOrStorePattern:                          # NOQA: PLW1641
         return _ContentMatchResult(
             result=m is not None and bool(m)
           , text=text_lines
-          , regex=self.expected_file_content               # type: ignore[arg-type]
+          , regex=self.expected_file_content                # type: ignore[arg-type]
           , filename=self.pattern_filename
           )
 
@@ -371,10 +371,10 @@ class _UnusedFilesReporter:
           }
 
         collected_paths = {
-            _make_expected_filename(item._request, ext)  # type: ignore[attr-defined] # NOQA: SLF001
+            _make_expected_filename(item._request, ext)     # type: ignore[attr-defined] # NOQA: SLF001
             for item in session.items
             for fixture, ext in zip((expected_out, expected_err), known_extensions, strict=True)
-            if fixture.__name__ in item.fixturenames  # type: ignore[attr-defined]
+            if fixture.__name__ in item.fixturenames        # type: ignore[attr-defined]
           }
 
         unused_paths = all_paths - collected_paths
