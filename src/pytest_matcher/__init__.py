@@ -3,7 +3,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 #
 
-"""`pytest` plugin to match test output against expectations stored in files."""
+"""A ``pytest`` plugin for matching test output against expectation files."""
 
 # Local imports
 from .plugin import expected_err, expected_out, pytest_addoption
