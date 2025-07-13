@@ -256,9 +256,6 @@ select = ["ALL"]
   , "D100"      # Missing docstring in public module
   , "A001"      # Variable `copyright` is shadowing a Python builtin
   ]
-"src/pytest_matcher/plugin.py" = [
-    "PLW1641"   # TODO Remove after PR #36 gets merged
-  ]
 "test/test_*.py" = [
     "ANN001"    # Missing type annotation for function argument
   , "D"         # Documentation issues

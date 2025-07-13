@@ -18,6 +18,7 @@ import re
 import shutil
 import sys
 import urllib.parse
+from dataclasses import dataclass
 from typing import Final, TextIO, cast
 
 # Third party packages
@@ -54,38 +55,36 @@ class _MismatchStyle(enum.Enum):
     DIFF = enum.auto()
 
 
-class _ContentMatchResult:
-    """TODO Is this job for Python `dataclass`?"""
+@dataclass
+class _ContentMatchResult:                                  # NOQA: PLW1641
+    """Result of matching text content against a regex."""
 
-    def __init__(self, *, result: bool, text: list[str], regex: str, filename: pathlib.Path) -> None:
-        self._result = result
-        self._text = text
-        self._regex = regex
-        self._filename = filename
+    result: bool
+    text: list[str]
+    regex: str
+    filename: pathlib.Path
 
     def __eq__(self, other: object) -> bool:
-        if isinstance(other, bool):
-            return self._result == other
-        return False
+        return isinstance(other, bool) and self.result == other
 
     def __bool__(self) -> bool:
-        return self._result
+        return self.result
 
     def report_regex_mismatch(self) -> list[str]:
         return [
             ''
           , "The test output doesn't match to the expected regex"
-          , f'(from `{self._filename}`):'
+          , f'(from `{self.filename}`):'
           , '---[BEGIN actual output]---'
-          , *self._text
+          , *self.text
           , '---[END actual output]---'
           , '---[BEGIN expected regex]---'
-          , *self._regex.splitlines()
+          , *self.regex.splitlines()
           , '---[END expected regex]---'
           ]
 
 
-class _ContentCheckOrStorePattern:
+class _ContentCheckOrStorePattern:                          # NOQA: PLW1641
 
     def __init__(self, filename: pathlib.Path, *, store: bool) -> None:
         self._pattern_filename = filename
@@ -290,7 +289,7 @@ def expected_err(request: pytest.FixtureRequest) -> _ContentCheckOrStorePattern:
       )
 
 
-class _YAMLCheckOrStorePattern:
+class _YAMLCheckOrStorePattern:                             # NOQA: PLW1641
 
     def __init__(self, filename: pathlib.Path, *, store: bool) -> None:
         self._expected_file = filename
