@@ -35,7 +35,9 @@ jobs:
       - name: Get Cache Key
         run: |
           echo "CACHE_KEY=$( \
-              python .github/workflows/get-key.py --hash tool.hatch.envs.default.dependencies \
+              yq eval -r .tool.hatch.envs.default.dependencies -oy pyproject.toml \
+            | sha1sum \
+            | cut -f 1 -d ' ' \
             )" | tee -a "${GITHUB_ENV}"
         shell: bash
 
