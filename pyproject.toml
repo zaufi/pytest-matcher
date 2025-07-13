@@ -108,7 +108,7 @@ all = [
 dead-check = "vulture src/pytest_matcher"
 dist-check = "twine check dist/*"
 license-check = "reuse lint"
-lint-check = "ruff check .github/workflows/get-key.py doc src/pytest_matcher test"
+lint-check = "ruff check doc src/pytest_matcher test"
 pyproject-check = "validate-pyproject {root:real}/pyproject.toml"
 spell-check = "codespell"
 type-check = "mypy src/pytest_matcher test"
@@ -251,12 +251,6 @@ ignore = [
 select = ["ALL"]
 
 [tool.ruff.lint.extend-per-file-ignores]
-".github/workflows/get-key.py" = [
-    "PTH123"    # `open()` should be replaced by `Path.open()`
-  , "S324"      # Probable use of insecure hash functions in `hashlib`: `sha1`
-  , "T201"      # `print` found
-  , "TRY301"    # Abstract `raise` to an inner function
-  ]
 "doc/conf.py" = [
     "INP001"
   , "D100"      # Missing docstring in public module
