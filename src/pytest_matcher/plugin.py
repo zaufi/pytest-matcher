@@ -56,7 +56,7 @@ class _MismatchStyle(enum.Enum):
 
 
 @dataclass
-class _ContentMatchResult:
+class _ContentMatchResult:                                  # NOQA: PLW1641
     """Result of matching text content against a regex."""
 
     result: bool
@@ -84,7 +84,7 @@ class _ContentMatchResult:
           ]
 
 
-class _ContentCheckOrStorePattern:
+class _ContentCheckOrStorePattern:                          # NOQA: PLW1641
 
     def __init__(self, filename: pathlib.Path, *, store: bool) -> None:
         self._pattern_filename = filename
@@ -289,7 +289,7 @@ def expected_err(request: pytest.FixtureRequest) -> _ContentCheckOrStorePattern:
       )
 
 
-class _YAMLCheckOrStorePattern:
+class _YAMLCheckOrStorePattern:                             # NOQA: PLW1641
 
     def __init__(self, filename: pathlib.Path, *, store: bool) -> None:
         self._expected_file = filename
