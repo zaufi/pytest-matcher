@@ -372,7 +372,7 @@ class _UnusedFilesReporter:
         collected_paths = {
             _make_expected_filename(item._request, ext)  # type: ignore[attr-defined] # NOQA: SLF001
             for item in session.items
-            for fixture, ext in zip((expected_out, expected_err), known_extensions)
+            for fixture, ext in zip((expected_out, expected_err), known_extensions, strict=True)
             if fixture.__name__ in item.fixturenames  # type: ignore[attr-defined]
           }
 

@@ -91,7 +91,7 @@ dependencies = [
   , "isort"
   , "mypy"
   , "reuse >= 4.0"
-  , "ruff >= 0.8.6"
+  , "ruff >= 0.12.3"
   , "types-PyYAML"
   , "twine"
   , "vulture"
@@ -237,7 +237,7 @@ xfail_strict = true
 cache-dir = "build/.ruff_cache"
 line-length = 120
 output-format = "full"
-target-version = "py39"
+target-version = "py310"
 
 [tool.ruff.lint]
 ignore = [
@@ -255,6 +255,9 @@ select = ["ALL"]
     "INP001"
   , "D100"      # Missing docstring in public module
   , "A001"      # Variable `copyright` is shadowing a Python builtin
+  ]
+"src/pytest_matcher/plugin.py" = [
+    "PLW1641"   # TODO Remove after PR #36 gets merged
   ]
 "test/test_*.py" = [
     "ANN001"    # Missing type annotation for function argument

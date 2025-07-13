@@ -9,7 +9,7 @@
 #
 
 default_stages: [pre-commit]
-default_install_hook_types: [pre-commit, commit-msg]
+default_install_hook_types: [commit-msg, pre-commit]
 fail_fast: false
 
 repos:
@@ -43,31 +43,30 @@ repos:
         name: Commit message check
         stages: [commit-msg]
 
-  - repo: https://github.com/editorconfig-checker/editorconfig-checker.python
-    rev: 3.2.0
+    # NOTE For config options check this: https://editorconfig-checker.github.io
+  - repo: https://github.com/editorconfig-checker/editorconfig-checker
+    rev: v3.3.0
     hooks:
       - id: editorconfig-checker
 
   - repo: https://github.com/codespell-project/codespell
-    # ALERT Don't forget to update `pyproject.toml:tool.hatch.envs.default`
     rev: v2.4.1
     hooks:
       - id: codespell
-        additional_dependencies: ['tomli']
-        stages: [commit-msg, pre-commit]
+        stages: &spell-check-stages [commit-msg, pre-commit]
 
-  - repo: https://github.com/crate-ci/typos
-    rev: v1.30.3
+    # NOTE See BUG https://github.com/crate-ci/typos/issues/390
+  - repo: https://github.com/adhtruong/mirrors-typos
+    rev: v1.34.0
     hooks:
       - id: typos
         # NOTE Override hook provided args to prevent automatic
         # fixing of found typos. Let the dev decide what to fix!
         args: [--force-exclude]
-        stages: [commit-msg, pre-commit]
+        stages: *spell-check-stages
 
   - repo: https://github.com/charliermarsh/ruff-pre-commit
-    # ALERT Don't forget to update `pyproject.toml:tool.hatch.envs.default`
-    rev: v0.11.2
+    rev: v0.12.3
     hooks:
       - id: ruff
 
@@ -77,14 +76,17 @@ repos:
       - id: rst-backticks
       - id: rst-directive-colons
 
+  - repo: https://github.com/sphinx-contrib/sphinx-lint
+    rev: v1.0.0
+    hooks:
+      - id: sphinx-lint
+
   - repo: https://github.com/abravalheri/validate-pyproject
-    # ALERT Don't forget to update `pyproject.toml:tool.hatch.envs.default`
     rev: v0.23
     hooks:
       - id: validate-pyproject
 
   - repo: https://github.com/fsfe/reuse-tool
-    # ALERT Don't forget to update `pyproject.toml:tool.hatch.envs.default`
     rev: v5.0.2
     hooks:
       - id: reuse
@@ -93,11 +95,6 @@ repos:
     rev: v0.10.0
     hooks:
       - id: shellcheck
-        args: ['--shell=bash', '--color=always']
+        args: [--shell=bash, --color=always]
         files: '\.sh$'
-        types: ['file', 'text']
-
-  - repo: https://github.com/sphinx-contrib/sphinx-lint
-    rev: v1.0.0
-    hooks:
-      - id: sphinx-lint
+        types: [file, text]
