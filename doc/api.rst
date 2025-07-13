@@ -12,8 +12,8 @@ Fixture
 .. py:data:: expected_out
 .. py:data:: expected_err
 
-    This fixture provides an easy way to test captured ``STDOUT``/``STDERR``.
-    To match a static output, one can use a trivial ``assert``:
+    This fixture makes it easy to test captured ``STDOUT`` and ``STDERR``.
+    To match static output, simply use an ``assert``:
 
     .. code-block:: python
 
@@ -26,9 +26,9 @@ Fixture
     .. py:function:: expected_out.match(output: str) -> bool
     .. py:function:: expected_err.match(output: str) -> bool
 
-        If the output has data changed from run to run (like timestamps or paths), one can edit the
-        expected output file using regular expressions and use this function to match them.
-        Please see :ref:`Getting Started <match-regex>` for more information about this topic.
+        If the output contains data that changes from run to run (such as timestamps or paths),
+        edit the expectation file to use regular expressions and match it with this function.
+        See :ref:`Getting Started <match-regex>` for more details.
 
         .. code-block:: python
             :emphasize-lines: 4
@@ -39,14 +39,12 @@ Fixture
                 assert expected_out.match(stdout) == True
 
         .. note::
-            The plugin provides elaborate output on assert failure, but to make it work, one
-            should use an explicit check for the ``True`` value of the ``expected_out.match(…)``
-            result.
+            The plugin provides detailed output on assertion failure, but it only works if you
+            explicitly check for ``True`` from ``expected_out.match(…)``.
 
 .. py:data:: expected_yaml
 
-    This fixture provides an easy way to check if the output YAML data matches
-    the expectations.
+    This fixture provides an easy way to verify that YAML output matches the expectations.
 
     .. todo::
         More docs on this!
@@ -57,11 +55,11 @@ Marker
 
 .. py:function:: expect_suffix(*args: str, suffix: str)
 
-    If output may have system-specific content (e.g., different EOL styles), adding an arbitrary
-    system-specific suffix to the pattern file makes storing different variants in separate files
-    possible.  Arguments to the marker will be ``%XX``-escaped, dash-concatenated and prefixed with
-    leading ``-`` and then used as the ``{suffix}`` placeholder of the :option:`pm-pattern-file-fmt`
-    option.
+    If output may contain system-specific content (e.g., different EOL styles), you can add an
+    arbitrary system-specific suffix to the pattern file so that different variants are stored in
+    separate files.  Arguments to the marker are ``%XX``-escaped, dash-concatenated and prefixed with
+    a leading ``-``. They are then used as the ``{suffix}`` placeholder of the
+    :option:`pm-pattern-file-fmt` option.
 
     Usage example:
 

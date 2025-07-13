@@ -15,17 +15,17 @@ The following options can be set in the `Pytest configuration file`_.
     :Choice: ``full``, ``diff``
     :Default: ``full``
 
-    In case of expected output mismatch, specifies how to report a test failure:
+    When the expected output does not match, this option controls how the failure is reported:
 
-    - ``full`` -- shows actual and expected separately (default).
-    - ``diff`` -- shows a unified diff between actual and expected text.
+    - ``full`` -- show actual and expected output separately (default).
+    - ``diff`` -- show a unified diff between actual and expected text.
 
 
 .. option:: pm-pattern-file-fmt
 
     :Default: ``{module}/{class}/{fn}{callspec}{suffix}``
 
-    Expectations filename pattern format. It can have the following placeholders:
+    Expectation filename pattern. It can contain the following placeholders:
 
     - ``{module}`` for the test module name.
     - ``{class}`` for the test class name.
@@ -33,17 +33,17 @@ The following options can be set in the `Pytest configuration file`_.
     - ``{callspec}`` for the parameterized part of the test function.
     - ``{suffix}`` for the optional suffix added by the :py:func:`expect_suffix` mark.
 
-    Note that for non-class test functions, the ``{class}`` placeholder part will be empty.
-    For parametrized tests, the ``{callspec}`` placeholder containing ``%XX``-escaped information
-    about the parametrization is added.
+    Note that for non-class test functions, the ``{class}`` placeholder will be empty.
+    For parametrized tests, the ``{callspec}`` placeholder contains ``%XX``-escaped information
+    about the parametrization.
 
 
 .. option:: pm-patterns-base-dir
 
     :Default: :file:`test/data/expected`
 
-    The base directory is used to place expectations/pattern files.
-    Given directory must be relative to the project's root.
+    The base directory used for expectation/pattern files.
+    The directory must be relative to the project's root.
 
 
 .. _Pytest configuration file: https://docs.pytest.org/en/8.0.x/reference/customize.html
