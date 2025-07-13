@@ -84,33 +84,33 @@ class _ContentMatchResult:                                  # NOQA: PLW1641
           ]
 
 
+@dataclass
 class _ContentCheckOrStorePattern:                          # NOQA: PLW1641
 
-    def __init__(self, filename: pathlib.Path, *, store: bool) -> None:
-        self._pattern_filename = filename
-        self._store = store
-        self._expected_file_content: str | None = None
+    pattern_filename: pathlib.Path
+    store: bool
+    expected_file_content: str | None = None
 
     def _maybe_store_pattern(self, text: str) -> None:
-        if not self._store:
+        if not self.store:
             return
 
         # Make a directory to store a pattern file if it doesn't exist yet
-        if not self._pattern_filename.parent.exists():
-            self._pattern_filename.parent.mkdir(parents=True)
+        if not self.pattern_filename.parent.exists():
+            self.pattern_filename.parent.mkdir(parents=True)
 
         # Store!
-        self._pattern_filename.write_text(text)
+        self.pattern_filename.write_text(text)
 
         # Also mark the test as skipped!
-        pytest.skip(f'Pattern file has been saved `{self._pattern_filename}`')
+        pytest.skip(f'Pattern file has been saved `{self.pattern_filename}`')
 
     def _read_expected_file_content(self) -> None:
-        if not (self._pattern_filename.exists() and self._pattern_filename.is_file()):
-            pytest.skip(f'Pattern file not found `{self._pattern_filename}`')
+        if not (self.pattern_filename.exists() and self.pattern_filename.is_file()):
+            pytest.skip(f'Pattern file not found `{self.pattern_filename}`')
 
-        if self._expected_file_content is None:
-            self._expected_file_content = self._pattern_filename.read_text()
+        if self.expected_file_content is None:
+            self.expected_file_content = self.pattern_filename.read_text()
 
     def __eq__(self, text: object) -> bool:
         if not isinstance(text, str):
@@ -119,7 +119,7 @@ class _ContentCheckOrStorePattern:                          # NOQA: PLW1641
 
         self._maybe_store_pattern(text)
         self._read_expected_file_content()
-        return self._expected_file_content == text
+        return self.expected_file_content == text
 
     def match(self, text: str, flags: re.RegexFlag = _RE_NOFLAG) -> _ContentMatchResult:
         self._maybe_store_pattern(text)
@@ -127,7 +127,7 @@ class _ContentCheckOrStorePattern:                          # NOQA: PLW1641
         content = (
             '.*\n' if flags & re.MULTILINE else ' '
           ).join(
-              self._expected_file_content.strip().splitlines()  # type: ignore[union-attr]
+              self.expected_file_content.strip().splitlines()  # type: ignore[union-attr]
             )
         try:
             if flags & re.MULTILINE:
@@ -144,20 +144,20 @@ class _ContentCheckOrStorePattern:                          # NOQA: PLW1641
         return _ContentMatchResult(
             result=m is not None and bool(m)
           , text=text_lines
-          , regex=self._expected_file_content               # type: ignore[arg-type]
-          , filename=self._pattern_filename
+          , regex=self.expected_file_content               # type: ignore[arg-type]
+          , filename=self.pattern_filename
           )
 
     def _make_newlines_visible(self, text: str) -> str:
         return _EOL_RE.sub(r'↵\1', text)
 
     def _report_mismatch_text(self, actual: str, *, color: bool) -> list[str]:  # NOQA: ARG002
-        assert self._expected_file_content is not None
-        expected = self._expected_file_content
+        assert self.expected_file_content is not None
+        expected = self.expected_file_content
         return [
             ''
           , "The test output doesn't equal to the expected"
-          , f'(from `{self._pattern_filename}`):'
+          , f'(from `{self.pattern_filename}`):'
           , '---[BEGIN actual output]---'
           , *self._make_newlines_visible(actual).splitlines()
           , '---[END actual output]---'
@@ -167,8 +167,8 @@ class _ContentCheckOrStorePattern:                          # NOQA: PLW1641
           ]
 
     def _report_mismatch_diff(self, actual: str, *, color: bool) -> list[str]:
-        assert self._expected_file_content is not None
-        expected = self._expected_file_content
+        assert self.expected_file_content is not None
+        expected = self.expected_file_content
         diff=[
             *difflib.unified_diff(
                 self._make_newlines_visible(expected).splitlines()
@@ -196,7 +196,7 @@ class _ContentCheckOrStorePattern:                          # NOQA: PLW1641
         return [
             ''
           , "The test output doesn't equal to the expected"
-          , f'(from `{self._pattern_filename}`):'
+          , f'(from `{self.pattern_filename}`):'
           , '---[BEGIN expected vs actual diff]---'
           , *diff
           , '---[END expected vs actual diff]---'
