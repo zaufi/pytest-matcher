@@ -27,7 +27,7 @@ Fixture
     .. py:function:: expected_err.match(output: str) -> bool
 
         If the output contains data that changes from run to run (such as timestamps or paths),
-        edit the expectation file using regular expressions and match it with this function.
+        edit the expectation file to use regular expressions and match it with this function.
         See :ref:`Getting Started <match-regex>` for more details.
 
         .. code-block:: python
