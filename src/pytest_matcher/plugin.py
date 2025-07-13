@@ -3,7 +3,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 #
 
-"""A `pytest` plugin to match test output against expectations."""
+"""A ``pytest`` plugin that matches test output against expectation files."""
 
 from __future__ import annotations
 
@@ -36,7 +36,7 @@ try:
 except ImportError:
     HAVE_PYGMENTS = False
     def should_do_markup(_: TextIO) -> bool:                # type: ignore[misc]
-        """A dummy stub if not possible to import smth."""
+        """Fallback stub used when the optional dependency cannot be imported."""
         return False
 
 
@@ -57,7 +57,7 @@ class _MismatchStyle(enum.Enum):
 
 @dataclass
 class _ContentMatchResult:                                  # NOQA: PLW1641
-    """Result of matching text content against a regex."""
+    """Result of matching text content against a regular expression."""
 
     result: bool
     text: list[str]
@@ -233,7 +233,7 @@ def _make_expected_filename(request: pytest.FixtureRequest, ext: str) -> pathlib
 
     # Make sure base directory exists
     if not result.exists():
-        pytest.skip(f'Base directory for pattern-matcher do not exists: `{result}`')
+        pytest.skip(f'Base directory for pattern-matcher does not exist: `{result}`')
 
     # Check if a test function has been marked as having a
     # suffix for a pattern filename.
@@ -273,7 +273,7 @@ def _make_expected_filename(request: pytest.FixtureRequest, ext: str) -> pathlib
 
 @pytest.fixture
 def expected_out(request: pytest.FixtureRequest) -> _ContentCheckOrStorePattern:
-    """A pytest fixture to match `STDOUT` against a file."""
+    """Pytest fixture for matching ``STDOUT`` against a file."""
     return _ContentCheckOrStorePattern(
         _make_expected_filename(request, '.out')
       , store=request.config.getoption('--pm-save-patterns')
@@ -282,7 +282,7 @@ def expected_out(request: pytest.FixtureRequest) -> _ContentCheckOrStorePattern:
 
 @pytest.fixture
 def expected_err(request: pytest.FixtureRequest) -> _ContentCheckOrStorePattern:
-    """A pytest fixture to match `STDERR` against a file."""
+    """Pytest fixture for matching ``STDERR`` against a file."""
     return _ContentCheckOrStorePattern(
         _make_expected_filename(request, '.err')
       , store=request.config.getoption('--pm-save-patterns')
@@ -344,7 +344,7 @@ class _YAMLCheckOrStorePattern:                             # NOQA: PLW1641
 
 @pytest.fixture
 def expected_yaml(request: pytest.FixtureRequest) -> _YAMLCheckOrStorePattern:
-    """A pytest fixture to match YAML file content."""
+    """Pytest fixture for matching YAML file content."""
     return _YAMLCheckOrStorePattern(
         _make_expected_filename(request, '.yaml')
       , store=request.config.getoption('--pm-save-patterns')
@@ -352,12 +352,12 @@ def expected_yaml(request: pytest.FixtureRequest) -> _YAMLCheckOrStorePattern:
 
 
 class _UnusedFilesReporter:
-    """A reporter to reveal unused pattern files."""
+    """Reporter that reveals unused pattern files."""
     def __init__(self, *, return_codes: bool = False) -> None:
         self._return_codes = return_codes
 
     def pytest_collection_finish(self, session: pytest.Session) -> None:
-        """Once test items have been collected, check for and show unused files."""
+        """Check for and display unused files after collection."""
         if not session.items:
             return
 
@@ -400,7 +400,7 @@ def pytest_assertrepr_compare(                              # NOQA: PLR0911
   , left: object
   , right: object
   ) -> list[str] | None:
-    """Hook into comparison failure."""
+    """Hook executed when assertion comparisons fail."""
     if op == '==':
         match left, right:
             case _ContentMatchResult() as left, bool(right):
@@ -437,7 +437,7 @@ def pytest_assertrepr_compare(                              # NOQA: PLR0911
 
 # Add CLI option
 def pytest_addoption(parser: pytest.Parser) -> None:
-    """Add plugin options to CLI and the configuration file."""
+    """Add plugin options to the command-line interface and configuration file."""
     group = parser.getgroup('pattern matcher')
     group.addoption(
         '--pm-save-patterns'
@@ -485,7 +485,7 @@ def pytest_addoption(parser: pytest.Parser) -> None:
 
 @pytest.hookimpl(trylast=True)
 def pytest_configure(config: pytest.Config) -> None:
-    """Validate configuration and register additional reporter."""
+    """Validate the configuration and register the unused-files reporter."""
     config.addinivalue_line(
         'markers'
       , 'expect_suffix(args..., *, suffix="..."): mark test to have suffixed pattern file'

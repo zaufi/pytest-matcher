@@ -45,7 +45,7 @@ Added
 Fixed
 -----
 
-- Release GitHub workflow has been fixed to use modern versions of involved actions.
+- The release GitHub workflow has been updated to use modern versions of the involved actions.
 - Do not override the path suffix-like part (separated by a dot) with a pattern
   filename extension.
 
@@ -70,7 +70,7 @@ Fixed
 
 - **BREAKING CHANGE** The expectation files path has never used the
   ``<test-module-name>`` component despite the :file:`README.rst` claimed.
-  Existed projects could set :option:`pm-pattern-file-fmt` to
+  Existing projects could set :option:`pm-pattern-file-fmt` to
   ``{class}/{fn}{callspec}`` to preserve backward compatibility.
 
 Removed

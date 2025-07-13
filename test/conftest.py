@@ -3,7 +3,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 #
 
-"""Fixtures."""
+"""Test fixtures."""
 
 # Standard imports
 import pathlib
@@ -40,7 +40,7 @@ class _ExpectDir:
 
 @pytest.fixture
 def ourtestdir(pytester: pytest.Pytester) -> pytest.Pytester:
-    """Pytest fixture to write a sample `pytest.ini` w/ `pm-patterns-base-dir` preset."""
+    """Pytest fixture that writes a sample ``pytest.ini`` with ``pm-patterns-base-dir`` preset."""
     pytester.makefile(
         '.ini'
       , pytest="""
@@ -54,7 +54,7 @@ def ourtestdir(pytester: pytest.Pytester) -> pytest.Pytester:
 
 @pytest.fixture
 def expectdir(pytester: pytest.Pytester, request: pytest.FixtureRequest) -> _ExpectDir:
-    """Pytest fixture to write sample pattern files."""
+    """Pytest fixture that writes sample pattern files."""
     path = pytester.path / request.function.__name__
     path.mkdir()
     return _ExpectDir(path)

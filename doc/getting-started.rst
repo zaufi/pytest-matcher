@@ -6,26 +6,26 @@ Getting Started
 
 .. program:: pytest-matcher
 
-Install the package in the variant you want:
+Install the package using the variant you want:
 
 .. code-block:: console
 
     $ pip install pytest-matcher
 
-or with ``diff`` mode highlighted with ``Pygments``:
+or with ``diff`` mode highlighted via ``Pygments``:
 
 .. code-block:: console
 
     $ pip install pytest-matcher[pygments]
 
-The plugin provides :py:data:`expected_out` and :py:data:`expected_err` named fixture functions.
-The usage is trivial as the following:
+The plugin provides the fixtures :py:data:`expected_out` and :py:data:`expected_err`.
+Usage is straightforward as shown below:
 
 .. literalinclude:: ../test/test_foo.py
     :language: python
     :pyobject: test_foo
 
-If you run :command:`pytest` now, it'll skip the test due to a missed output expectations file:
+If you run :command:`pytest` now, the test will be skipped because the expectation file is missing:
 
 .. code-block:: console
     :emphasize-lines: 5,6
@@ -41,8 +41,8 @@ If you run :command:`pytest` now, it'll skip the test due to a missed output exp
 
 
 Add the :option:`pm-patterns-base-dir` option to the `Pytest configuration file`_
-pointing, for example, to :file:`test/data/expected`.  Add the :option:`--pm-save-patterns`
-:command:`pytest` CLI option to write the initial output expectations file:
+pointing, for example, to :file:`test/data/expected`. Run :command:`pytest` with
+the :option:`--pm-save-patterns` option to write the initial expectation file:
 
 .. code-block:: console
     :emphasize-lines: 5,6
@@ -60,13 +60,13 @@ Review the stored pattern file :file:`test/data/expected/test_foo/test_foo.out` 
 
 .. note::
 
-    It’s recommended that the exact test name(s) be specified when writing the expectations file.
-    Otherwise, the plugin will overwrite all files that are most likely not what you want ;-)
+    It’s recommended that you specify the exact test name(s) when writing the expectation file.
+    Otherwise the plugin will overwrite all files, which is probably not what you want ;-)
 
 
 
-Now, when the expected output file exists, you can rerun :command:`pytest` to see that the test output
-is matching expectations:
+Now that the expected output file exists, rerun :command:`pytest` to see that the test
+output matches expectations:
 
 .. code-block:: console
     :emphasize-lines: 5
@@ -82,14 +82,14 @@ is matching expectations:
 
 .. _match-regex:
 
-If the captured output has something that could change from run to run, for example, timestamps
-or filesystem paths, it's possible to match the output using regular expressions:
+If the captured output contains values that change from run to run, for example timestamps
+or filesystem paths, you can match the output using regular expressions:
 
 .. literalinclude:: ../test/test_foo.py
     :language: python
     :pyobject: test_regex
 
-Store the pattern file for this test and rerun :command:`pytest` with ``-vv`` option:
+Store the pattern file for this test and rerun :command:`pytest` with the ``-vv`` option:
 
 .. code-block:: console
     :emphasize-lines: 24,28
@@ -130,7 +130,7 @@ Store the pattern file for this test and rerun :command:`pytest` with ``-vv`` op
     FAILED test/test_foo.py::test_regex - AssertionError: assert
     ============================== 1 failed in 0.03s ===============================
 
-To make it match, edit the expected output file and replace changing parts with regular
+To make it match, edit the expectation file and replace the changing parts with regular
 expressions:
 
 .. code-block::
@@ -139,7 +139,7 @@ expressions:
     Current date: [0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}(\.[0-9]+)?
     Current module: .*/test/test_foo.py
 
-Now the test will pass:
+The test will now pass:
 
 .. code-block:: console
     :emphasize-lines: 5

@@ -3,7 +3,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 #
 
-"""Demo tests."""
+"""Demonstration tests."""
 
 # Standard imports
 from datetime import datetime
@@ -13,7 +13,7 @@ import pytest
 
 
 def test_foo(capfd, expected_out) -> None:
-    """Plain text demo test."""
+    """Plain text demonstration test."""
     print('foo')
 
     stdout, _ = capfd.readouterr()
@@ -22,7 +22,7 @@ def test_foo(capfd, expected_out) -> None:
 
 
 def test_regex(capfd, expected_out) -> None:
-    """Regex demo test."""
+    """Regular-expression demonstration test."""
     print(f'Current date: {datetime.now()}')
     print(f'Current module: {__file__}')
 
@@ -33,7 +33,7 @@ def test_regex(capfd, expected_out) -> None:
 
 @pytest.mark.xfail(reason='Demo for diff show')
 def test_diff(capfd, expected_out) -> None:
-    """Plain text demo test with diff."""
+    """Plain text demonstration test that shows diff output."""
     print('Hello Africa!\nHow are you doing?', end='')
 
     stdout, _ = capfd.readouterr()

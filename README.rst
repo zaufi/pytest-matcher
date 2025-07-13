@@ -6,20 +6,20 @@ What is this
 
 |Latest Release| |nbsp| |Tests|
 
-This is a ``pytest`` plugin provides a couple of fixtures to match test output against patterns
-stored in files. Expectations/pattern files are stored in a base directory, and additional
-paths are based on the test module name, test class name, and test function name::
+This is a ``pytest`` plugin that provides a couple of fixtures to match test output against
+patterns stored in files. Expectation files are placed in a base directory, and additional
+paths are derived from the test module name, test class name and test function name::
 
     <base-dir>/<test-module-name>/[test-class-name/]<test-function-name>[[<callspec-id>]]
 
-Having output expectations/pattern files separate from tests helps to reduce the code of the
-latter and match the output more than just a few lines.
+Keeping the expectation files separate from tests reduces the amount of test code and makes
+it possible to match more than just a few lines of output.
 
 
 Documentation
 -------------
 
-The latest documentation could be found `here <https://pytest-matcher.readthedocs.io>`_.
+The latest documentation can be found `here <https://pytest-matcher.readthedocs.io>`_.
 
 
 See Also
