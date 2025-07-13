@@ -289,53 +289,55 @@ def expected_err(request: pytest.FixtureRequest) -> _ContentCheckOrStorePattern:
       )
 
 
+@dataclass
 class _YAMLCheckOrStorePattern:                             # NOQA: PLW1641
 
-    def __init__(self, filename: pathlib.Path, *, store: bool) -> None:
-        self._expected_file = filename
-        self._store = store
+    expected_file: pathlib.Path
+    store: bool
+    result: object | None = None
+    expected: object | None = None
 
     def _store_pattern_file(self, result_file: pathlib.Path) -> None:
-        assert self._store, 'Code review required!'
+        assert self.store, 'Code review required!'
 
-        if not self._expected_file.parent.exists():
-            self._expected_file.parent.mkdir(parents=True)
+        if not self.expected_file.parent.exists():
+            self.expected_file.parent.mkdir(parents=True)
 
-        assert self._expected_file.parent.is_dir()
+        assert self.expected_file.parent.is_dir()
 
-        shutil.copy(str(result_file), str(self._expected_file))
+        shutil.copy(str(result_file), str(self.expected_file))
 
     def __eq__(self, result_file: object) -> bool:
         assert isinstance(result_file, pathlib.Path)
 
-        if self._store:
+        if self.store:
             self._store_pattern_file(result_file)
             return True
 
         if not result_file.exists():
             pytest.skip(f'Result YAML file not found `{result_file}`')
 
-        if not self._expected_file.exists():
-            pytest.skip(f'Expected YAML file not found `{self._expected_file}`')
+        if not self.expected_file.exists():
+            pytest.skip(f'Expected YAML file not found `{self.expected_file}`')
 
         # Load data to compare
-        with result_file.open('r') as result_fd, self._expected_file.open('r') as expected_fd:
-            self._result = yaml.safe_load(result_fd)
-            self._expected = yaml.safe_load(expected_fd)
+        with result_file.open('r') as result_fd, self.expected_file.open('r') as expected_fd:
+            self.result = yaml.safe_load(result_fd)
+            self.expected = yaml.safe_load(expected_fd)
 
-            return bool(self._result == self._expected)
+            return bool(self.result == self.expected)
 
     def report_compare_mismatch(self, actual: pathlib.Path) -> list[str]:
-        assert self._result is not None
-        assert self._expected is not None
+        assert self.result is not None
+        assert self.expected is not None
         return [
             ''
-          , f'Comparing the test result (`{actual}`) and the expected (`{self._expected_file}`) YAML files:'
+          , f'Comparing the test result (`{actual}`) and the expected (`{self.expected_file}`) YAML files:'
           , '---[BEGIN actual result]---'
-          , repr(self._result)
+          , repr(self.result)
           , '---[END actual result]---'
           , '---[BEGIN expected result]---'
-          ,  repr(self._expected)
+          ,  repr(self.expected)
           , '---[END expected result]---'
           ]
 
