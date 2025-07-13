@@ -462,6 +462,11 @@ def pytest_addoption(parser: pytest.Parser) -> None:
       , action='store_true'
       , help='reveal and print unused pattern files'
       )
+    group.addoption(
+        '--pm-fail-on-unused-files'
+      , action='store_true'
+      , help='exit with fail if unused pattern files found'
+      )
 
     # Also add INI file (TOML table) options
     parser.addini(
@@ -520,7 +525,8 @@ def pytest_configure(config: pytest.Config) -> None:
     if not config.getoption('--pm-reveal-unused-files'):
         return
 
-    return_codes = os.getenv('PYTEST_MATCHER_RETURN_CODES', '').lower() in ('yes', 'true', '1')
+    return_codes = os.getenv('PYTEST_MATCHER_RETURN_CODES', '').lower() in ('yes', 'true', '1') \
+      or config.getoption('--pm-fail-on-unused-files')
     config.option.collectonly = True
     reporter = _UnusedFilesReporter(return_codes=return_codes)
     config.pluginmanager.unregister(name='terminalreporter')

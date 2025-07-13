@@ -23,6 +23,14 @@ to `Semantic Versioning`_.
 
 .. program:: pytest-matcher
 
+Unreleased_
+===========
+
+Added
+-----
+
+- Introduce the :option:`--pm-fail-on-unused-files` option.
+
 
 2.0.2_ -- 2024-08-01
 ====================
