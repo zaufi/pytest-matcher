@@ -15,7 +15,7 @@ Plugin Command Line Options
 
 .. option:: --pm-patterns-base-dir <DIR>
 
-    Specify the base directory used to find expectation/pattern files.
+    Base directory used for storing pattern files.
     See also :option:`pm-patterns-base-dir`.
 
 
@@ -29,5 +29,5 @@ Plugin Command Line Options
 
 .. option:: --pm-save-patterns
 
-    Write the captured output to the expectation file instead of performing the test.
-    This option helps collect the initial pattern and skips the test.
+    Save captured output to pattern files and skip the test.
+    Use this option to collect initial content for future comparisons.

@@ -42,7 +42,7 @@ The following options can be set in the `Pytest configuration file`_.
 
     :Default: :file:`test/data/expected`
 
-    The base directory used for expectation/pattern files.
+    Base directory used for storing pattern files.
     The directory must be relative to the project's root.
 
 
