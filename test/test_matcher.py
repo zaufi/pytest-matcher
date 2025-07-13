@@ -109,7 +109,7 @@ def regex_fail_match_test(ourtestdir, expectdir) -> None:
     result = ourtestdir.runpytest()
     result.assert_outcomes(failed=1)
     result.stdout.re_match_lines([
-        ".*The test output doesn't match to the expected regex"
+        ".*The test output doesn't match the expected regex."
       ])
 
 

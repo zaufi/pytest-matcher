@@ -73,7 +73,7 @@ class _ContentMatchResult:                                  # NOQA: PLW1641
     def report_regex_mismatch(self) -> list[str]:
         return [
             ''
-          , "The test output doesn't match to the expected regex"
+          , "The test output doesn't match the expected regex."
           , f'(from `{self.filename}`):'
           , '---[BEGIN actual output]---'
           , *self.text
@@ -103,7 +103,7 @@ class _ContentCheckOrStorePattern:                          # NOQA: PLW1641
         self.pattern_filename.write_text(text)
 
         # Also mark the test as skipped!
-        pytest.skip(f'Pattern file has been saved `{self.pattern_filename}`')
+        pytest.skip(f'Pattern file saved to `{self.pattern_filename}`.')
 
     def _read_expected_file_content(self) -> None:
         if not (self.pattern_filename.exists() and self.pattern_filename.is_file()):
@@ -136,7 +136,9 @@ class _ContentCheckOrStorePattern:                          # NOQA: PLW1641
                 what = re.compile(content, flags=flags)
 
         except re.error as ex:
-            pytest.skip(f'Compile a regular expression from the pattern has failed: {ex!s}')
+            pytest.skip(
+                f'Compiling the regular expression from the pattern failed: {ex!s}'
+            )
 
         text_lines = text.splitlines()
 
@@ -156,7 +158,7 @@ class _ContentCheckOrStorePattern:                          # NOQA: PLW1641
         expected = self.expected_file_content
         return [
             ''
-          , "The test output doesn't equal to the expected"
+          , "The test output doesn't match the expected output."
           , f'(from `{self.pattern_filename}`):'
           , '---[BEGIN actual output]---'
           , *self._make_newlines_visible(actual).splitlines()
@@ -195,7 +197,7 @@ class _ContentCheckOrStorePattern:                          # NOQA: PLW1641
 
         return [
             ''
-          , "The test output doesn't equal to the expected"
+          , "The test output doesn't match the expected output."
           , f'(from `{self.pattern_filename}`):'
           , '---[BEGIN expected vs actual diff]---'
           , *diff
@@ -332,7 +334,7 @@ class _YAMLCheckOrStorePattern:                             # NOQA: PLW1641
         assert self.expected is not None
         return [
             ''
-          , f'Comparing the test result (`{actual}`) and the expected (`{self.expected_file}`) YAML files:'
+          , f'Comparing the test result (`{actual}`) with the expected YAML file (`{self.expected_file}`):'
           , '---[BEGIN actual result]---'
           , repr(self.result)
           , '---[END actual result]---'
@@ -442,19 +444,19 @@ def pytest_addoption(parser: pytest.Parser) -> None:
     group.addoption(
         '--pm-save-patterns'
       , action='store_true'
-      , help='write captured output to pattern files and skip the test'
+      , help='Save captured output to pattern files and skip the test.'
       )
     group.addoption(
         '--pm-mismatch-style'
       , type=str
-      , help='output style on expected/actual mismatch'
+      , help='Style of the mismatch report when expected and actual outputs differ.'
       , choices=[style.name.lower() for style in _MismatchStyle]
       , default=None
       )
     group.addoption(
         '--pm-patterns-base-dir'
       , metavar='PATH'
-      , help='base directory to read/write pattern files'
+      , help='Base directory used for storing pattern files.'
       , type=pathlib.Path
       )
     group.addoption(
@@ -471,7 +473,7 @@ def pytest_addoption(parser: pytest.Parser) -> None:
     # Also add INI file (TOML table) options
     parser.addini(
         'pm-patterns-base-dir'
-      , help='base directory to read/write pattern files'
+      , help='Base directory used for storing pattern files.'
       , default=pathlib.Path('test/data/expected')
       )
     parser.addini(
@@ -482,7 +484,7 @@ def pytest_addoption(parser: pytest.Parser) -> None:
       )
     parser.addini(
         'pm-mismatch-style'
-      , help='output style on expected/actual mismatch'
+      , help='Style of the mismatch report when expected and actual outputs differ.'
       , type='string'
       , default=_MismatchStyle.FULL.name.lower()
       )

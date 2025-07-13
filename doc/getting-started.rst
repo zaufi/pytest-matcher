@@ -35,7 +35,7 @@ If you run :command:`pytest` now, the test will be skipped because the expectati
     collected 1 item
 
     test/test_foo.py::test_foo SKIPPED (Base directory for pattern-matcher
-    do not exists: `…/pytest-matcher/master/test/data/expected`)               [100%]
+    does not exist: `…/pytest-matcher/master/test/data/expected`)               [100%]
 
     ============================== 1 skipped in 0.01s ==============================
 
@@ -51,7 +51,7 @@ the :option:`--pm-save-patterns` option to write the initial expectation file:
     ============================= test session starts ==============================
     collecting ... collected 1 item
 
-    test/test_foo.py::test_foo SKIPPED (Pattern file has been saved
+    test/test_foo.py::test_foo SKIPPED (Pattern file saved to
     `…/pytest-matcher/master/test/data/expected/test_foo/test_foo.out`)       [100%]
 
     ============================== 1 skipped in 0.02s ==============================
@@ -114,7 +114,7 @@ Store the pattern file for this test and rerun :command:`pytest` with the ``-vv`
 
     >       assert expected_out.match(stdout) ==True
     E       AssertionError: assert
-    E         The test output doesn't match to the expected regex
+    E         The test output doesn't match the expected regex.
     E         (from `…/pytest-matcher/master/test/data/expected/test_foo/test_regex.out`):
     E         ---[BEGIN actual output]---
     E         Current date: 2024-03-02 21:59:03.792447
