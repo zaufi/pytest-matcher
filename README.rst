@@ -21,6 +21,22 @@ Documentation
 
 The latest documentation can be found `here <https://pytest-matcher.readthedocs.io>`_.
 
+Use with ``pre-commit``
+-----------------------
+
+.. code-block:: yaml
+
+    repos:
+      - repo: https://github.com/zaufi/pytest-matcher
+        rev: '' # Use Git hash or release tag
+        hooks:
+          - id: reveal-unused-pattern-files
+
+.. warning::
+
+    Unfortunately, this hook can't be run automatically because it must be run from development
+    virtual environment.
+
 
 See Also
 ========

@@ -30,6 +30,7 @@ Added
 -----
 
 - Introduce the :option:`--pm-fail-on-unused-files` option.
+- Add a ``pre-commit`` hook declaration file.
 
 
 2.0.2_ -- 2024-08-01
