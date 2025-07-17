@@ -90,7 +90,6 @@ dependencies = [
     "isort"
   , "mypy"
   , "reuse ~= 5.0"
-  , "ruff ~= 0.12.3"
   , "types-PyYAML"
   , "twine"
   , "vulture"
@@ -107,7 +106,7 @@ all = [
 dead-check = "vulture src/pytest_matcher"
 dist-check = "twine check dist/*"
 license-check = "reuse lint"
-lint-check = "ruff check doc src/pytest_matcher tests"
+lint-check = "hatch fmt --check --linter"
 pyproject-check = "validate-pyproject {root:real}/pyproject.toml"
 type-check = "mypy src/pytest_matcher"
 # Testing shortcut commands
@@ -131,6 +130,17 @@ template = "doc"
 build = "sphinx-build --color -j auto doc/ build/sphinx/html/"
 link-check = "sphinx-build --color -b linkcheck doc/ build/sphinx/link-check/"
 show = "xdg-open build/sphinx/html/index.html"
+
+[tool.hatch.envs.hatch-static-analysis]
+description = "Static analysis environment"
+dependencies = ["ruff ~= 0.12.4"]
+config-path = "none"
+
+[tool.hatch.envs.hatch-static-analysis.scripts]
+format-check = "echo Sorry, format check is unsupported in this project."
+format-fix = "echo Sorry, format fix is unsupported in this project."
+lint-fix = "echo Sorry, lint fix is unsupported in this project."
+lint-check = "ruff check src/ tests/ doc/"
 
 [tool.hatch.envs.hatch-test]
 description = "Unit tests environment"

@@ -82,7 +82,7 @@ jobs:
         run: hatch run dist-check
 
       - name: Run linter check
-        run: hatch run lint-check
+        run: hatch fmt --linter --check
         env:
           RUFF_OUTPUT_FORMAT: github
 
