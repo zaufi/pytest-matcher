@@ -108,7 +108,7 @@ dist-check = "twine check dist/*"
 license-check = "reuse lint"
 lint-check = "hatch fmt --check --linter"
 pyproject-check = "validate-pyproject {root:real}/pyproject.toml"
-type-check = "mypy src/pytest_matcher"
+type-check = "mypy src/pytest_matcher tests"
 # Testing shortcut commands
 cov = "hatch test --cov"
 test = "hatch test -i pytest=pytest.7x,pytest.8x"
@@ -196,8 +196,8 @@ warn_unused_ignores = true
 
 [[tool.mypy.overrides]]
 module = [
-    "test.test_foo"
-  , "test.test_matcher"
+    "tests.test_foo"
+  , "tests.test_matcher"
   ]
 disallow_any_decorated = false
 disallow_incomplete_defs = false
