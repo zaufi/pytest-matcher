@@ -110,8 +110,8 @@ lint-check = "hatch fmt --check --linter"
 pyproject-check = "validate-pyproject {root:real}/pyproject.toml"
 type-check = "mypy src/pytest_matcher tests"
 # Testing shortcut commands
-cov = "hatch test --cov"
-test = "hatch test -i pytest=pytest.7x,pytest.8x"
+cov = "hatch test -a --cov"
+test = "hatch test -a"
 # Misc commands
 annotate-code = "reuse annotate -c \"$(git config --get user.name) <$(git config --get user.email)>\" -t code -l GPL-3.0-or-later {args}"
 annotate-misc = "reuse annotate -c \"$(git config --get user.name) <$(git config --get user.email)>\" -t misc -l CC0-1.0 {args}"
