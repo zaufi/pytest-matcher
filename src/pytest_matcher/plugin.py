@@ -29,12 +29,15 @@ try:
     from pygments import highlight
     from pygments.formatters import TerminalFormatter
     from pygments.lexers import DiffLexer
+
     HAVE_PYGMENTS = True
     # ATTENTION THIS IS THE UGLY IMPORT OF PYTEST IMPLEMENTATION DETAILS
     # BUT UNFORTUNATELY I SEE NO OTHER WAY (and I don't like copy-n-paste %-)
     from _pytest._io.terminalwriter import should_do_markup
+
 except ImportError:
     HAVE_PYGMENTS = False
+
     def should_do_markup(_: TextIO) -> bool:                # type: ignore[misc]
         """Fallback stub used when the optional dependency cannot be imported."""
         return False
