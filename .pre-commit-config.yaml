@@ -96,5 +96,3 @@ repos:
     hooks:
       - id: shellcheck
         args: [--shell=bash, --color=always]
-        files: '\.sh$'
-        types: [file, text]
