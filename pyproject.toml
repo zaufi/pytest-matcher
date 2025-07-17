@@ -135,7 +135,6 @@ show = "xdg-open build/sphinx/html/index.html"
 [tool.hatch.envs.hatch-test]
 description = "Unit tests environment"
 dependencies = []
-installer = "uv"
 
 [[tool.hatch.envs.hatch-test.matrix]]
 pytest = ["pytest.8x", "pytest.7x"]
