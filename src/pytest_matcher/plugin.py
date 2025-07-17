@@ -469,7 +469,7 @@ def pytest_addoption(parser: pytest.Parser) -> None:
     parser.addini(
         'pm-patterns-base-dir'
       , help='Base directory used for storing pattern files.'
-      , default=pathlib.Path('test/data/expected')
+      , default=pathlib.Path('tests/data/expected')
       )
     parser.addini(
         'pm-pattern-file-fmt'

@@ -21,7 +21,7 @@ or with ``diff`` mode highlighted via ``Pygments``:
 The plugin provides the fixtures :py:data:`expected_out` and :py:data:`expected_err`.
 Usage is straightforward as shown below:
 
-.. literalinclude:: ../test/test_foo.py
+.. literalinclude:: ../tests/test_foo.py
     :language: python
     :pyobject: test_foo
 
@@ -30,33 +30,34 @@ If you run :command:`pytest` now, the test will be skipped because the expectati
 .. code-block:: console
     :emphasize-lines: 5,6
 
-    $ pytest --no-header --no-summary test/test_foo.py::test_foo
+    $ pytest --no-header --no-summary tests/test_foo.py::test_foo
     ============================= test session starts ==============================
     collected 1 item
 
-    test/test_foo.py::test_foo SKIPPED (Base directory for pattern-matcher
-    does not exist: `…/pytest-matcher/master/test/data/expected`)               [100%]
+    tests/test_foo.py::test_foo SKIPPED (Base directory for pattern-matcher
+    does not exist: `…/pytest-matcher/master/tests/data/expected`)            [100%]
 
     ============================== 1 skipped in 0.01s ==============================
 
 
 Add the :option:`pm-patterns-base-dir` option to the `Pytest configuration file`_
-pointing, for example, to :file:`test/data/expected`. Run :command:`pytest` with
+pointing, for example, to :file:`tests/data/expected`. Run :command:`pytest` with
 the :option:`--pm-save-patterns` option to write the initial expectation file:
 
 .. code-block:: console
     :emphasize-lines: 5,6
 
-    $ pytest --pm-save-patterns --no-header --no-summary test/test_foo.py::test_foo
+    $ pytest --pm-save-patterns --no-header --no-summary tests/test_foo.py::test_foo
     ============================= test session starts ==============================
     collecting ... collected 1 item
 
-    test/test_foo.py::test_foo SKIPPED (Pattern file saved to
-    `…/pytest-matcher/master/test/data/expected/test_foo/test_foo.out`)       [100%]
+    tests/test_foo.py::test_foo SKIPPED (Pattern file saved to
+    `…/pytest-matcher/master/tests/data/expected/test_foo/test_foo.out`)      [100%]
 
     ============================== 1 skipped in 0.02s ==============================
 
-Review the stored pattern file :file:`test/data/expected/test_foo/test_foo.out` and add it to your VCS.
+Review the stored pattern file :file:`tests/data/expected/test_foo/test_foo.out` and add it to
+your VCS.
 
 .. note::
 
@@ -71,11 +72,11 @@ output matches expectations:
 .. code-block:: console
     :emphasize-lines: 5
 
-    $ pytest --no-header --no-summary test/test_foo.py::test_foo
+    $ pytest --no-header --no-summary tests/test_foo.py::test_foo
     ============================= test session starts ==============================
     collected 1 item
 
-    test/test_foo.py::test_foo PASSED                                        [100%]
+    tests/test_foo.py::test_foo PASSED                                        [100%]
 
     ============================== 1 passed in 0.01s ===============================
 
@@ -85,20 +86,20 @@ output matches expectations:
 If the captured output contains values that change from run to run, for example timestamps
 or filesystem paths, you can match the output using regular expressions:
 
-.. literalinclude:: ../test/test_foo.py
+.. literalinclude:: ../tests/test_foo.py
     :language: python
     :pyobject: test_regex
 
 Store the pattern file for this test and rerun :command:`pytest` with the ``-vv`` option:
 
 .. code-block:: console
-    :emphasize-lines: 24,28
+    :emphasize-lines: 24,25,28,29
 
-    $ pytest -vv --no-header test/test_foo.py::test_regex
+    $ pytest -vv --no-header tests/test_foo.py::test_regex
     ============================= test session starts ==============================
     collecting ... collected 1 item
 
-    test/test_foo.py::test_regex FAILED                                      [100%]
+    tests/test_foo.py::test_regex FAILED                                      [100%]
 
     =================================== FAILURES ===================================
     __________________________________ test_regex __________________________________
@@ -112,43 +113,43 @@ Store the pattern file for this test and rerun :command:`pytest` with the ``-vv`
 
             stdout, _ = capfd.readouterr()
 
-    >       assert expected_out.match(stdout) ==True
+    >       assert expected_out.match(stdout) == True
     E       AssertionError: assert
     E         The test output doesn't match the expected regex.
-    E         (from `…/pytest-matcher/master/test/data/expected/test_foo/test_regex.out`):
+    E         (from `…/pytest-matcher/master/tests/data/expected/test_foo/test_regex.out`):
     E         ---[BEGIN actual output]---
     E         Current date: 2024-03-02 21:59:03.792447
-    E         Current module: …/pytest-matcher/master/test/test_foo.py
+    E         Current module: …/pytest-matcher/master/tests/test_foo.py
     E         ---[END actual output]---
     E         ---[BEGIN expected regex]---
     E         Current date: 2024-03-02 21:58:32.289679
-    E         Current module: …/pytest-matcher/master/test/test_foo.py
+    E         Current module: …/pytest-matcher/master/tests/test_foo.py
     E         ---[END expected regex]---
 
-    test/test_foo.py:26: AssertionError
+    tests/test_foo.py:26: AssertionError
     =========================== short test summary info ============================
-    FAILED test/test_foo.py::test_regex - AssertionError: assert
+    FAILED tests/test_foo.py::test_regex - AssertionError: assert
     ============================== 1 failed in 0.03s ===============================
 
 To make it match, edit the expectation file and replace the changing parts with regular
 expressions:
 
 .. code-block::
-    :caption: ``test/data/expect/test_foo/test_regex.out``
+    :caption: ``tests/data/expect/test_foo/test_regex.out``
 
     Current date: [0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}(\.[0-9]+)?
-    Current module: .*/test/test_foo.py
+    Current module: .*/tests/test_foo.py
 
 The test will now pass:
 
 .. code-block:: console
     :emphasize-lines: 5
 
-    $ pytest --no-header --no-summary test/test_foo.py::test_regex
+    $ pytest --no-header --no-summary tests/test_foo.py::test_regex
     ============================= test session starts ==============================
     collected 1 item
 
-    test/test_foo.py::test_regex PASSED                                        [100%]
+    tests/test_foo.py::test_regex PASSED                                      [100%]
 
     ============================== 1 passed in 0.01s ===============================
 

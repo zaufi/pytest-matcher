@@ -26,10 +26,13 @@ to `Semantic Versioning`_.
 Unreleased_
 ===========
 
-Added
------
+Changed
+-------
 
+- Set the :option:`pm-patterns-base-dir` default to :file:`tests/data/expected` to align with
+  the common :file:`tests/` directory layout.
 - Improve documentation.
+- Update the :file:`pyproject.toml` to suit the :program:`hatch test` command.
 
 
 2.0.2_ -- 2024-08-01

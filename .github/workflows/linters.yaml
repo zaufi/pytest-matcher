@@ -89,9 +89,6 @@ jobs:
       - name: Run type check
         run: hatch run type-check
 
-      - name: Run spell check
-        run: hatch run spell-check
-
       - name: Run license check
         run: hatch run license-check
 

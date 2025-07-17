@@ -25,7 +25,7 @@ SPDX-FileCopyrightText = "2024 Alex Turbov <zaufi@pm.me>"
 SPDX-License-Identifier = "CC0-1.0"
 
 [[annotations]]
-path = "test/data/**"
+path = "tests/data/**"
 precedence = "aggregate"
 SPDX-FileCopyrightText = "2024 Alex Turbov <zaufi@pm.me>"
 SPDX-License-Identifier = "CC0-1.0"

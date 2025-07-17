@@ -40,9 +40,10 @@ jobs:
 
       - name: Get Cache Key
         run: |
-          [[ '${{ matrix.python-version }}' == '3.10' ]] && pip install tomli
           echo "CACHE_KEY=$( \
-              .github/workflows/get-key.py --json --hash tool.hatch.envs.test.overrides.matrix.pytest.dependencies \
+              yq eval -r .tool.hatch.envs.hatch-test.overrides.matrix.pytest.dependencies -oy pyproject.toml \
+            | sha1sum \
+            | cut -f 1 -d ' ' \
             )" | tee -a "${GITHUB_ENV}"
         shell: bash
 
@@ -58,8 +59,5 @@ jobs:
         uses: pypa/hatch@install
 
       - name: Run tests
-        # NOTE Run tests per environment to avoid `default` environment activation
-        # when `hatch run test` running.
         run: |
-          hatch run test.pytest.7x:test
-          hatch run test.pytest.8x:test
+          hatch test -i pytest=pytest.7x,pytest.8x

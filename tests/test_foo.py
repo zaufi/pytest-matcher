@@ -28,7 +28,7 @@ def test_regex(capfd, expected_out) -> None:
 
     stdout, _ = capfd.readouterr()
 
-    assert expected_out.match(stdout) ==True
+    assert expected_out.match(stdout) == True
 
 
 @pytest.mark.xfail(reason='Demo for diff show')

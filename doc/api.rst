@@ -69,7 +69,7 @@ Marker
         def system_specific_test(capfd, expected_out):
             ...
             stdout, _ = capfd.readouterr()
-            # Get content from `<base-dir>/.../system_specific-Linux.out`
+            # Get content from `<base-dir>/.../system_specific_test-Linux.out`
             assert expected_out == stdout
 
         @pytest.mark.expect_suffix(

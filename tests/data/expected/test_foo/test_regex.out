@@ -1,2 +1,2 @@
 Current date: [0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}(\.[0-9]+)?
-Current module: .*/test/test_foo.py
+Current module: .*/tests/test_foo.py
