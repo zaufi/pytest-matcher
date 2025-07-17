@@ -60,4 +60,4 @@ jobs:
 
       - name: Run tests
         run: |
-          hatch test -i pytest=pytest.7x,pytest.8x
+          hatch test -a
