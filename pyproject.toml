@@ -60,6 +60,7 @@ quiet-level = 3
 skip = "./build,./dist"
 
 [tool.coverage.html]
+directory = "build/coverage"
 skip_empty = true
 title = "Test Coverage Report"
 
@@ -111,6 +112,7 @@ pyproject-check = "validate-pyproject {root:real}/pyproject.toml"
 type-check = "mypy src/pytest_matcher tests"
 # Testing shortcut commands
 cov = "hatch test -a --cov"
+show-cov = "xdg-open build/coverage/index.html"
 test = "hatch test -a"
 # Misc commands
 annotate-code = "reuse annotate -c \"$(git config --get user.name) <$(git config --get user.email)>\" -t code -l GPL-3.0-or-later {args}"
@@ -159,7 +161,9 @@ matrix.pytest.dependencies = [
 
 [tool.hatch.envs.hatch-test.scripts]
 run = "pytest{env:HATCH_TEST_ARGS:} -o cache_dir=build/.{matrix:pytest}_cache {verbosity:flag} {args}"
-cov = "pytest --cov-report term --cov-report html:build/coverage-{matrix:pytest} --cov=pytest_matcher"
+run-cov = "coverage run -m pytest{env:HATCH_TEST_ARGS:} {args}"
+cov-combine = "coverage combine"
+cov-report = ["coverage report", "coverage html"]
 
 [tool.hatch.version]
 source = "vcs"
