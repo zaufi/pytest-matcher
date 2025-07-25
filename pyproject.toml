@@ -135,7 +135,7 @@ show = "xdg-open build/sphinx/html/index.html"
 
 [tool.hatch.envs.hatch-static-analysis]
 description = "Static analysis environment"
-dependencies = ["ruff ~= 0.12.4"]
+dependencies = ["ruff ~= 0.12.5"]
 config-path = "none"
 
 [tool.hatch.envs.hatch-static-analysis.scripts]
