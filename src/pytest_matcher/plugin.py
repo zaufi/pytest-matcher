@@ -16,6 +16,7 @@ import pathlib
 import platform
 import re
 import shutil
+import string
 import sys
 import urllib.parse
 from dataclasses import dataclass
@@ -496,7 +497,7 @@ def pytest_configure(config: pytest.Config) -> None:
       , 'expect_suffix(args..., *, suffix="..."): mark test to have suffixed pattern file'
       )
 
-    # ALERT Make sure the patterns base directory isn't an absolute path!
+    # Make sure the patterns base directory isn't an absolute path!
     basedir = _get_base_dir(config)
     if basedir.is_absolute():
         msg = 'The patterns base directory must be relative'
@@ -505,14 +506,41 @@ def pytest_configure(config: pytest.Config) -> None:
     def _path_have_dot_dot(path: pathlib.Path) -> bool:
         return any(part == '..' for part in path.parts)
 
-    # ALERT Prevent directory traversal in
-    # `pm-pattern-file-fmt` and `pm-patterns-base-dir` parameters!
-    if any(map(_path_have_dot_dot, (basedir, pathlib.Path(config.getini('pm-pattern-file-fmt'))))):
+    # Prevent directory traversal in # `pm-pattern-file-fmt`
+    # and `pm-patterns-base-dir` parameters!
+    pattern_file_fmt = config.getini('pm-pattern-file-fmt')
+    if any(map(_path_have_dot_dot, (basedir, pathlib.Path(pattern_file_fmt)))):
         msg = 'Directory traversal is not allowed for `pm-pattern-file-fmt` or `pm-patterns-base-dir` option'
         raise pytest.UsageError(msg)
 
-    style_str = config.getini('pm-mismatch-style')
+    # Make sure the `pm-pattern-file-fmt` format string is correct
+    # and there are only known placeholders!
+    try:
+        formatter = string.Formatter()
+        placeholders = [
+            placeholder
+            for _, placeholder, _, _ in formatter.parse(pattern_file_fmt)
+            if placeholder
+          ]
 
+        if not bool(placeholders):
+            msg = "'pm-pattern-file-fmt' should have at least one placeholder"
+            raise pytest.UsageError(msg)
+
+        supported = ['module', 'class', 'fn', 'callspec', 'suffix']
+        unsupported = [f"'{item}'" for item in placeholders if item not in supported]
+
+        if unsupported:
+            plural = 's' if len(unsupported) > 1 else ''
+            msg = f"'pm-pattern-file-fmt' has invalid placeholder{plural}: {', '.join(unsupported)}"
+            raise pytest.UsageError(msg)
+
+    except ValueError as ex:
+        msg = f"'pm-pattern-file-fmt' has incorrect format: {str(ex).lower()}"
+        raise pytest.UsageError(msg) from ex
+
+    # Validate `pm-mismatch-style` option value.
+    style_str = config.getini('pm-mismatch-style')
     if style_str.upper() not in [item.name for item in _MismatchStyle]:
         msg = (
             f"'pm-mismatch-style' option have an invalid value `{style_str}`. "

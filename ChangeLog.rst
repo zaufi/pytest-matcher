@@ -34,6 +34,11 @@ Changed
 - Improve documentation.
 - Update the :file:`pyproject.toml` to suit the :program:`hatch test` command.
 
+Fixed
+-----
+
+- Handle invalid values of the :option:`pm-pattern-file-fmt` option.
+
 
 2.0.2_ -- 2024-08-01
 ====================
