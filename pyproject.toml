@@ -4,8 +4,8 @@
 #
 
 [build-system]
-requires = ["hatchling", "hatch-vcs"]
 build-backend = "hatchling.build"
+requires = ["hatchling", "hatch-vcs"]
 
 [project]
 # https://packaging.python.org/en/latest/specifications/pyproject-toml
@@ -17,7 +17,8 @@ license = { file="LICENSES/GPL-3.0-or-later.txt" }
 authors = [{ name="Alex Turbov", email="zaufi@pm.me" }]
 maintainers = [{ name="Alex Turbov", email="zaufi@pm.me" }]
 keywords = [
-    "pytest plugin"
+    "pytest"
+  , "plugin"
   ]
 # https://pypi.org/classifiers
 classifiers = [
@@ -51,6 +52,9 @@ Documentation = "https://pytest-matcher.readthedocs.io"
 'Issues Tracker' = "https://github.com/zaufi/pytest-matcher/issues"
 'Report an Issue' = "https://github.com/zaufi/pytest-matcher/issues/new/choose"
 
+# NOTE: `codespell` isn't tied to any specific environment.
+# However, when used as a `pre-commit` hook, it can still
+# read configuration options from this file.
 [tool.codespell]
 builtin = "clear,rare,names,code,en-GB_to_en-US"
 check-filenames = ""
@@ -68,7 +72,6 @@ title = "Test Coverage Report"
 exclude_lines = [
     # Have to re-enable the standard pragma
     "pragma: no cover"
-
     # Don't complain about missing debug-only code:
   , "def __repr__"
   ]
@@ -101,7 +104,12 @@ installer = "uv"
 [tool.hatch.envs.default.scripts]
 # Some shortcut commands
 all = [
-    "dead-check", "dist-check", "license-check", "lint-check", "pyproject-check", "type-check"
+    "dead-check"
+  , "dist-check"
+  , "license-check"
+  , "lint-check"
+  , "pyproject-check"
+  , "type-check"
   ]
 # Various linter commands
 dead-check = "vulture src/pytest_matcher"
@@ -141,8 +149,8 @@ config-path = "none"
 [tool.hatch.envs.hatch-static-analysis.scripts]
 format-check = "echo Sorry, format check is unsupported in this project."
 format-fix = "echo Sorry, format fix is unsupported in this project."
-lint-fix = "echo Sorry, lint fix is unsupported in this project."
 lint-check = "ruff check src/ tests/ doc/"
+lint-fix = "echo Sorry, lint fix is unsupported in this project."
 
 [tool.hatch.envs.hatch-test]
 description = "Unit tests environment"
@@ -159,23 +167,23 @@ matrix.pytest.dependencies = [
   ]
 
 [tool.hatch.envs.hatch-test.scripts]
-run = "pytest{env:HATCH_TEST_ARGS:} -o cache_dir=build/.{matrix:pytest}_cache {verbosity:flag} {args}"
-run-cov = "coverage run -m pytest{env:HATCH_TEST_ARGS:} {args}"
 cov-combine = "coverage combine"
 cov-report = ["coverage report", "coverage html"]
+run-cov = "coverage run -m pytest{env:HATCH_TEST_ARGS:} {args}"
+run = "pytest{env:HATCH_TEST_ARGS:} -o cache_dir=build/.{matrix:pytest}_cache {verbosity:flag} {args}"
 
 [tool.hatch.version]
 source = "vcs"
 tag-pattern = "release/(.*)"
 
 [tool.isort]
-multi_line_output = 3
-use_parentheses = true
 honor_noqa = true
-import_heading_stdlib = "Standard imports"
-import_heading_thirdparty = "Third party packages"
 import_heading_firstparty = "Project specific imports"
 import_heading_localfolder = "Local imports"
+import_heading_stdlib = "Standard imports"
+import_heading_thirdparty = "Third party packages"
+multi_line_output = 3
+use_parentheses = true
 
 [tool.mypy]
 cache_dir = "build/.mypy_cache"
@@ -198,13 +206,13 @@ warn_unused_configs = true
 warn_unused_ignores = true
 
 [[tool.mypy.overrides]]
+disallow_any_decorated = false
+disallow_incomplete_defs = false
+disallow_untyped_defs = false
 module = [
     "tests.test_foo"
   , "tests.test_matcher"
   ]
-disallow_any_decorated = false
-disallow_incomplete_defs = false
-disallow_untyped_defs = false
 
 [tool.pylint.BASIC]
 const-naming-style = "UPPER_CASE"
@@ -230,12 +238,10 @@ notes = []
 addopts = "-ra"
 cache_dir = "build/.pytest.8x_cache"
 log_cli = true
-markers = [
-    "wip: work in progress"
-  ]
+markers = ["wip: work in progress"]
 minversion = "7.0"
-python_files = ["test_*.py"]
 python_classes = ["*Tester"]
+python_files = ["test_*.py"]
 python_functions = ["*_test", "*_test_?", "*_test_??", "test_*"]
 testpaths = ["tests"]
 xfail_strict = true
@@ -284,10 +290,12 @@ known-first-party = ["pytest_matcher"]
 [tool.ruff.lint.pydocstyle]
 convention = "google"
 
+# NOTE: `typos` isn't tied to any specific environment.
+# However, when used as a `pre-commit` hook, it can still
+# read configuration options from this file.
 [tool.typos.default]
 check-file = true
 check-filename = true
-locale = "en-us"
 extend-ignore-re = [
     # NOTE Allow to mark block of text to exclude from spellchecking inside C++ or Python comments
     "(?s)(#|//)\\s*(NOQA|noqa):? spellcheck(: *|=| +)off.*?\\n\\s*(#|//)\\s*(NOQA|noqa):? spellcheck(: *|=| +)on"
@@ -297,6 +305,7 @@ extend-ignore-re = [
     # This line is a marker added by Git to the `COMMIT_EDITMSG`.
   , "(?sm)^# ------------------------ >8 ------------------------$.*"
   ]
+locale = "en-us"
 
 [tool.typos.default.extend-words]
 ret = "ret"
@@ -308,5 +317,5 @@ extend-ignore-re = [
   ]
 
 [tool.vulture]
-min_confidence = 61
 ignore_names = ["kwargs", "args"]
+min_confidence = 61
