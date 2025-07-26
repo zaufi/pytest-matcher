@@ -23,6 +23,16 @@ to `Semantic Versioning`_.
 
 .. program:: pytest-matcher
 
+Unreleased_
+===========
+
+Fixed
+-----
+
+- Updated the default value of :option:`pm-pattern-file-fmt` to append ``{suffix}``,
+  which was missing despite being documented.
+
+
 2.0.3_ -- 2025-07-26
 ====================
 

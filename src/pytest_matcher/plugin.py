@@ -477,7 +477,7 @@ def pytest_addoption(parser: pytest.Parser) -> None:
         'pm-pattern-file-fmt'
       , help='pattern filename format can use placeholders: `module`, `class`, `fn`, `callspec`, `system`'
       , type='string'
-      , default='{module}/{class}/{fn}{callspec}'
+      , default='{module}/{class}/{fn}{callspec}{suffix}'
       )
     parser.addini(
         'pm-mismatch-style'
