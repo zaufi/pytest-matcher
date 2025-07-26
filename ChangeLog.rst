@@ -23,8 +23,8 @@ to `Semantic Versioning`_.
 
 .. program:: pytest-matcher
 
-Unreleased_
-===========
+2.0.3_ -- 2025-07-26
+====================
 
 Changed
 -------
@@ -218,7 +218,8 @@ Added
   comparison operator.
 
 
-.. _Unreleased: https://github.com/zaufi/pytest-matcher/compare/release/2.0.2...HEAD
+.. _Unreleased: https://github.com/zaufi/pytest-matcher/compare/release/2.0.3...HEAD
+.. _2.0.3: https://github.com/zaufi/pytest-matcher/compare/release/2.0.2...release/2.0.3
 .. _2.0.2: https://github.com/zaufi/pytest-matcher/compare/release/2.0.1...release/2.0.2
 .. _2.0.1: https://github.com/zaufi/pytest-matcher/compare/release/2.0.0...release/2.0.1
 .. _2.0.0: https://github.com/zaufi/pytest-matcher/compare/release/1.6.0...release/2.0.0
