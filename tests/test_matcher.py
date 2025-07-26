@@ -4,6 +4,7 @@
 #
 
 # Standard imports
+import pathlib
 import platform
 from typing import Final
 
@@ -504,3 +505,133 @@ def diff_test(pytester) -> None:
       , 'E         +Hello America!↵'
       , 'E         ---[END expected vs actual diff]---'
       ])
+
+
+@pytest.mark.parametrize(
+    ('on_store_params', 'error_string')
+  , [
+        (
+            'drop_head="string"'
+          , "parameter with invalid type: 'drop_head'"
+        )
+      , (
+            'drop_head=-1'
+          , "invalid value `-1` for parameter 'drop_head'"
+        )
+      , (
+            'drop_head="string", drop_tail="string"'
+          , "parameters with invalid type: 'drop_head', 'drop_tail'"
+        )
+      , (
+            'replace_matched_lines=["[*"]'
+          , "invalid regular expression: '[*'"
+        )
+    ]
+  )
+def bad_on_store_marker_test(pytester, on_store_params: str, error_string: str) -> None:
+    # Write a sample config file
+    pytester.makefile(
+        '.ini'
+      , pytest="""
+            [pytest]
+            pm-patterns-base-dir = .
+            pm-pattern-file-fmt = {fn}
+        """
+      )
+
+    # Write a sample test
+    pytester.makepyfile(f"""
+        import pytest
+
+        @pytest.mark.on_store({on_store_params})
+        def test_bad_on_store_marker(expected_out):
+            pass
+        """
+      )
+
+    # On first run store the patched pattern...
+    result = pytester.runpytest('--pm-save-patterns')
+    result.assert_outcomes(errors=1)
+    result.stdout.fnmatch_lines([
+        f"E           _pytest.config.exceptions.UsageError: 'on_store' marker got {error_string}"
+      ])
+
+
+HELLO_STRING: Final[str] = 'Hello Africa!\\nHola Antarctica!\\nHello Americas!'
+
+@pytest.mark.parametrize(
+    ('on_store_params', 'test_string', 'second_run')
+  , [
+        pytest.param('drop_head=1', HELLO_STRING, False, id='drop_head_1')
+      , pytest.param('drop_head=2', HELLO_STRING, False, id='drop_head_2')
+      , pytest.param('drop_tail=1', HELLO_STRING, False, id='drop_tail_1')
+      , pytest.param('drop_tail=2', HELLO_STRING, False, id='drop_tail_2')
+      , pytest.param(
+            'drop_head=1, drop_tail=1'
+          , HELLO_STRING
+          , False
+          , id='drop_head_and_tail_1'
+        )
+      , pytest.param(
+            "replace_matched_lines=['Hello .*!']"
+          , HELLO_STRING
+          , True
+          , id='replace_matched_lines'
+        )
+      , pytest.param(
+            "drop_head=1, replace_matched_lines=['Hola .*!'], drop_tail=1"
+          , HELLO_STRING
+          , True
+          , id='replace_matched_lines_and_drops'
+        )
+      , pytest.param(
+            "replace_matched_lines=['Hola .*!']"
+          , 'Hello ++ Africa!\\nHola Antarctica!\\nHello * Americas!'
+          , True
+          , id='need_escape_regex_chars'
+        )
+    ]
+  )
+def on_store_marker_test(
+    pytester
+  , on_store_params: str
+  , test_string: str
+  , second_run: bool                                        # NOQA: FBT001
+  , expected_out
+  ) -> None:
+    # Write a sample config file
+    pytester.makefile(
+        '.ini'
+      , pytest="""
+            [pytest]
+            pm-patterns-base-dir = .
+            pm-pattern-file-fmt = {fn}
+        """
+      )
+
+    # Write a sample test
+    pytester.makepyfile(f"""
+        import pytest
+
+        @pytest.mark.on_store({on_store_params})
+        def test_on_store_marker(capfd, expected_out):
+            print('{test_string!s}')
+            stdout, _ = capfd.readouterr()
+            assert expected_out.match(stdout) == True
+        """
+      )
+
+    # On first run store the patched pattern...
+    result = pytester.runpytest('--pm-save-patterns')
+    result.assert_outcomes(skipped=1)
+
+    # Check the stored pattern
+    stored_pattern = pathlib.Path.cwd() / 'test_on_store_marker.out'
+    assert stored_pattern.exists()
+    actual_pattern = stored_pattern.read_text()
+    assert actual_pattern == expected_out
+
+    # Second run should pass!
+    if second_run:
+        result = pytester.runpytest()
+        result.assert_outcomes(passed=1)

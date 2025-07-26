@@ -81,3 +81,20 @@ Marker
             stdout, _ = capfd.readouterr()
             # Get content from `<base-dir>/.../python_specific_test-py312-pytest8.out`
             assert expected_out == stdout
+
+
+.. py:function:: on_store(*, drop_head: int = 0, drop_tail: int = 0, replace_matched_lines: list[str] = [])
+
+    Edit a pattern before save it when :option:`--pm-save-patterns` option has given.
+
+    :param drop_head: Number of lines to remove from the beginning of the pattern. Removed lines are replaced
+        with a ``.*`` placeholder to retain structural compatibility during pattern matching. The number must
+        be a positive integer.
+    :type x: int
+
+    :param drop_tail: Number of lines to remove from the end of the pattern. The number must be a positive integer.
+    :type x: int
+
+    :param replace_matched_lines: A list of regular expression strings used to find and replace matching
+        lines within the pattern.
+    :type x: list[str]

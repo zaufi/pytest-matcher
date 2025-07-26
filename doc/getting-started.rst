@@ -153,4 +153,41 @@ The test will now pass:
 
     ============================== 1 passed in 0.01s ===============================
 
+The necessity to manually edit pattern after storing it (to make it a valid regular expression)
+could be boring. With the :py:func:`on_store` marker, one can pass "instructions" on how to
+edit raw text to turn it into a regular expression pattern.
+
+.. literalinclude:: ../tests/test_foo.py
+    :language: python
+    :pyobject: test_on_store_marker
+    :emphasize-lines: 1-7
+
+So, now it's stored as a ready-to-match regex automatically:
+
+.. code-block:: console
+    :emphasize-lines: 12,13
+
+    $ pytest --pm-save-patterns --no-header --no-summary tests/test_foo.py::test_on_store_marker
+    ============================= test session starts ==============================
+    collecting ... collected 1 item
+
+    tests/test_foo.py::test_on_store_marker SKIPPED (Pattern file saved to
+    `…/pytest-matcher/master/tests/data/expected/test_foo/test_on_store_m...) [100%]
+
+    ============================== 1 skipped in 0.02s ==============================
+
+    $ cat tests/data/expected/test_foo/test_on_store_marker.out
+    The beginning of a static text that never changes from run to run\.
+    Current date: [0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}(\.[0-9]+)?
+    Current module: .*/tests/test_foo.py
+    The text \*may have\* regex special\(\?\) metacharacters that \[would be\] escaped properly\.
+
+    $ pytest --no-header --no-summary tests/test_foo.py::test_on_store_marker
+    ============================= test session starts ==============================
+    collected 1 item
+
+    tests/test_foo.py::test_on_store_marker PASSED                            [100%]
+    ============================== 1 passed in 0.01s ===============================
+
+
 .. _Pytest configuration file: https://docs.pytest.org/en/latest/reference/customize.html

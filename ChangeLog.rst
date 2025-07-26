@@ -26,6 +26,11 @@ to `Semantic Versioning`_.
 Unreleased_
 ===========
 
+Added
+-----
+
+- Automate pattern editing (preparation) with the :py:func:`on_store` marker.
+
 Fixed
 -----
 
