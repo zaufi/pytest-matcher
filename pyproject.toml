@@ -154,7 +154,6 @@ pytest = ["pytest.8x", "pytest.7x"]
 [tool.hatch.envs.hatch-test.overrides]
 matrix.pytest.dependencies = [
     "coverage[toml]"
-  , "pytest-cov"
   , { value = "pytest ~= 8.0", if = ["pytest.8x"] }
   , { value = "pytest ~= 7.0", if = ["pytest.7x"] }
   ]
