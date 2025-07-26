@@ -504,3 +504,32 @@ def diff_test(pytester) -> None:
       , 'E         +Hello America!↵'
       , 'E         ---[END expected vs actual diff]---'
       ])
+
+def on_store_marker_test(pytester) -> None:
+    # Write a sample config file
+    pytester.makefile(
+        '.ini'
+      , pytest="""
+            [pytest]
+            pm-patterns-base-dir = .
+        """
+      )
+
+    # Write a sample test
+    pytester.makepyfile("""
+        import pytest
+
+        @pytest.mark.on_store(replace_matched_lines=['Hello .*!'])
+        def test_on_store_marker(capfd, expected_out):
+            print('Hello Africa!\\nHola Antarctica!\\nHello Americas!')
+            stdout, stderr = capfd.readouterr()
+            assert expected_out.match(stdout) == True
+        """
+      )
+
+    # On first run store patched pattern...
+    result = pytester.runpytest('--pm-save-patterns')
+    result.assert_outcomes(skipped=1)
+    # Second run should pass!
+    result = pytester.runpytest()
+    result.assert_outcomes(passed=1)
