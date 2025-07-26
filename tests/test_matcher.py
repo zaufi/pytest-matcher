@@ -435,3 +435,47 @@ def suffix_test(pytester, sfx, filename) -> None:
     # Run all tests with pytest
     result = pytester.runpytest()
     result.assert_outcomes(passed=1)
+
+
+def diff_test(pytester) -> None:
+    # Write a sample config file
+    pytester.makefile(
+        '.ini'
+      , pytest="""
+            [pytest]
+            addopts = -vv -ra
+            pm-patterns-base-dir = .
+            pm-mismatch-style = diff
+            pm-pattern-file-fmt = {fn}
+        """
+      )
+
+    # Write a sample expectations file
+    (pytester.path / 'test_diff.out').write_text('Hello Africa!\n')
+
+    # Write a sample test that will fail
+    pytester.makepyfile("""
+        import platform
+        import pytest
+        import sys
+
+        def test_diff(capfd, expected_out):
+            print('Hello America!')
+            stdout, stderr = capfd.readouterr()
+            assert expected_out == stdout
+            assert stderr == ''
+        """
+      )
+
+    # Run all tests with pytest
+    result = pytester.runpytest()
+    result.assert_outcomes(failed=1)
+    result.stdout.fnmatch_lines([
+        'E         ---[BEGIN expected vs actual diff]---'
+      , 'E         --- expected'
+      , 'E         +++ actual'
+      , 'E         @@ -1 +1 @@'
+      , 'E         -Hello Africa!↵'
+      , 'E         +Hello America!↵'
+      , 'E         ---[END expected vs actual diff]---'
+      ])
