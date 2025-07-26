@@ -19,8 +19,11 @@ import shutil
 import string
 import sys
 import urllib.parse
-from dataclasses import dataclass
-from typing import Final, TextIO, cast
+from dataclasses import InitVar, astuple, dataclass, field
+from typing import TYPE_CHECKING, Any, Final, TextIO, cast
+
+if TYPE_CHECKING:
+    from collections.abc import Iterable
 
 # Third party packages
 import pytest
@@ -45,6 +48,17 @@ except ImportError:
 
 
 PM_COLOR_OUTPUT = pytest.StashKey[bool]()
+
+ON_STORE_KWARGS_INT: Final[set[str]] = {
+    'drop_head'
+  , 'drop_tail'
+  }
+ON_STORE_KWARGS_STR: Final[set[str]] = {
+    'drop_matched_lines'
+  , 'replace_matched_lines'
+  }
+ON_STORE_KWARGS: Final[set[str]] = ON_STORE_KWARGS_INT | ON_STORE_KWARGS_STR
+
 
 _EOL_RE: Final[re.Pattern] = re.compile('(\r?\n|\r)')
 
@@ -89,10 +103,67 @@ class _ContentMatchResult:                                  # NOQA: PLW1641
 
 
 @dataclass
+class _ContentEditParameters:
+    drop_matched_lines_raw: InitVar[list[str] | None] = None
+    replace_matched_lines_raw: InitVar[list[str] | None] = None
+
+    drop_head: int = 0
+    drop_tail: int = 0
+    drop_matched_lines: list[re.Pattern] = field(default_factory=list, init=False)
+    replace_matched_lines: list[re.Pattern] = field(default_factory=list, init=False)
+
+    def __post_init__(
+        self
+      , drop_matched_lines_raw: list[str] | None
+      , replace_matched_lines_raw: list[str] | None
+      ) -> None:
+        self.drop_matched_lines = functools.reduce(
+            self._str2re
+          , drop_matched_lines_raw if drop_matched_lines_raw is not None else []
+          , []
+          )
+        self.replace_matched_lines = functools.reduce(
+            self._str2re
+          , replace_matched_lines_raw if replace_matched_lines_raw is not None else []
+          , []
+          )
+
+    def _str2re(self, state: list[re.Pattern], raw_re: str) -> list[re.Pattern]:
+        try:
+            return [*state, re.compile(raw_re)]
+        except re.error as ex:
+            msg = f"Invalid regular expression: '{raw_re}'"
+            raise pytest.UsageError(msg) from ex
+
+    def _edit_line(self, state: Iterable[str], line: str) -> Iterable[str]:
+        if self.replace_matched_lines:
+            line = functools.reduce(
+                lambda current_line, regex: re.sub(
+                    regex.pattern
+                  , regex.pattern
+                  , current_line
+                  )
+              , self.replace_matched_lines
+              , line
+              )
+        return [*state, line]
+
+    def edit_text(self, text: str) -> str:
+        return '\n'.join(
+            functools.reduce(
+                self._edit_line
+              , text.splitlines()
+              , []
+              )
+          )
+
+
+@dataclass
 class _ContentCheckOrStorePattern:                          # NOQA: PLW1641
 
     pattern_filename: pathlib.Path
     store: bool
+    edit: _ContentEditParameters
     expected_file_content: str | None = None
 
     def _maybe_store_pattern(self, text: str) -> None:
@@ -104,7 +175,7 @@ class _ContentCheckOrStorePattern:                          # NOQA: PLW1641
             self.pattern_filename.parent.mkdir(parents=True)
 
         # Store!
-        self.pattern_filename.write_text(text)
+        self.pattern_filename.write_text(self.edit.edit_text(text))
 
         # Also mark the test as skipped!
         pytest.skip(f'Pattern file saved to `{self.pattern_filename}`.')
@@ -275,12 +346,77 @@ def _make_expected_filename(request: pytest.FixtureRequest, ext: str) -> pathlib
     return result.with_suffix(result.suffix + ext)
 
 
+@dataclass
+class _OnStoreParamsReducerState:
+    ctor_args: dict[str, str | int] = field(default_factory=dict)
+    unsupported: list[str] = field(default_factory=list)
+    invalid_type: list[str] = field(default_factory=list)
+
+
+def _collect_on_store_param(
+    state: _OnStoreParamsReducerState
+  , item: tuple[str, Any]
+  ) -> _OnStoreParamsReducerState:
+
+    def _is_list_of_strings(value: list[Any]) -> bool:
+        return isinstance(value, list) and all(isinstance(item, str) for item in value)
+
+    match item:
+        case (key, int() as value) if key in ON_STORE_KWARGS_INT:
+            state.ctor_args[key] = value
+
+        case (key, value) if _is_list_of_strings(value) and key in ON_STORE_KWARGS_STR:
+            state.ctor_args[f'{key}_raw'] = value
+
+        case (key, _) if key in ON_STORE_KWARGS:
+            state.invalid_type.append(key)
+
+        case (key, _):
+            state.unsupported.append(key)
+
+    return state
+
+
+def _try_get_on_store_params(request: pytest.FixtureRequest) -> _ContentEditParameters:
+    on_store = request.node.get_closest_marker('on_store')
+    if on_store is None:
+        return _ContentEditParameters()
+
+    ctor_args, unsupported, invalid_type = astuple(
+        functools.reduce(
+            _collect_on_store_param
+          , on_store.kwargs.items()
+          , _OnStoreParamsReducerState()
+          )
+      )
+
+    def _report_problem(items: list[str], fmt: str) -> None:
+        if items:
+            msg = fmt.format(
+                plural='s' if len(items) > 1 else ''
+              , items=', '.join(items)
+              )
+            raise pytest.UsageError(msg)
+
+    _report_problem(
+        invalid_type
+      , "'on_store' marker got parameter{plural} with invalid type: {items}"
+      )
+    _report_problem(
+        unsupported
+      , "'on_store' marker got invalid parameter{plural}: {items}"
+      )
+
+    return _ContentEditParameters(**ctor_args)
+
+
 @pytest.fixture
 def expected_out(request: pytest.FixtureRequest) -> _ContentCheckOrStorePattern:
     """Pytest fixture for matching ``STDOUT`` against a file."""
     return _ContentCheckOrStorePattern(
         _make_expected_filename(request, '.out')
       , store=request.config.getoption('--pm-save-patterns')
+      , edit=_try_get_on_store_params(request)
       )
 
 
@@ -290,6 +426,7 @@ def expected_err(request: pytest.FixtureRequest) -> _ContentCheckOrStorePattern:
     return _ContentCheckOrStorePattern(
         _make_expected_filename(request, '.err')
       , store=request.config.getoption('--pm-save-patterns')
+      , edit=_try_get_on_store_params(request)
       )
 
 
@@ -493,6 +630,10 @@ def pytest_configure(config: pytest.Config) -> None:
     config.addinivalue_line(
         'markers'
       , 'expect_suffix(args..., *, suffix="..."): mark test to have suffixed pattern file'
+      )
+    config.addinivalue_line(
+        'markers'
+      , 'on_store(**kwargs): patch an expected pattern before store'
       )
 
     # Make sure the patterns base directory isn't an absolute path!
