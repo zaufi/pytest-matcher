@@ -142,7 +142,7 @@ class _ContentCheckOrStorePattern:                          # NOQA: PLW1641
         except re.error as ex:
             pytest.skip(
                 f'Compiling the regular expression from the pattern failed: {ex!s}'
-            )
+              )
 
         text_lines = text.splitlines()
 
