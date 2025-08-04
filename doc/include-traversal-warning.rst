@@ -6,4 +6,4 @@
     Directory traversal is not allowed for path parameters and paths must be relative.
     They are evaluated relative to the ``rootdir`` determined_ by ``pytest``.
 
-.. _determined: https://docs.pytest.org/en/8.0.x/reference/customize.html#initialization-determining-rootdir-and-configfile
+.. _determined: https://docs.pytest.org/en/latest/reference/customize.html#initialization-determining-rootdir-and-configfile

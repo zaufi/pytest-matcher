@@ -153,4 +153,4 @@ The test will now pass:
 
     ============================== 1 passed in 0.01s ===============================
 
-.. _Pytest configuration file: https://docs.pytest.org/en/8.0.x/reference/customize.html
+.. _Pytest configuration file: https://docs.pytest.org/en/latest/reference/customize.html

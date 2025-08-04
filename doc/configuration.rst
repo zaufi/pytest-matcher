@@ -46,4 +46,4 @@ The following options can be set in the `Pytest configuration file`_.
     The directory must be relative to the project's root.
 
 
-.. _Pytest configuration file: https://docs.pytest.org/en/8.0.x/reference/customize.html
+.. _Pytest configuration file: https://docs.pytest.org/en/latest/reference/customize.html
