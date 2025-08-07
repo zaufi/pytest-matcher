@@ -361,33 +361,44 @@ def fn_fmt_test(pytester: pytest.Pytester, fmt, file_name, cls_name, expected_pa
     result.assert_outcomes(passed=1)
 
 
-def pm_pattern_file_fmt_directory_traversal_test(pytester: pytest.Pytester) -> None:
-    # Write a sample config file
-    pytester.makefile(
-        '.ini'
-      , pytest="""
-            [pytest]
-            addopts = -vv -ra
-            pm-patterns-base-dir = .
-            pm-pattern-file-fmt = ../{class}/../{fn}
-        """
-      )
-    # Run all tests with pytest
-    result = pytester.runpytest()
-    result.stderr.re_match_lines([
-        'ERROR: Directory traversal is not allowed for `pm-pattern-file-fmt` or `pm-patterns-base-dir` option'
-      ])
-
-
 @pytest.mark.parametrize(
     ('fmt', 'error_string')
   , [
-        ('{unknown}', "'pm-pattern-file-fmt' has invalid placeholder: 'unknown'")
-      , ('{fn}/{unknown}/{class}', "'pm-pattern-file-fmt' has invalid placeholder: 'unknown'")
-      , ('{satu}-{dua}', "'pm-pattern-file-fmt' has invalid placeholders: 'satu', 'dua'")
-      , ('{fn', "'pm-pattern-file-fmt' has incorrect format: expected '}' before end of string")
-      , ('fn}', "'pm-pattern-file-fmt' has incorrect format: single '}' encountered in format string")
-      , ('static string', "'pm-pattern-file-fmt' should have at least one placeholder")
+        pytest.param(
+            '{unknown}'
+          , "'pm-pattern-file-fmt' has invalid placeholder: 'unknown'"
+          , id='invalid-placeholders-1'
+          )
+      , pytest.param(
+            '{fn}/{unknown}/{class}'
+          , "'pm-pattern-file-fmt' has invalid placeholder: 'unknown'"
+          , id='invalid-placeholders-2'
+          )
+      , pytest.param(
+            '{satu}-{dua}'
+          , "'pm-pattern-file-fmt' has invalid placeholders: 'satu', 'dua'"
+          , id='invalid-placeholders-3'
+          )
+      , pytest.param(
+            '{fn'
+          , "'pm-pattern-file-fmt' has incorrect format: expected '}' before end of string"
+          , id='placeholder-syntax-error-1'
+          )
+      , pytest.param(
+            'fn}'
+          , "'pm-pattern-file-fmt' has incorrect format: single '}' encountered in format string"
+          , id='placeholder-syntax-error-2'
+          )
+      , pytest.param(
+            'static string'
+          , "'pm-pattern-file-fmt' should have at least one placeholder"
+          , id='missed-placeholder'
+          )
+      , pytest.param(
+            '../{class}/../{fn}'
+          , 'Directory traversal is not allowed for `pm-pattern-file-fmt` or `pm-patterns-base-dir` option'
+          , id='directory-traversal'
+          )
     ]
   )
 def pm_pattern_file_bad_fmt_test(pytester: pytest.Pytester, fmt, error_string) -> None:
