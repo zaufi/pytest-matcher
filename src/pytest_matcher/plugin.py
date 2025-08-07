@@ -170,24 +170,6 @@ class _ContentCheckOrStorePattern:                          # NOQA: PLW1641
     store: bool
     edit: _ContentEditParameters
 
-    def _maybe_store_pattern(self, text: str) -> None:
-        if not self.store:
-            return
-
-        # Make a directory to store a pattern file if it doesn't exist yet
-        if not self.pattern_filename.parent.exists():
-            self.pattern_filename.parent.mkdir(parents=True)
-
-        # Store!
-        self.pattern_filename.write_text(
-            self.edit.edit_text(text)
-            if self.edit.is_edit_requested()
-            else text
-          )
-
-        # Also mark the test as skipped!
-        pytest.skip(f'Pattern file saved to `{self.pattern_filename}`.')
-
     @functools.cached_property
     def expected_file_content(self) -> str:
         if not (self.pattern_filename.exists() and self.pattern_filename.is_file()):
@@ -202,6 +184,12 @@ class _ContentCheckOrStorePattern:                          # NOQA: PLW1641
 
         self._maybe_store_pattern(text)
         return self.expected_file_content == text
+
+    def __str__(self) -> str:
+        return self.expected_file_content
+
+    def __repr__(self) -> str:
+        return f"(pattern_filename='{self.pattern_filename!s}', pattern='{self.expected_file_content}')"
 
     def match(self, text: str, flags: re.RegexFlag = _RE_NOFLAG) -> _ContentMatchResult:
         self._maybe_store_pattern(text)
@@ -230,6 +218,32 @@ class _ContentCheckOrStorePattern:                          # NOQA: PLW1641
           , regex=self.expected_file_content
           , filename=self.pattern_filename
           )
+
+    def report_compare_mismatch(self, actual: str, *, color: bool, style: _MismatchStyle) -> list[str]:
+        return (
+            self._report_mismatch_diff(actual, color=color)
+            if style == _MismatchStyle.DIFF
+            else self._report_mismatch_text(actual, color=color)
+          )
+
+    # BEGIN Private members
+    def _maybe_store_pattern(self, text: str) -> None:
+        if not self.store:
+            return
+
+        # Make a directory to store a pattern file if it doesn't exist yet
+        if not self.pattern_filename.parent.exists():
+            self.pattern_filename.parent.mkdir(parents=True)
+
+        # Store!
+        self.pattern_filename.write_text(
+            self.edit.edit_text(text)
+            if self.edit.is_edit_requested()
+            else text
+          )
+
+        # Also mark the test as skipped!
+        pytest.skip(f'Pattern file saved to `{self.pattern_filename}`.')
 
     def _make_newlines_visible(self, text: str) -> str:
         return _EOL_RE.sub(r'↵\1', text)
@@ -280,13 +294,7 @@ class _ContentCheckOrStorePattern:                          # NOQA: PLW1641
           , *diff
           , '---[END expected vs actual diff]---'
           ]
-
-    def report_compare_mismatch(self, actual: str, *, color: bool, style: _MismatchStyle) -> list[str]:
-        return (
-            self._report_mismatch_diff(actual, color=color)
-            if style == _MismatchStyle.DIFF
-            else self._report_mismatch_text(actual, color=color)
-          )
+    # END Private members
 
 
 def _get_base_dir(config: pytest.Config) -> pathlib.Path:

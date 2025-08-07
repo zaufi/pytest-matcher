@@ -635,3 +635,61 @@ def on_store_marker_test(
     if second_run:
         result = pytester.runpytest()
         result.assert_outcomes(passed=1)
+
+
+def printable_test(pytester) -> None:
+    # Write a sample config file
+    pytester.makefile(
+        '.ini'
+      , pytest="""
+            [pytest]
+            pm-patterns-base-dir = .
+            pm-pattern-file-fmt = {fn}
+        """
+      )
+    # Write a sample expectations file
+    pytester.makefile('.out', test_printing='Hello Africa!')
+    # Write a sample test
+    pytester.makepyfile("""
+        def test_printing(expected_out):
+            print(f'printable_test: expected_out="{expected_out}"')
+            assert False
+        """
+      )
+
+    # Run all tests with pytest
+    result = pytester.runpytest()
+    result.assert_outcomes(failed=1)
+
+    result.stdout.fnmatch_lines([
+        'printable_test: expected_out="Hello Africa!"'
+      ])
+
+
+def repr_test(pytester) -> None:
+    # Write a sample config file
+    pytester.makefile(
+        '.ini'
+      , pytest="""
+            [pytest]
+            pm-patterns-base-dir = .
+            pm-pattern-file-fmt = {fn}
+        """
+      )
+    # Write a sample expectations file
+    pytester.makefile('.out', test_repr='Hello Africa!')
+    # Write a sample test
+    pytester.makepyfile("""
+        def test_repr(expected_out):
+            print(f'repr_test: {expected_out=}')
+            assert False
+        """
+      )
+
+    # Run all tests with pytest
+    result = pytester.runpytest()
+    result.assert_outcomes(failed=1)
+
+    result.stdout.re_match_lines([
+        "repr_test: expected_out=\\(pattern_filename='.*/test_repr.out', pattern='Hello Africa!'\\)"
+      ])

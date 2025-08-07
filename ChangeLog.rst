@@ -30,6 +30,7 @@ Added
 -----
 
 - Automate pattern editing (preparation) with the :py:func:`on_store` marker.
+- Make the :py:data:`expected_out` printable.
 
 Fixed
 -----
