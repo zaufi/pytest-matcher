@@ -418,25 +418,37 @@ def pm_pattern_file_bad_fmt_test(pytester: pytest.Pytester, fmt, error_string) -
 @pytest.mark.parametrize(
     ('sfx', 'filename')
   , [
-        # No args marker
-        ('', f'test_sfx-{platform.system()}.out')
-        # Positional arg marker
-      , ('platform.system()', f'test_sfx-{platform.system()}.out')
-      , ('"with.dot"', 'test_sfx-with.dot.out')
-        # Positional args marker
-      , (
+        pytest.param('', f'test_sfx-{platform.system()}.out', id='no-args-marker')
+      , pytest.param(
+            'platform.system()'
+          , f'test_sfx-{platform.system()}.out'
+          , id='positional-arg-marker-1'
+          )
+      , pytest.param(
+            '"with.dot"'
+          , 'test_sfx-with.dot.out'
+          , id='positional-arg-marker-2'
+          )
+      , pytest.param(
             '"py", f"{sys.version_info.major}", platform.system()'
           , f'test_sfx-py-3-{platform.system()}.out'
-        )
-        # KW arg marker
-      , ('suffix=platform.system()', f'test_sfx-{platform.system()}.out')
-        # Positional and KW args marker
-      , (
+          , id='positional-arg-marker-3'
+          )
+      , pytest.param(
+            'suffix=platform.system()'
+          , f'test_sfx-{platform.system()}.out'
+          , id='kw-arg-marker-1'
+          )
+      , pytest.param(
             '"py", f"{sys.version_info.major}", suffix=platform.system()'
           , f'test_sfx-py-3-{platform.system()}.out'
-        )
-        # URL-escape has applied
-      , ('"[%&()*+/]"', 'test_sfx-[%25%26%28%29%2A%2B%2F].out')
+          , id='positional-and-kw-args-marker'
+          )
+      , pytest.param(
+            '"[%&()*+/]"'
+          , 'test_sfx-[%25%26%28%29%2A%2B%2F].out'
+          , id='url-escape-applied'
+          )
     ]
   )
 @pytest.mark.pytest_ini_options(pm_pattern_file_fmt='{fn}{suffix}')
