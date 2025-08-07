@@ -57,7 +57,7 @@ repos:
 
     # NOTE See BUG https://github.com/crate-ci/typos/issues/390
   - repo: https://github.com/adhtruong/mirrors-typos
-    rev: v1.34.0
+    rev: v1.35.1
     hooks:
       - id: typos
         # NOTE Override hook provided args to prevent automatic
@@ -66,7 +66,7 @@ repos:
         stages: *spell-check-stages
 
   - repo: https://github.com/charliermarsh/ruff-pre-commit
-    rev: v0.12.7
+    rev: v0.12.8
     hooks:
       - id: ruff
 
@@ -92,7 +92,7 @@ repos:
       - id: reuse
 
   - repo: https://github.com/koalaman/shellcheck-precommit
-    rev: v0.10.0
+    rev: v0.11.0
     hooks:
       - id: shellcheck
         args: [--shell=bash, --color=always]
