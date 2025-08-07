@@ -439,23 +439,13 @@ def pm_pattern_file_bad_fmt_test(pytester: pytest.Pytester, fmt, error_string) -
       , ('"[%&()*+/]"', 'test_sfx-[%25%26%28%29%2A%2B%2F].out')
     ]
   )
-def suffix_test(pytester, sfx, filename) -> None:
-    # Write a sample config file
-    pytester.makefile(
-        '.ini'
-      , pytest="""
-            [pytest]
-            addopts = -vv -ra
-            pm-patterns-base-dir = .
-            pm-pattern-file-fmt = {fn}{suffix}
-        """
-      )
-
+@pytest.mark.pytest_ini_options(pm_pattern_file_fmt='{fn}{suffix}')
+def suffix_test(ourtestdir, sfx, filename) -> None:
     # Write a sample expectations file
-    (pytester.path / filename).write_text('Hello Africa!\n')
+    (ourtestdir.path / filename).write_text('Hello Africa!\n')
 
     # Write a sample test
-    pytester.makepyfile(f"""
+    ourtestdir.makepyfile(f"""
         import platform
         import pytest
         import sys
@@ -470,28 +460,17 @@ def suffix_test(pytester, sfx, filename) -> None:
       )
 
     # Run all tests with pytest
-    result = pytester.runpytest()
+    result = ourtestdir.runpytest()
     result.assert_outcomes(passed=1)
 
 
-def diff_test(pytester) -> None:
-    # Write a sample config file
-    pytester.makefile(
-        '.ini'
-      , pytest="""
-            [pytest]
-            addopts = -vv -ra
-            pm-patterns-base-dir = .
-            pm-mismatch-style = diff
-            pm-pattern-file-fmt = {fn}
-        """
-      )
-
+@pytest.mark.pytest_ini_options(pm_pattern_file_fmt='{fn}', pm_mismatch_style='diff')
+def diff_test(ourtestdir) -> None:
     # Write a sample expectations file
-    (pytester.path / 'test_diff.out').write_text('Hello Africa!\n')
+    (ourtestdir.path / 'test_diff.out').write_text('Hello Africa!\n')
 
     # Write a sample test that will fail
-    pytester.makepyfile("""
+    ourtestdir.makepyfile("""
         import platform
         import pytest
         import sys
@@ -505,7 +484,7 @@ def diff_test(pytester) -> None:
       )
 
     # Run all tests with pytest
-    result = pytester.runpytest()
+    result = ourtestdir.runpytest()
     result.assert_outcomes(failed=1)
     result.stdout.fnmatch_lines([
         'E         ---[BEGIN expected vs actual diff]---'
@@ -521,37 +500,32 @@ def diff_test(pytester) -> None:
 @pytest.mark.parametrize(
     ('on_store_params', 'error_string')
   , [
-        (
+        pytest.param(
             'drop_head="string"'
           , "parameter with invalid type: 'drop_head'"
-        )
-      , (
+          , id='invalid-drop_head-type'
+          )
+      , pytest.param(
             'drop_head=-1'
           , "invalid value `-1` for parameter 'drop_head'"
-        )
-      , (
+          , id='invalid-drop_head-value'
+          )
+      , pytest.param(
             'drop_head="string", drop_tail="string"'
           , "parameters with invalid type: 'drop_head', 'drop_tail'"
-        )
-      , (
+          , id='invalid-drop-types'
+          )
+      , pytest.param(
             'replace_matched_lines=["[*"]'
           , "invalid regular expression: '[*'"
-        )
+          , id='invalid-regex'
+          )
     ]
   )
-def bad_on_store_marker_test(pytester, on_store_params: str, error_string: str) -> None:
-    # Write a sample config file
-    pytester.makefile(
-        '.ini'
-      , pytest="""
-            [pytest]
-            pm-patterns-base-dir = .
-            pm-pattern-file-fmt = {fn}
-        """
-      )
-
+@pytest.mark.pytest_ini_options(pm_pattern_file_fmt='{fn}')
+def bad_on_store_marker_test(ourtestdir, on_store_params: str, error_string: str) -> None:
     # Write a sample test
-    pytester.makepyfile(f"""
+    ourtestdir.makepyfile(f"""
         import pytest
 
         @pytest.mark.on_store({on_store_params})
@@ -561,7 +535,7 @@ def bad_on_store_marker_test(pytester, on_store_params: str, error_string: str) 
       )
 
     # On first run store the patched pattern...
-    result = pytester.runpytest('--pm-save-patterns')
+    result = ourtestdir.runpytest('--pm-save-patterns')
     result.assert_outcomes(errors=1)
     result.stdout.fnmatch_lines([
         f"E           _pytest.config.exceptions.UsageError: 'on_store' marker got {error_string}"
@@ -603,25 +577,16 @@ HELLO_STRING: Final[str] = 'Hello Africa!\\nHola Antarctica!\\nHello Americas!'
         )
     ]
   )
+@pytest.mark.pytest_ini_options(pm_pattern_file_fmt='{fn}')
 def on_store_marker_test(
-    pytester
+    ourtestdir
   , on_store_params: str
   , test_string: str
   , second_run: bool                                        # NOQA: FBT001
   , expected_out
   ) -> None:
-    # Write a sample config file
-    pytester.makefile(
-        '.ini'
-      , pytest="""
-            [pytest]
-            pm-patterns-base-dir = .
-            pm-pattern-file-fmt = {fn}
-        """
-      )
-
     # Write a sample test
-    pytester.makepyfile(f"""
+    ourtestdir.makepyfile(f"""
         import pytest
 
         @pytest.mark.on_store({on_store_params})
@@ -633,7 +598,7 @@ def on_store_marker_test(
       )
 
     # On first run store the patched pattern...
-    result = pytester.runpytest('--pm-save-patterns')
+    result = ourtestdir.runpytest('--pm-save-patterns')
     result.assert_outcomes(skipped=1)
 
     # Check the stored pattern
@@ -644,24 +609,17 @@ def on_store_marker_test(
 
     # Second run should pass!
     if second_run:
-        result = pytester.runpytest()
+        result = ourtestdir.runpytest()
         result.assert_outcomes(passed=1)
 
 
-def printable_test(pytester) -> None:
-    # Write a sample config file
-    pytester.makefile(
-        '.ini'
-      , pytest="""
-            [pytest]
-            pm-patterns-base-dir = .
-            pm-pattern-file-fmt = {fn}
-        """
-      )
+@pytest.mark.pytest_ini_options(pm_pattern_file_fmt='{fn}')
+def printable_test(ourtestdir) -> None:
     # Write a sample expectations file
-    pytester.makefile('.out', test_printing='Hello Africa!')
+    ourtestdir.makefile('.out', test_printing='Hello Africa!')
+
     # Write a sample test
-    pytester.makepyfile("""
+    ourtestdir.makepyfile("""
         def test_printing(expected_out):
             print(f'printable_test: expected_out="{expected_out}"')
             assert False
@@ -669,7 +627,7 @@ def printable_test(pytester) -> None:
       )
 
     # Run all tests with pytest
-    result = pytester.runpytest()
+    result = ourtestdir.runpytest()
     result.assert_outcomes(failed=1)
 
     result.stdout.fnmatch_lines([
@@ -677,20 +635,13 @@ def printable_test(pytester) -> None:
       ])
 
 
-def repr_test(pytester) -> None:
-    # Write a sample config file
-    pytester.makefile(
-        '.ini'
-      , pytest="""
-            [pytest]
-            pm-patterns-base-dir = .
-            pm-pattern-file-fmt = {fn}
-        """
-      )
+@pytest.mark.pytest_ini_options(pm_pattern_file_fmt='{fn}')
+def repr_test(ourtestdir) -> None:
     # Write a sample expectations file
-    pytester.makefile('.out', test_repr='Hello Africa!')
+    ourtestdir.makefile('.out', test_repr='Hello Africa!')
+
     # Write a sample test
-    pytester.makepyfile("""
+    ourtestdir.makepyfile("""
         def test_repr(expected_out):
             print(f'repr_test: {expected_out=}')
             assert False
@@ -698,7 +649,7 @@ def repr_test(pytester) -> None:
       )
 
     # Run all tests with pytest
-    result = pytester.runpytest()
+    result = ourtestdir.runpytest()
     result.assert_outcomes(failed=1)
 
     result.stdout.re_match_lines([

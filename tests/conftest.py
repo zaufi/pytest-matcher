@@ -39,15 +39,25 @@ class _ExpectDir:
 
 
 @pytest.fixture
-def ourtestdir(pytester: pytest.Pytester) -> pytest.Pytester:
+def ourtestdir(request: pytest.FixtureRequest, pytester: pytest.Pytester) -> pytest.Pytester:
     """Pytest fixture that writes a sample ``pytest.ini`` with ``pm-patterns-base-dir`` preset."""
+    default_options = {
+        'addopts': '-vv -ra'
+      , 'pm-patterns-base-dir': '.'
+      }
+
+    if pytest_ini_options_marker := request.node.get_closest_marker('pytest_ini_options'):
+        default_options.update({
+            key.replace('_', '-'): value
+            for key, value in pytest_ini_options_marker.kwargs.items()
+          })
+
     pytester.makefile(
         '.ini'
-      , pytest="""
-            [pytest]
-            addopts = -vv -ra
-            pm-patterns-base-dir = .
-        """
+      , pytest='\n'.join([
+            '[pytest]'
+          , *(f'{key} = {value}' for key, value in default_options.items())
+          ])
       )
     return pytester
 
@@ -58,3 +68,14 @@ def expectdir(pytester: pytest.Pytester, request: pytest.FixtureRequest) -> _Exp
     path = pytester.path / request.function.__name__
     path.mkdir()
     return _ExpectDir(path)
+
+
+# BEGIN Pytest hooks
+@pytest.hookimpl(trylast=True)
+def pytest_configure(config: pytest.Config) -> None:
+    """Register custom markers for our tests."""
+    config.addinivalue_line(
+        'markers'
+      , 'pytest_ini_options(args...): write a pytest.ini with the given keys and values'
+      )
+# END Pytest hooks
