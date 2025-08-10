@@ -19,7 +19,7 @@ repos:
       - id: check-useless-excludes
 
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v5.0.0
+    rev: v6.0.0
     hooks:
       - id: check-case-conflict
       - id: check-executables-have-shebangs
@@ -57,7 +57,7 @@ repos:
 
     # NOTE See BUG https://github.com/crate-ci/typos/issues/390
   - repo: https://github.com/adhtruong/mirrors-typos
-    rev: v1.35.1
+    rev: v1.35.3
     hooks:
       - id: typos
         # NOTE Override hook provided args to prevent automatic
