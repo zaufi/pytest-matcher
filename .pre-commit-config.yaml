@@ -19,7 +19,7 @@ repos:
       - id: check-useless-excludes
 
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v5.0.0
+    rev: v6.0.0
     hooks:
       - id: check-case-conflict
       - id: check-executables-have-shebangs
@@ -45,7 +45,7 @@ repos:
 
     # NOTE For config options check this: https://editorconfig-checker.github.io
   - repo: https://github.com/editorconfig-checker/editorconfig-checker
-    rev: v3.3.0
+    rev: v3.4.0
     hooks:
       - id: editorconfig-checker
 
@@ -57,7 +57,7 @@ repos:
 
     # NOTE See BUG https://github.com/crate-ci/typos/issues/390
   - repo: https://github.com/adhtruong/mirrors-typos
-    rev: v1.35.1
+    rev: v1.36.2
     hooks:
       - id: typos
         # NOTE Override hook provided args to prevent automatic
@@ -66,7 +66,7 @@ repos:
         stages: *spell-check-stages
 
   - repo: https://github.com/charliermarsh/ruff-pre-commit
-    rev: v0.12.8
+    rev: v0.13.0
     hooks:
       - id: ruff
 
@@ -87,7 +87,7 @@ repos:
       - id: validate-pyproject
 
   - repo: https://github.com/fsfe/reuse-tool
-    rev: v5.0.2
+    rev: v5.1.1
     hooks:
       - id: reuse
 
