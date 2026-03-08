@@ -45,19 +45,19 @@ repos:
 
     # NOTE For config options check this: https://editorconfig-checker.github.io
   - repo: https://github.com/editorconfig-checker/editorconfig-checker
-    rev: v3.6.0
+    rev: v3.6.1
     hooks:
       - id: editorconfig-checker
 
   - repo: https://github.com/codespell-project/codespell
-    rev: v2.4.1
+    rev: v2.4.2
     hooks:
       - id: codespell
         stages: &spell-check-stages [commit-msg, pre-commit]
 
     # NOTE See BUG https://github.com/crate-ci/typos/issues/390
   - repo: https://github.com/adhtruong/mirrors-typos
-    rev: v1.42.1
+    rev: v1.44.0
     hooks:
       - id: typos
         # NOTE Override hook provided args to prevent automatic
@@ -66,7 +66,7 @@ repos:
         stages: *spell-check-stages
 
   - repo: https://github.com/charliermarsh/ruff-pre-commit
-    rev: v0.14.14
+    rev: v0.15.5
     hooks:
       - id: ruff
 
@@ -82,7 +82,7 @@ repos:
       - id: sphinx-lint
 
   - repo: https://github.com/abravalheri/validate-pyproject
-    rev: v0.24.1
+    rev: v0.25
     hooks:
       - id: validate-pyproject
 
