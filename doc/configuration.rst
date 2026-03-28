@@ -33,7 +33,7 @@ The following options can be set in the `Pytest configuration file`_.
     - ``{callspec}`` for the parameterized part of the test function.
     - ``{suffix}`` for the optional suffix added by the :py:func:`expect_suffix` mark.
 
-    Note that for non-class test functions, the ``{class}`` placeholder will be empty.
+    For non-class test functions, the ``{class}`` placeholder is empty.
     For parametrized tests, the ``{callspec}`` placeholder contains ``%XX``-escaped information
     about the parametrization.
 

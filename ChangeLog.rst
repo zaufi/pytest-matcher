@@ -45,8 +45,8 @@ Fixed
 Changed
 -------
 
-- Set the :option:`pm-patterns-base-dir` default to :file:`tests/data/expected` to align with
-  the common :file:`tests/` directory layout.
+- Set the default value of :option:`pm-patterns-base-dir` to :file:`tests/data/expected` to align
+  it with the common :file:`tests/` directory layout.
 - Improve documentation.
 - Update the :file:`pyproject.toml` to suit the :program:`hatch test` command.
 
@@ -62,8 +62,8 @@ Fixed
 Changed
 -------
 
-- **BREAKING CHANGE** Remove Python 3.9 from classifiers (ought to be done in 1.6.0).
-- Little improvements in documentation.
+- **BREAKING CHANGE** Removed Python 3.9 from the classifiers (this should have been done in 1.6.0).
+- Minor improvements to the documentation.
 
 
 2.0.1_ -- 2024-03-15
@@ -77,7 +77,7 @@ Added
 Fixed
 -----
 
-- The release GitHub workflow has been updated to use modern versions of the involved actions.
+- The release GitHub workflow was updated to use modern versions of the relevant actions.
 - Do not override the path suffix-like part (separated by a dot) with a pattern
   filename extension.
 
@@ -100,8 +100,8 @@ Added
 Fixed
 -----
 
-- **BREAKING CHANGE** The expectation files path has never used the
-  ``<test-module-name>`` component despite the :file:`README.rst` claimed.
+- **BREAKING CHANGE** The expectation file path has never used the
+  ``<test-module-name>`` component, despite what :file:`README.rst` claimed.
   Existing projects could set :option:`pm-pattern-file-fmt` to
   ``{class}/{fn}{callspec}`` to preserve backward compatibility.
 
@@ -109,8 +109,8 @@ Removed
 -------
 
 - **BREAKING CHANGE** The :option:`!pm-pattern-file-use-system-name` configuration
-  parameter has been removed. Having ``{suffix}`` in the :option:`pm-pattern-file-fmt`
-  one can have a system name suffix whenever he needs it.
+  parameter has been removed. By using ``{suffix}`` in :option:`pm-pattern-file-fmt`,
+  users can add a system-name suffix whenever they need it.
 
 
 1.6.0_ -- 2024-02-29
@@ -120,7 +120,7 @@ Added
 -----
 
 - :option:`--pm-reveal-unused-files` option to reveal unused pattern files.
-- run test with :command:`pytest` 7.x and 8.x.
+- Run tests with :command:`pytest` 7.x and 8.x.
 
 
 1.5.1_ -- 2024-01-15
@@ -201,7 +201,7 @@ Fixed
 Added
 -----
 
-- Add an INI-file option :option:`!pm-pattern-file-use-system-name` to control if the system
+- Add an INI-file option :option:`!pm-pattern-file-use-system-name` to control whether the system
   name suffix is expected to be in a pattern filename. For example, this allows patterns with
   different CR/LF conventions to be created.
 - Add :py:data:`expected_yaml` fixture to match YAML files.

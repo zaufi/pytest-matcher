@@ -6,11 +6,11 @@
 Welcome to Pytest Matcher documentation!
 ========================================
 
-This is a ``pytest`` plugin that provides a couple of fixtures to match test output against
-patterns stored in files. Expectation files are kept in a base directory, and additional
-paths are derived from the test module name, test class name and test function name. Keeping
-expectation files separate from tests reduces test code and allows matching more than just a
-few lines of output.
+This is a ``pytest`` plugin that provides a couple of fixtures for matching test output against
+patterns stored in files. Expectation files are kept in a base directory, and additional path
+components are derived from the test module name, test class name, and test function name.
+Keeping expectation files separate from tests reduces the amount of test code and allows
+matching more than just a few lines of output.
 
 .. toctree::
     :maxdepth: 1

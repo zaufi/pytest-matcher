@@ -6,14 +6,14 @@ What is this
 
 |Latest Release| |nbsp| |Tests|
 
-This is a ``pytest`` plugin that provides a couple of fixtures to match test output against
+This is a ``pytest`` plugin that provides a couple of fixtures for matching test output against
 patterns stored in files. Expectation files are placed in a base directory, and additional
-paths are derived from the test module name, test class name and test function name::
+path components are derived from the test module name, test class name, and test function name::
 
     <base-dir>/<test-module-name>/[test-class-name/]<test-function-name>[[<callspec-id>]]
 
-Keeping the expectation files separate from tests reduces the amount of test code and makes
-it possible to match more than just a few lines of output.
+Keeping expectation files separate from tests reduces the amount of test code and makes it
+possible to match more than just a few lines of output.
 
 
 Documentation

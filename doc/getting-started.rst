@@ -40,8 +40,8 @@ If you run :command:`pytest` now, the test will be skipped because the expectati
     ============================== 1 skipped in 0.01s ==============================
 
 
-Add the :option:`pm-patterns-base-dir` option to the `Pytest configuration file`_
-pointing, for example, to :file:`tests/data/expected`. Run :command:`pytest` with
+Add the :option:`pm-patterns-base-dir` option to the `Pytest configuration file`_,
+pointing it, for example, to :file:`tests/data/expected`. Run :command:`pytest` with
 the :option:`--pm-save-patterns` option to write the initial expectation file:
 
 .. code-block:: console
@@ -57,7 +57,7 @@ the :option:`--pm-save-patterns` option to write the initial expectation file:
     ============================== 1 skipped in 0.02s ==============================
 
 Review the stored pattern file :file:`tests/data/expected/test_foo/test_foo.out` and add it to
-your VCS.
+version control.
 
 .. note::
 
@@ -153,16 +153,16 @@ The test will now pass:
 
     ============================== 1 passed in 0.01s ===============================
 
-The necessity to manually edit pattern after storing it (to make it a valid regular expression)
-could be boring. With the :py:func:`on_store` marker, one can pass "instructions" on how to
-edit raw text to turn it into a regular expression pattern.
+Needing to manually edit a pattern after storing it, so that it becomes a valid regular
+expression, can be tedious. With the :py:func:`on_store` marker, you can pass instructions on
+how to edit the raw text to turn it into a regular expression pattern.
 
 .. literalinclude:: ../tests/test_foo.py
     :language: python
     :pyobject: test_on_store_marker
     :emphasize-lines: 1-7
 
-So, now it's stored as a ready-to-match regex automatically:
+Now it is stored automatically as a ready-to-match regular expression:
 
 .. code-block:: console
     :emphasize-lines: 12,13

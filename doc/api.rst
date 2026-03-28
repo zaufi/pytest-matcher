@@ -12,7 +12,7 @@ Fixture
 .. py:data:: expected_out
 .. py:data:: expected_err
 
-    This fixture makes it easy to test captured ``STDOUT`` and ``STDERR``.
+    These fixtures make it easy to test captured ``STDOUT`` and ``STDERR``.
     To match static output, simply use an ``assert``:
 
     .. code-block:: python
@@ -21,7 +21,7 @@ Fixture
             ...
             stdout, stderr = capfd.readouterr()
             assert expected_out == stdout
-            assert expected_stderr == stderr
+            assert expected_err == stderr
 
     .. py:function:: expected_out.match(output: str) -> bool
     .. py:function:: expected_err.match(output: str) -> bool
@@ -40,11 +40,11 @@ Fixture
 
         .. note::
             The plugin provides detailed output on assertion failure, but it only works if you
-            explicitly check for ``True`` from ``expected_out.match(…)``.
+            explicitly check that ``expected_out.match(…)`` returns ``True``.
 
 .. py:data:: expected_yaml
 
-    This fixture provides an easy way to verify that YAML output matches the expectations.
+    This fixture provides an easy way to verify that YAML output matches expectations.
 
     .. todo::
         More docs on this!
@@ -55,10 +55,10 @@ Marker
 
 .. py:function:: expect_suffix(*args: str, suffix: str)
 
-    If output may contain system-specific content (e.g., different EOL styles), you can add an
+    If output may contain system-specific content, such as different EOL styles, you can add an
     arbitrary system-specific suffix to the pattern file so that different variants are stored in
-    separate files.  Arguments to the marker are ``%XX``-escaped, dash-concatenated and prefixed with
-    a leading ``-``. They are then used as the ``{suffix}`` placeholder of the
+    separate files. Arguments passed to the marker are ``%XX``-escaped, dash-concatenated, and
+    prefixed with a leading ``-``. They are then used as the ``{suffix}`` placeholder of the
     :option:`pm-pattern-file-fmt` option.
 
     Usage example:
@@ -85,7 +85,7 @@ Marker
 
 .. py:function:: on_store(*, drop_head: int = 0, drop_tail: int = 0, replace_matched_lines: list[str] = [])
 
-    Edit a pattern before save it when :option:`--pm-save-patterns` option has given.
+    Edit a pattern before saving it when the :option:`--pm-save-patterns` option is used.
 
     :param drop_head: Number of lines to remove from the beginning of the pattern. Removed lines are replaced
         with a ``.*`` placeholder to retain structural compatibility during pattern matching. The number must
