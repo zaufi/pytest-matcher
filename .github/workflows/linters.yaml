@@ -28,7 +28,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: '3.12'
 
@@ -42,7 +42,7 @@ jobs:
         shell: bash
 
       - name: Prepare Cache
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           key: py3.12-hatch-${{ env.CACHE_KEY }}-lint
           path: |
