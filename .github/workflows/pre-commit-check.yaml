@@ -25,13 +25,88 @@ env:
   PRE_COMMIT_COLOR: always
 
 jobs:
-  pre-commit-checks:
-    name: Pre-commit check
+  checking-files:
+    name: Checking files
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
+
+      - name: Setup Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.13'
 
       - name: Checking configured hooks
         uses: pre-commit/action@v3.0.1
+
+
+  checking-commit-messages:
+    name: Checking commit messages
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Setup Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.13'
+
+      - name: Install `pre-commit`
+        run: python -m pip install pre-commit
+
+      - name: Freeze
+        run: python -m pip freeze --local
+
+      - name: Cache installed `pre-commit`
+        uses: actions/cache@v5
+        with:
+          path: ~/.cache/pre-commit
+          key: pre-commit-3|${{ env.pythonLocation }}|${{ hashFiles('.pre-commit-config.yaml') }}
+
+      - name: Checkout full code
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          fetch-tags: false
+
+      - name: Fetch base branch
+        run: git fetch origin ${{ github.event.pull_request.base.ref }}
+
+      - name: Set user/email
+        run: |
+          git config user.name 'CI Builder'
+          git config user.email ci.builder@onixs.biz
+
+      - name: Get commits range to check
+        id: get_range
+        run: |
+          case "${{ github.event_name }}" in
+          pull_request)
+            echo "begin=${{ github.event.pull_request.base.sha }}" >> $GITHUB_OUTPUT
+            echo "end=${{ github.event.pull_request.head.sha }}" >> $GITHUB_OUTPUT
+            ;;
+          push)
+            echo "begin=${{ github.event.before }}" >> $GITHUB_OUTPUT
+            echo "end=${{ github.event.after }}" >> $GITHUB_OUTPUT
+            ;;
+          esac
+        shell: bash
+
+      - name: Run `commit-msg` hooks
+        run: |
+          declare -r begin="${{ steps.get_range.outputs.begin }}"
+          declare -r end="${{ steps.get_range.outputs.end }}"
+          declare -a commits
+          mapfile -t commits < <(git rev-list --no-merges ${begin:-HEAD^}..${end:-HEAD})
+          declare -i ec=0
+          for commit in "${commits[@]}"; do
+            declare message=$(git log -1 --pretty=%B "${commit}")
+            echo "${message}" > .git/COMMIT_EDITMSG
+            echo "::group::Checking commit ${commit}"
+            echo -e "\033[36m${message}\033[0m"
+            echo "::endgroup::"
+            pre-commit run --color=always --hook-stage commit-msg --commit-msg-filename .git/COMMIT_EDITMSG || ec=1
+          done
+          exit "${ec}"
+        shell: bash
