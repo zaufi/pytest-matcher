@@ -1,5 +1,5 @@
 #!/bin/bash
-# SPDX-FileCopyrightText: 2024-now, Alex Turbov <zaufi@pm.me>
+# SPDX-FileCopyrightText: Alex Turbov <zaufi@pm.me>
 # SPDX-License-Identifier: CC0-1.0
 
 set -e

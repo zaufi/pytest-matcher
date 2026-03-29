@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: 2024-now, Alex Turbov <zaufi@pm.me>
+# SPDX-FileCopyrightText: Alex Turbov <zaufi@pm.me>
 # SPDX-License-Identifier: CC0-1.0
 
 name: Publish Python 🐍 distribution 📦
@@ -60,8 +60,8 @@ jobs:
           CLICOLOR_FORCE: 0
           FORCE_COLOR: 0
 
-        # NOTE It's not exactly the same as in the `linters.yaml` workflow!
-        # This one strips _local version_!
+      # NOTE It's not exactly the same as in the `linters.yaml` workflow!
+      # This one strips _local version_!
       - name: Prepare Version
         shell: bash
         run: |
